@@ -48,7 +48,8 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('No time slots yet'), findsOneWidget);
+    expect(find.text('No appointment'), findsOneWidget);
+    expect(find.text('Make an appointment'), findsOneWidget);
 
     await tester.tap(
       find.descendant(

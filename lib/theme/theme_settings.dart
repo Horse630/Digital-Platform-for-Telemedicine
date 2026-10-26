@@ -7,9 +7,8 @@ import 'app_theme.dart';
 ///
 /// These values stay on this device. MongoDB does not store them.
 class ThemeSettings extends ChangeNotifier {
-  ThemeSettings({ThemeMode mode = ThemeMode.light, Color seed = AppTheme.seed})
-    : _mode = mode,
-      _seed = seed;
+  ThemeSettings({this._mode = ThemeMode.light, Color seed = AppTheme.seed})
+    : _seed = seed;
 
   static const modeKey = 'ui_theme_mode';
   static const seedKey = 'ui_theme_seed';
@@ -31,14 +30,13 @@ class ThemeSettings extends ChangeNotifier {
   }
 
   Future<void> setDark(bool dark) {
-    return _update(
-      mode: dark ? ThemeMode.dark : ThemeMode.light,
-      seed: _seed,
-    );
+    return _update(mode: dark ? ThemeMode.dark : ThemeMode.light, seed: _seed);
   }
 
   Future<void> setSeed(Color seed) {
-    if (!AppTheme.choices.any((choice) => choice.color.toARGB32() == seed.toARGB32())) {
+    if (!AppTheme.choices.any(
+      (choice) => choice.color.toARGB32() == seed.toARGB32(),
+    )) {
       return Future<void>.value();
     }
     return _update(mode: _mode, seed: seed);
@@ -54,7 +52,10 @@ class ThemeSettings extends ChangeNotifier {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(modeKey, mode == ThemeMode.dark ? 'dark' : 'light');
-      await prefs.setString(seedKey, seed.toARGB32().toRadixString(16).padLeft(8, '0'));
+      await prefs.setString(
+        seedKey,
+        seed.toARGB32().toRadixString(16).padLeft(8, '0'),
+      );
     } catch (_error) {
       // The choice still applies until the app is closed.
     }
@@ -78,8 +79,11 @@ Color? _colorFromHex(String? hex) {
 
 /// Exposes [ThemeSettings] to the settings page.
 class ThemeScope extends InheritedNotifier<ThemeSettings> {
-  const ThemeScope({super.key, required ThemeSettings settings, required super.child})
-    : super(notifier: settings);
+  const ThemeScope({
+    super.key,
+    required ThemeSettings settings,
+    required super.child,
+  }) : super(notifier: settings);
 
   static ThemeSettings of(BuildContext context) {
     final scope = context.dependOnInheritedWidgetOfExactType<ThemeScope>();

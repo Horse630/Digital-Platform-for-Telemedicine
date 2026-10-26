@@ -7,7 +7,8 @@ import '../services/doctor_types.dart';
 
 /// Appointment tab.
 ///
-/// A doctor publishes open times. A patient books one of those times.
+/// A doctor publishes open times. A patient sees only their own bookings
+/// here, and opens a separate page to choose an open time.
 /// An admin can read every row and cannot change them.
 class AppointmentsScreen extends StatefulWidget {
   const AppointmentsScreen({
@@ -30,9 +31,6 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
   List<AppointmentRecord> _appointments = const [];
   bool _loading = true;
   String? _error;
-  final _doctorName = TextEditingController();
-  String _doctorType = '';
-  AppointmentSort _sort = AppointmentSort.soonest;
 
   @override
   void initState() {
@@ -49,21 +47,17 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
     }
   }
 
-  @override
-  void dispose() {
-    _doctorName.dispose();
-    super.dispose();
-  }
-
   AppointmentApi _apiFor(String token) {
     return AppointmentApi(authService: widget.authService, token: token);
   }
 
-  Future<void> _load() async {
-    setState(() {
-      _loading = true;
-      _error = null;
-    });
+  Future<void> _load({bool showSpinner = true}) async {
+    if (showSpinner) {
+      setState(() {
+        _loading = true;
+        _error = null;
+      });
+    }
     try {
       final appointments = await _api.list();
       if (!mounted) {
@@ -117,15 +111,13 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
       );
     }
     if (role == 'patient') {
-      return _PatientSchedule(
-        appointments: _appointments,
-        doctorName: _doctorName,
-        doctorType: _doctorType,
-        sort: _sort,
-        onDoctorNameChanged: () => setState(() {}),
-        onDoctorTypeChanged: (value) => setState(() => _doctorType = value),
-        onSortChanged: (value) => setState(() => _sort = value),
-        onBook: _book,
+      final mine = filterAppointments(
+        _appointments.where((item) => item.status != 'available').toList(),
+        const AppointmentQuery(),
+      );
+      return _MyAppointments(
+        appointments: mine,
+        onOpenBooking: _openBooking,
         onCancel: _cancel,
       );
     }
@@ -166,15 +158,45 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
     await _run(_api.addSlot(scheduledAt));
   }
 
-  Future<void> _book(AppointmentRecord appointment) async {
+  Future<void> _openBooking() {
+    final open = _appointments
+        .where((item) => item.status == 'available')
+        .toList();
+    return Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (routeContext) => _OpenTimesPage(
+          appointments: open,
+          onBook: (appointment) async {
+            final booked = await _book(appointment);
+            if (booked && routeContext.mounted) {
+              Navigator.of(routeContext).pop();
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  Future<bool> _book(AppointmentRecord appointment) async {
     final reason = await showDialog<String>(
       context: context,
       builder: (context) => const _ReasonDialog(),
     );
     if (reason == null || !mounted) {
-      return;
+      return false;
     }
-    await _run(_api.book(appointment.id, reason));
+    try {
+      await _api.book(appointment.id, reason);
+      await _load(showSpinner: false);
+      return true;
+    } on AppointmentException catch (error) {
+      if (!mounted) {
+        return false;
+      }
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(error.message)));
+      return false;
+    }
   }
 
   Future<void> _cancel(AppointmentRecord appointment) {
@@ -195,6 +217,17 @@ class _DoctorSchedule extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (appointments.isEmpty) {
+      return _Message(
+        icon: Icons.event_busy_outlined,
+        title: 'No appointment',
+        message: 'You have no appointment yet.',
+        actionKey: const Key('addTimeSlot'),
+        actionLabel: 'Make an appointment',
+        onAction: onAdd,
+      );
+    }
+
     return Column(
       children: [
         Padding(
@@ -205,169 +238,72 @@ class _DoctorSchedule extends StatelessWidget {
               key: const Key('addTimeSlot'),
               onPressed: onAdd,
               icon: const Icon(Icons.add),
-              label: const Text('Add time slot'),
+              label: const Text('Make an appointment'),
             ),
           ),
         ),
         Expanded(
-          child: appointments.isEmpty
-              ? const _Message(
-                  icon: Icons.event_available_outlined,
-                  title: 'No time slots yet',
-                  message: 'Add a time. Patients can then book it.',
-                )
-              : ListView.separated(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: appointments.length,
-                  separatorBuilder: (_, _) => const SizedBox(height: 12),
-                  itemBuilder: (context, index) {
-                    final appointment = appointments[index];
-                    final open = appointment.status == 'available';
-                    final booked = appointment.status == 'scheduled';
-                    return _AppointmentCard(
-                      appointment: appointment,
-                      detail: open
-                          ? 'Open for patients'
-                          : 'Patient: ${appointment.patientName ?? 'Unknown'}',
-                      actionLabel: open || booked ? 'Cancel slot' : null,
-                      onAction: open || booked
-                          ? () => onCancel(appointment)
-                          : null,
-                    );
-                  },
-                ),
+          child: ListView.separated(
+            padding: const EdgeInsets.all(16),
+            itemCount: appointments.length,
+            separatorBuilder: (_, _) => const SizedBox(height: 12),
+            itemBuilder: (context, index) {
+              final appointment = appointments[index];
+              final open = appointment.status == 'available';
+              final booked = appointment.status == 'scheduled';
+              return _AppointmentCard(
+                appointment: appointment,
+                detail: open
+                    ? 'Open for patients'
+                    : 'Patient: ${appointment.patientName ?? 'Unknown'}',
+                actionLabel: open || booked ? 'Cancel slot' : null,
+                onAction: open || booked ? () => onCancel(appointment) : null,
+              );
+            },
+          ),
         ),
       ],
     );
   }
 }
 
-class _PatientSchedule extends StatelessWidget {
-  const _PatientSchedule({
+class _MyAppointments extends StatelessWidget {
+  const _MyAppointments({
     required this.appointments,
-    required this.doctorName,
-    required this.doctorType,
-    required this.sort,
-    required this.onDoctorNameChanged,
-    required this.onDoctorTypeChanged,
-    required this.onSortChanged,
-    required this.onBook,
+    required this.onOpenBooking,
     required this.onCancel,
   });
 
   final List<AppointmentRecord> appointments;
-  final TextEditingController doctorName;
-  final String doctorType;
-  final AppointmentSort sort;
-  final VoidCallback onDoctorNameChanged;
-  final ValueChanged<String> onDoctorTypeChanged;
-  final ValueChanged<AppointmentSort> onSortChanged;
-  final Future<void> Function(AppointmentRecord appointment) onBook;
+  final VoidCallback onOpenBooking;
   final Future<void> Function(AppointmentRecord appointment) onCancel;
 
   @override
   Widget build(BuildContext context) {
-    final query = AppointmentQuery(
-      doctorName: doctorName.text,
-      doctorType: doctorType.isEmpty ? null : doctorType,
-      sort: sort,
-    );
-    final open = filterAppointments(
-      appointments.where((item) => item.status == 'available').toList(),
-      query,
-    );
-    final mine = filterAppointments(
-      appointments.where((item) => item.status != 'available').toList(),
-      query,
-    );
+    if (appointments.isEmpty) {
+      return _Message(
+        icon: Icons.event_busy_outlined,
+        title: 'No appointment',
+        message: 'You have no appointment yet.',
+        actionKey: const Key('openBookingButton'),
+        actionLabel: 'Book an appointment',
+        onAction: onOpenBooking,
+      );
+    }
 
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        TextField(
-          key: const Key('doctorNameSearch'),
-          controller: doctorName,
-          decoration: const InputDecoration(
-            hintText: 'Doctor name',
-            prefixIcon: Icon(Icons.search),
-            border: OutlineInputBorder(),
-            isDense: true,
+        Align(
+          alignment: Alignment.centerRight,
+          child: FilledButton(
+            key: const Key('openBookingButton'),
+            onPressed: onOpenBooking,
+            child: const Text('Book an appointment'),
           ),
-          onChanged: (_) => onDoctorNameChanged(),
         ),
         const SizedBox(height: 12),
-        _FilterMenu<String>(
-          fieldKey: const Key('doctorTypeFilter'),
-          label: 'Doctor type',
-          value: doctorType,
-          items: [
-            const DropdownMenuItem(value: '', child: Text('All types')),
-            for (final type in doctorTypes)
-              DropdownMenuItem(value: type, child: Text(type)),
-          ],
-          onChanged: (value) {
-            if (value != null) {
-              onDoctorTypeChanged(value);
-            }
-          },
-        ),
-        const SizedBox(height: 12),
-        _FilterMenu<AppointmentSort>(
-          fieldKey: const Key('appointmentSort'),
-          label: 'Sort',
-          value: sort,
-          items: const [
-            DropdownMenuItem(
-              value: AppointmentSort.soonest,
-              child: Text('Soonest'),
-            ),
-            DropdownMenuItem(
-              value: AppointmentSort.latest,
-              child: Text('Latest'),
-            ),
-            DropdownMenuItem(
-              value: AppointmentSort.nameAscending,
-              child: Text('Name A–Z'),
-            ),
-            DropdownMenuItem(
-              value: AppointmentSort.nameDescending,
-              child: Text('Name Z–A'),
-            ),
-          ],
-          onChanged: (value) {
-            if (value != null) {
-              onSortChanged(value);
-            }
-          },
-        ),
-        const SizedBox(height: 16),
-        Text('Open times', style: Theme.of(context).textTheme.titleMedium),
-        const SizedBox(height: 8),
-        if (open.isEmpty)
-          _InlineNote(
-            query.isFiltering
-                ? 'No open times match this search.'
-                : 'No open time slots. A doctor has not published a time yet.',
-          ),
-        for (final appointment in open) ...[
-          _AppointmentCard(
-            appointment: appointment,
-            detail: _doctorDetail(appointment),
-            actionLabel: 'Book',
-            onAction: () => onBook(appointment),
-          ),
-          const SizedBox(height: 12),
-        ],
-        const SizedBox(height: 12),
-        Text('My appointments', style: Theme.of(context).textTheme.titleMedium),
-        const SizedBox(height: 8),
-        if (mine.isEmpty)
-          _InlineNote(
-            query.isFiltering
-                ? 'No appointments match this search.'
-                : 'You have no appointments.',
-          ),
-        for (final appointment in mine) ...[
+        for (final appointment in appointments) ...[
           _AppointmentCard(
             appointment: appointment,
             detail: appointment.reason.isEmpty
@@ -385,13 +321,128 @@ class _PatientSchedule extends StatelessWidget {
       ],
     );
   }
+}
 
-  String _doctorDetail(AppointmentRecord appointment) {
-    if (appointment.doctorSpecialty.isEmpty) {
-      return appointment.doctorName;
-    }
-    return '${appointment.doctorName} · ${appointment.doctorSpecialty}';
+class _OpenTimesPage extends StatefulWidget {
+  const _OpenTimesPage({required this.appointments, required this.onBook});
+
+  final List<AppointmentRecord> appointments;
+  final Future<void> Function(AppointmentRecord appointment) onBook;
+
+  @override
+  State<_OpenTimesPage> createState() => _OpenTimesPageState();
+}
+
+class _OpenTimesPageState extends State<_OpenTimesPage> {
+  final _doctorName = TextEditingController();
+  String _doctorType = '';
+  AppointmentSort _sort = AppointmentSort.soonest;
+
+  @override
+  void dispose() {
+    _doctorName.dispose();
+    super.dispose();
   }
+
+  @override
+  Widget build(BuildContext context) {
+    final query = AppointmentQuery(
+      doctorName: _doctorName.text,
+      doctorType: _doctorType.isEmpty ? null : _doctorType,
+      sort: _sort,
+    );
+    final open = filterAppointments(widget.appointments, query);
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('Book an appointment')),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          TextField(
+            key: const Key('doctorNameSearch'),
+            controller: _doctorName,
+            decoration: const InputDecoration(
+              hintText: 'Doctor name',
+              prefixIcon: Icon(Icons.search),
+              border: OutlineInputBorder(),
+              isDense: true,
+            ),
+            onChanged: (_) => setState(() {}),
+          ),
+          const SizedBox(height: 12),
+          _FilterMenu<String>(
+            fieldKey: const Key('doctorTypeFilter'),
+            label: 'Doctor type',
+            value: _doctorType,
+            items: [
+              const DropdownMenuItem(value: '', child: Text('All types')),
+              for (final type in doctorTypes)
+                DropdownMenuItem(value: type, child: Text(type)),
+            ],
+            onChanged: (value) {
+              if (value != null) {
+                setState(() => _doctorType = value);
+              }
+            },
+          ),
+          const SizedBox(height: 12),
+          _FilterMenu<AppointmentSort>(
+            fieldKey: const Key('appointmentSort'),
+            label: 'Sort',
+            value: _sort,
+            items: const [
+              DropdownMenuItem(
+                value: AppointmentSort.soonest,
+                child: Text('Soonest'),
+              ),
+              DropdownMenuItem(
+                value: AppointmentSort.latest,
+                child: Text('Latest'),
+              ),
+              DropdownMenuItem(
+                value: AppointmentSort.nameAscending,
+                child: Text('Name A–Z'),
+              ),
+              DropdownMenuItem(
+                value: AppointmentSort.nameDescending,
+                child: Text('Name Z–A'),
+              ),
+            ],
+            onChanged: (value) {
+              if (value != null) {
+                setState(() => _sort = value);
+              }
+            },
+          ),
+          const SizedBox(height: 16),
+          Text('Open times', style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: 8),
+          if (open.isEmpty)
+            _InlineNote(
+              query.isFiltering
+                  ? 'No open times match this search.'
+                  : 'No open time slots. A doctor has not published a time yet.',
+            ),
+          for (final appointment in open) ...[
+            _AppointmentCard(
+              appointment: appointment,
+              detail: _doctorDetail(appointment),
+              actionLabel: 'Book',
+              onAction: () => widget.onBook(appointment),
+            ),
+            const SizedBox(height: 12),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+String _doctorDetail(AppointmentRecord appointment) {
+  if (appointment.doctorSpecialty.isEmpty) {
+    return appointment.doctorName;
+  }
+  return '${appointment.doctorName} · ${appointment.doctorSpecialty}';
 }
 
 class _FilterMenu<T> extends StatelessWidget {
@@ -571,11 +622,17 @@ class _Message extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.message,
+    this.actionLabel,
+    this.onAction,
+    this.actionKey,
   });
 
   final IconData icon;
   final String title;
   final String message;
+  final String? actionLabel;
+  final VoidCallback? onAction;
+  final Key? actionKey;
 
   @override
   Widget build(BuildContext context) {
@@ -594,6 +651,14 @@ class _Message extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(message, textAlign: TextAlign.center),
+            if (actionLabel != null && onAction != null) ...[
+              const SizedBox(height: 16),
+              FilledButton(
+                key: actionKey,
+                onPressed: onAction,
+                child: Text(actionLabel!),
+              ),
+            ],
           ],
         ),
       ),

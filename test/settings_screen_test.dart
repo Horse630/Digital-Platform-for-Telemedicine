@@ -28,21 +28,27 @@ void main() {
         authService: AuthService(
           baseUrl: 'http://localhost:3000',
           client: MockClient((request) async {
-            if (request.method == 'GET' && request.url.path == '/api/appointments') {
+            if (request.method == 'GET' &&
+                request.url.path == '/api/appointments') {
               return http.Response('[]', 200);
             }
             if (request.method == 'GET' && request.url.path == '/api/profile') {
               return http.Response(_profile(description), 200);
             }
-            if (request.method == 'PATCH' && request.url.path == '/api/profile') {
+            if (request.method == 'PATCH' &&
+                request.url.path == '/api/profile') {
               final body = jsonDecode(request.body) as Map<String, dynamic>;
               description = body['description'] as String;
               savedUsername = body['username'] as String;
               savedTypes = body['specialties'] as List<dynamic>?;
-              return http.Response(_profile(description, token: 'next-token'), 200);
+              return http.Response(
+                _profile(description, token: 'next-token'),
+                200,
+              );
             }
             final body = jsonDecode(request.body) as Map<String, dynamic>;
-            if (body['username'] == 'doctor' && body['password'] == 'Doctor123!') {
+            if (body['username'] == 'doctor' &&
+                body['password'] == 'Doctor123!') {
               return http.Response(_login(), 200);
             }
             return http.Response(
@@ -55,7 +61,10 @@ void main() {
     );
 
     await tester.enterText(find.byKey(const Key('usernameField')), 'doctor');
-    await tester.enterText(find.byKey(const Key('passwordField')), 'Doctor123!');
+    await tester.enterText(
+      find.byKey(const Key('passwordField')),
+      'Doctor123!',
+    );
     await tester.tap(find.byKey(const Key('loginButton')));
     await tester.pumpAndSettle();
 
@@ -101,7 +110,9 @@ void main() {
     await tester.tap(find.byKey(const Key('themeColorBlue')));
     await tester.pumpAndSettle();
     expect(
-      Theme.of(tester.element(find.byKey(const Key('themeColorBlue')))).colorScheme.primary,
+      Theme.of(tester.element(find.byKey(const Key('themeColorBlue'))))
+          .colorScheme
+          .primary,
       isNot(before),
     );
 
@@ -119,11 +130,12 @@ void main() {
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
 
-    await tester.pumpWidget(
-      TelemedicineApp(authService: _auth()),
-    );
+    await tester.pumpWidget(TelemedicineApp(authService: _auth()));
     await tester.enterText(find.byKey(const Key('usernameField')), 'doctor');
-    await tester.enterText(find.byKey(const Key('passwordField')), 'Doctor123!');
+    await tester.enterText(
+      find.byKey(const Key('passwordField')),
+      'Doctor123!',
+    );
     await tester.tap(find.byKey(const Key('loginButton')));
     await tester.pumpAndSettle();
     await tester.tap(
@@ -137,9 +149,18 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.ensureVisible(find.byKey(const Key('currentPasswordField')));
-    await tester.enterText(find.byKey(const Key('currentPasswordField')), 'Doctor123!');
-    await tester.enterText(find.byKey(const Key('newPasswordField')), 'NewPass123');
-    await tester.enterText(find.byKey(const Key('confirmPasswordField')), 'Different1');
+    await tester.enterText(
+      find.byKey(const Key('currentPasswordField')),
+      'Doctor123!',
+    );
+    await tester.enterText(
+      find.byKey(const Key('newPasswordField')),
+      'NewPass123',
+    );
+    await tester.enterText(
+      find.byKey(const Key('confirmPasswordField')),
+      'Different1',
+    );
     await tester.ensureVisible(find.byKey(const Key('changePasswordButton')));
     await tester.tap(find.byKey(const Key('changePasswordButton')));
     await tester.pumpAndSettle();
@@ -161,19 +182,25 @@ void main() {
         authService: AuthService(
           baseUrl: 'http://localhost:3000',
           client: MockClient((request) async {
-            if (request.method == 'GET' && request.url.path == '/api/appointments') {
+            if (request.method == 'GET' &&
+                request.url.path == '/api/appointments') {
               return http.Response('[]', 200);
             }
             if (request.method == 'GET' && request.url.path == '/api/profile') {
               return http.Response(_patientProfile(), 200);
             }
-            if (request.method == 'PATCH' && request.url.path == '/api/profile') {
+            if (request.method == 'PATCH' &&
+                request.url.path == '/api/profile') {
               final body = jsonDecode(request.body) as Map<String, dynamic>;
               savedAllergies = body['allergies'] as List<dynamic>?;
-              return http.Response(_patientProfile(allergies: savedAllergies), 200);
+              return http.Response(
+                _patientProfile(allergies: savedAllergies),
+                200,
+              );
             }
             final body = jsonDecode(request.body) as Map<String, dynamic>;
-            if (body['username'] == 'patient' && body['password'] == 'Patient123!') {
+            if (body['username'] == 'patient' &&
+                body['password'] == 'Patient123!') {
               return http.Response(_patientLogin(), 200);
             }
             return http.Response('{}', 401);
@@ -183,11 +210,17 @@ void main() {
     );
 
     await tester.enterText(find.byKey(const Key('usernameField')), 'patient');
-    await tester.enterText(find.byKey(const Key('passwordField')), 'Patient123!');
+    await tester.enterText(
+      find.byKey(const Key('passwordField')),
+      'Patient123!',
+    );
     await tester.tap(find.byKey(const Key('loginButton')));
     await tester.pumpAndSettle();
     await tester.tap(
-      find.descendant(of: find.byType(NavigationBar), matching: find.text('Profile')),
+      find.descendant(
+        of: find.byType(NavigationBar),
+        matching: find.text('Profile'),
+      ),
     );
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('settingsButton')));
@@ -245,7 +278,7 @@ String _profile(String description, {String? token}) {
     'description': description,
     'avatarBase64': '',
     'avatarMime': '',
-    if (token != null) 'token': token,
+    'token': ?token,
   });
 }
 
@@ -259,7 +292,8 @@ AuthService _auth() {
       if (request.method == 'GET' && request.url.path == '/api/profile') {
         return http.Response(_profile(''), 200);
       }
-      if (request.method == 'POST' && request.url.path == '/api/profile/password') {
+      if (request.method == 'POST' &&
+          request.url.path == '/api/profile/password') {
         return http.Response(jsonEncode({'message': 'Password updated.'}), 200);
       }
       final body = jsonDecode(request.body) as Map<String, dynamic>;
