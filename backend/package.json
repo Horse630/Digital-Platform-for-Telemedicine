@@ -1,0 +1,17 @@
+{
+  "name": "telemedicine-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Mongoose models and seed data for the telemedicine platform.",
+  "scripts": {
+    "seed": "node scripts/seed.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.6.1",
+    "mongoose": "^8.19.2"
+  }
+}

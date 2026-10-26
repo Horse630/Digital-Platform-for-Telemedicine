@@ -46,3 +46,11 @@ app.*.map.json
 
 # Widget Preview related
 .widget_preview/
+
+# Node backend
+backend/node_modules/
+
+# Atlas credentials. Commit backend/.env.example only, never a real .env.
+.env
+**/.env
+!**/.env.example
