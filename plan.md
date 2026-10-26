@@ -1,0 +1,124 @@
+# Handoff for the next coding session
+
+Read this file, then the source files it names. Do not invent screens, routes, packages, or database fields.
+
+If this file and the code disagree, trust the code, then correct this file. The first progress report describes the intended product. It is not a list of finished features. A schema file or a seed row is not a working screen.
+
+The student wants explanations in Traditional Chinese. Code comments, `README.md`, and this file stay in English. Do not commit `backend/.env`. Flutter must not open MongoDB. Do not put Atlas usernames, passwords, or connection strings in code, tests, README, or this file. Do not restore the old local `Admin` / `Admin` login.
+
+## Project
+
+Hong Kong Baptist University, COMP4878-9 Innovative Computing Project I. Project name: Digital Platform for Telemedicine. Student: Ma Chun Kit. Supervisor: Prof. LEUNG, Yiu Wing. The report is `MA_Chun_Kit_Frist_Progress_Report_23230215.docx` at the repository root. The filename spells "First" as "Frist". That report says Google Gemini was used only to edit the report's grammar and wording. That sentence is about the document, not about which code exists.
+
+The report's stack is Flutter and Dart for the app, MongoDB for storage, and a separate backend. The backend in this repository is Node.js, Express 5, and Mongoose. It is not a Dart server. An earlier attempt to rewrite the backend in Dart was stopped. Do not start that rewrite again unless the student asks.
+
+## How to run
+
+From `backend/`: `npm install`, then `npm start` (`node src/server.js`, port 3000). From the repository root: `flutter pub get`, then `flutter run`. Android emulator API base is `http://10.0.2.2:3000` (`lib/services/api_config.dart`). Chrome, desktop, and the iOS simulator use `http://localhost:3000`. A physical phone needs the computer's LAN address in that same file. Android allows cleartext HTTP. iOS allows local networking.
+
+Keep `MONGODB_URI` and `AUTH_TOKEN_SECRET` in `backend/.env`. Copy `backend/.env.example` and fill those values on each machine. Do not print those values, and do not commit `backend/.env`. The database name `telemedicine` is set in `backend/src/db.js`. It is not part of the URI.
+
+Demo application accounts, from `backend/scripts/seed.js`. These are not the Atlas login.
+
+| Role | Username | Password |
+| --- | --- | --- |
+| Admin | `admin` | `Admin123!` |
+| Doctor | `doctor` | `Doctor123!` |
+| Patient | `patient` | `Patient123!` |
+
+The doctor document also has specialty `General Practice` and license `DEMO-HK-DOCTOR-001`. The patient document has date of birth 20 May 1998. Passwords in MongoDB are bcrypt hashes (`bcryptjs`, 12 rounds). Login compares the typed password with `passwordHash`. It does not store or return the plain password.
+
+## Report schedule against the code
+
+The report's phases are the plan, not the current build.
+
+| Report phase | Report asked for | In the code now |
+| --- | --- | --- |
+| Phase 1, through late October | Login, patient dashboard, navigation, backend, MongoDB connection | Done. Settings was added later and is not in the report. |
+| Phase 2, November | Appointment scheduling, PayPal Sandbox, read-only sick-leave PDFs | Appointment scheduling is done. PayPal and PDF generation are not. |
+| Phase 3, December to January | Video SDK and Hong Kong Vector Map delivery tracking | Not started. No video or map package is installed. |
+| Phase 4, February to March | HKBU chatbot, discussion board, wearable health sync | Not started. Seed documents exist. The app does not load them. |
+| Phase 5, April | Full testing, UI polish, final report | Not started. `flutter test` covers the current screens with a fake HTTP client. Those tests do not prove Atlas is running. |
+
+## Done
+
+Login, shell, and theme:
+
+- `lib/screens/login_screen.dart` posts to `POST /api/login`. A failed login stays on that screen. Success replaces the route with `lib/screens/main_shell.dart`. **Create an account** opens `lib/screens/sign_up_screen.dart`.
+- `POST /api/signup` in `backend/src/server.js` accepts `email`, `username`, `password`, and `role`. `role` must be `patient` or `doctor`. It rejects `admin`. The username is checked without case sensitivity against `users`. A duplicate username returns 409, `That username is already used.` A duplicate email returns 409, `That email is already used.` The password must be at least 8 characters. The new document stores `fullName` as the username because sign-up does not ask for a separate name. Success returns the same JSON as login, including a token, and the app opens the shell.
+- Patient and doctor sign-up send the same fields. `User.js` no longer rejects a doctor who has no specialty or license number. The seeded doctor still has those values.
+- `POST /api/login` in `backend/src/server.js` trims the username, matches it without case sensitivity, checks bcrypt, and returns `username`, `role`, `fullName`, and `token`.
+- The token is an HMAC-SHA256 bearer token from `backend/src/authToken.js`. It is not produced by a JWT library. The payload keys are `sub`, `username`, `role`, and `exp`. It lasts 7 days. The secret is `AUTH_TOKEN_SECRET`.
+- Tabs are Home, Appointments, Consultation, and Profile (`lib/navigation/app_destination.dart`). Width under 840 uses a bottom bar. Width of 840 or more uses a side rail.
+- `GET /api/health` returns `{ "ok": true }`.
+- Light and dark mode, and the accent colors teal, blue, green, purple, and orange, are in `lib/theme/theme_settings.dart` and `lib/theme/app_theme.dart`. They are stored on the device with `shared_preferences`. MongoDB does not store them. The default is light teal.
+
+Appointments, the only clinical workflow that saves data:
+
+- Screen: `lib/screens/appointments_screen.dart`. Client: `lib/services/appointment_api.dart`. Routes: `backend/src/routes/appointments.js`.
+- A doctor creates a future slot with `POST /api/appointments` and body `{ "scheduledAt" }`. Status becomes `available`. A second slot for the same doctor at the same time returns 409.
+- A patient sees future `available` slots, including the doctor's name and specialty, plus appointments where that patient is the patient. Booking is `POST /api/appointments/:id/book` with `{ "reason" }`. The reason is 1 to 200 characters. Status becomes `scheduled`.
+- A patient cancel of a `scheduled` row sets it back to `available` and removes `patient` and `reason`. A doctor cancel of an `available` or `scheduled` row sets `cancelled`. An admin can read every row and cannot change one. There is no route that sets `completed`.
+- The home card "Next appointment" is the fixed text `Not scheduled` in `lib/screens/home_screen.dart`. It does not read the appointments API.
+- The booking design in the code is: the doctor publishes a time, and the patient books that time. Do not add a separate "pick a doctor, then contact that doctor" flow unless the student asks.
+
+Profile and settings, added after the report:
+
+- Profile is `lib/screens/profile_screen.dart`. Settings opens from the Settings button. It is not a fifth tab. Screen: `lib/screens/settings_screen.dart`. Client: `lib/services/profile_api.dart`. Routes: `backend/src/routes/profile.js`.
+- `GET /api/profile` returns `username`, `role`, `fullName`, `description`, `avatarBase64`, `avatarMime`, `specialties`, and `allergies`.
+- `PATCH /api/profile` updates username, description, and photo. Username is 3 to 40 characters and may contain letters, numbers, `.`, `_`, and `-`. Description is at most 280 characters. A photo must be JPEG, PNG, or WebP, at most 512 KB, stored as base64 without a data-url prefix. A username change returns a new `token`.
+- A doctor can select more than one type from this fixed list: General Practice, Family Medicine, Internal Medicine, Paediatrics, Obstetrics and Gynaecology, Surgery, Orthopaedics, Dermatology, Psychiatry, Ophthalmology, Otorhinolaryngology, Cardiology. The list is `DOCTOR_TYPES` in `backend/src/models/User.js` and `doctorTypes` in `lib/services/doctor_types.dart`. Keep those two lists identical. The chosen values are stored in `specialties`. `specialty` is the same names joined with commas so appointment rows can still show one string. A value outside the list is rejected.
+- A patient can type allergy names. Each name is at most 40 characters, and the list holds at most 20. Duplicates that differ only by letter case are stored once. They are stored in `allergies`. A doctor does not edit allergies, and a patient does not edit doctor types. An admin sees neither control.
+- `POST /api/profile/password` needs `currentPassword` and `newPassword`. The new password must be at least 8 characters and must differ from the current one. The response message is `Password updated.` The hash stays in MongoDB.
+- `backend/scripts/seed.js` updates the three demo users but does not clear `description`, `avatarBase64`, `specialties`, or `allergies`. If a doctor has no `specialties` yet but `specialty` is one of the fixed names, the settings page shows that one name as selected.
+
+Navigation placeholders:
+
+- Home lists the report's core and sub-functions. Appointments and Consultation open their tabs. Sick leave, Payment, Medication delivery, AI chatbot, Discussion, and IoT health open a dialog that says the service is not available yet (`lib/screens/home_screen.dart`). The dialog does not mention the database, the build, or sample data.
+- Consultation (`lib/screens/consultation_screen.dart`) says video visits are not available yet.
+
+## Not done
+
+Do not claim any of the following exist. Do not add their packages or routes unless the student asks.
+
+- No video call. `pubspec.yaml` does not depend on `agora_rtc_engine`, `stream_video_flutter`, or `videosdk`. The report names all three and does not pick one. `consultations` has a `channelName` string only. Seed row `demo-consultation` uses `demo-visit-1` and status `scheduled`. Status values in the schema are `scheduled`, `live`, and `ended`. Nothing in the app sets `live` or `ended`.
+- No PayPal call. `payments.provider` defaults to the string `paypal_sandbox`. Seed row `demo-payment` is HKD 200, purpose `consultation`, status `pending`. Schema statuses are `pending`, `paid`, and `failed`. Purposes are `consultation` and `delivery`. No payment route exists.
+- No PDF. `syncfusion_flutter_pdf` is not installed. `sick_leave_certificates` is a schema plus seed row `demo-sick-leave`, certificate number `SL-DEMO-0001`, `readOnly: true`. The app cannot open or generate it.
+- No map and no live delivery tracking. The Hong Kong Vector Map API is not called. Seed row `demo-delivery` is `Sample tablets`, quantity 1, status `preparing`, destination `Kowloon, Hong Kong`. Schema statuses are `preparing`, `in_transit`, and `delivered`.
+- No HKBU chatbot. Seed rows `demo-chat-user` and `demo-chat-assistant` are fixed sentences. Speakers in the schema are `user` and `assistant`. The app has no chat screen.
+- No discussion board. Seed row `demo-discussion` is a question about sample tablets, status `answered`, with one doctor comment `demo-comment`. The app has no discussion screen.
+- No wearable sync. The `health` package is not installed. Seed row `demo-heart-rate` is 72 bpm on 26 Oct 2026. Schema metrics are `heart_rate`, `steps`, and `blood_oxygen`. The app has no health screen.
+- No route creates, edits, or deletes consultations, certificates, payments, deliveries, chatbot messages, discussions, comments, or health readings. `server.js` mounts `/api/health`, `/api/login`, `/api/signup`, `/api/appointments`, and `/api/profile`.
+- The home dashboard does not load live appointment or delivery counts.
+- Phase 5 system testing and the final report are not done.
+
+## Collections
+
+MongoDB collections, not SQL tables. All of these model files are in `backend/src/models/`. `npm run seed` upserts the demo rows by username or `seedKey`. Running it again updates those same rows.
+
+| Collection | Used by the running app | What exists today |
+| --- | --- | --- |
+| `users` | Yes. Login, sign-up, profile, settings. | Three demo accounts, plus any account created from sign-up. Optional `description`, `avatarBase64`, `avatarMime`, `specialties`, and `allergies`. A self-signed-up doctor may have no specialty, specialties, or license. |
+| `appointments` | Yes. The appointments screen. | Seed: `demo-appointment` on 3 Nov 2026 at 02:00 UTC, status `scheduled`, reason `Sample sore throat visit`. Seed: `demo-open-slot` on 5 Nov 2026 at 02:00 UTC, status `available`. |
+| `consultations` | No | Schema and one seed row. |
+| `sick_leave_certificates` | No | Schema and one seed row. |
+| `payments` | No | Schema and one seed row. |
+| `deliveries` | No | Schema and one seed row. |
+| `chatbot_messages` | No | Schema and two seed rows. |
+| `discussions` | No | Schema and one seed row. |
+| `discussion_comments` | No | Schema and one seed row. |
+| `health_readings` | No | Schema and one seed row. |
+
+Atlas also has system databases such as `admin`, `config`, and `local`. Those are not this app. Another database on the same cluster, if present, is not this app. This app uses `telemedicine`.
+
+## Tests
+
+`flutter test` uses `MockClient`. It checks login validation, sign-up, the doctor dashboard, the empty appointment state, logout, the side rail, settings save, doctor type tags, allergy tags, dark mode, theme color, password confirmation, and avatar byte checks. A passing test does not mean `npm start` is running or that Atlas accepted a password.
+
+## To do
+
+- Change the doctor sign-up process. Sign-up is still the same form for a patient and a doctor: email, username, and password. Doctor type tags are chosen later in Settings from the fixed list above. Do not add a license number or an approval step to sign-up until the student asks. The seeded doctor account is separate and already has specialty `General Practice` and license `DEMO-HK-DOCTOR-001`.
+
+## Do not start unless the student asks
+
+PayPal, PDF certificates, a video SDK, the Vector Map, the HKBU chatbot, discussion threads, and wearable sync. Also do not rewrite the backend in Dart, do not connect Flutter to MongoDB, and do not invent a second appointment flow.
