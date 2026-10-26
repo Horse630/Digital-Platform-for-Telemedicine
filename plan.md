@@ -52,6 +52,7 @@ Login, shell, and theme:
 - Tabs are Home, Appointments, Consultation, and Profile (`lib/navigation/app_destination.dart`). Width under 840 uses a bottom bar. Width of 840 or more uses a side rail.
 - `GET /api/health` returns `{ "ok": true }`.
 - Light and dark mode, and the accent colors teal, blue, green, purple, and orange, are in `lib/theme/theme_settings.dart` and `lib/theme/app_theme.dart`. They are stored on the device with `shared_preferences`. MongoDB does not store them. The default is light teal.
+- The launcher icon is a teal medical cross with a white video camera. The source file is `assets/app_icon.png` (1024×1024). `flutter_launcher_icons` ^0.14.4 is a dev dependency. Its config is the `flutter_launcher_icons` block in `pubspec.yaml`. Run `dart run flutter_launcher_icons` from the repository root after changing that source file. It writes Android (`mipmap-*/ic_launcher.png`, adaptive icon `mipmap-anydpi-v26/ic_launcher.xml`, foreground drawables, and `values/colors.xml` color `#0F766E`), iOS (`ios/Runner/Assets.xcassets/AppIcon.appiconset`), web (`web/favicon.png`, `web/icons/Icon-*.png`, and `web/manifest.json` background and theme `#0F766E`), Windows (`windows/runner/resources/app_icon.ico`), and macOS (`macos/Runner/Assets.xcassets/AppIcon.appiconset`). Linux still uses the default icon. A hot restart does not replace an already installed launcher icon; run the app again.
 
 Appointments, the only clinical workflow that saves data:
 

@@ -41,6 +41,8 @@ flutter run -d chrome
 
 The Android emulator calls the API at `http://10.0.2.2:3000`. Chrome, desktop, and the iOS simulator use `http://localhost:3000`. A physical phone needs your computer's LAN address in `lib/services/api_config.dart`.
 
+The app icon is `assets/app_icon.png`, a teal medical cross with a video camera. Platform icon files are generated from that image.
+
 ## Screens
 
 - **Login** calls `POST /api/login` and opens the shell when MongoDB accepts the account. **Create an account** opens sign-up.
