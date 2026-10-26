@@ -28,6 +28,8 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   String _description = '';
   String _avatarBase64 = '';
+  List<String> _specialties = const [];
+  List<String> _allergies = const [];
 
   @override
   void initState() {
@@ -55,6 +57,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       setState(() {
         _description = details.description;
         _avatarBase64 = details.avatarBase64;
+        _specialties = details.specialties;
+        _allergies = details.allergies;
       });
     } on ProfileException {
       // The username from sign-in is still shown when the profile request fails.
@@ -102,6 +106,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
             if (_description.isNotEmpty) ...[
               const SizedBox(height: 12),
               Text(_description, textAlign: TextAlign.center),
+            ],
+            if (_specialties.isNotEmpty || _allergies.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              Wrap(
+                alignment: WrapAlignment.center,
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  for (final tag in widget.user.role == 'doctor'
+                      ? _specialties
+                      : _allergies)
+                    Chip(label: Text(tag)),
+                ],
+              ),
             ],
             const SizedBox(height: 24),
             Card(

@@ -15,6 +15,8 @@ class ProfileDetails {
     required this.description,
     required this.avatarBase64,
     required this.avatarMime,
+    this.specialties = const [],
+    this.allergies = const [],
     this.token,
   });
 
@@ -24,6 +26,8 @@ class ProfileDetails {
   final String description;
   final String avatarBase64;
   final String avatarMime;
+  final List<String> specialties;
+  final List<String> allergies;
   final String? token;
 
   factory ProfileDetails.fromJson(Map<String, dynamic> json) {
@@ -47,6 +51,8 @@ class ProfileDetails {
       avatarMime: json['avatarMime'] is String
           ? json['avatarMime'] as String
           : '',
+      specialties: _stringList(json['specialties']),
+      allergies: _stringList(json['allergies']),
       token: token is String && token.isNotEmpty ? token : null,
     );
   }
@@ -74,6 +80,8 @@ class ProfileApi {
     required String description,
     required String avatarBase64,
     required String avatarMime,
+    List<String> specialties = const [],
+    List<String> allergies = const [],
   }) {
     return _send(
       'PATCH',
@@ -83,6 +91,8 @@ class ProfileApi {
         'description': description.trim(),
         'avatarBase64': avatarBase64,
         'avatarMime': avatarMime,
+        'specialties': specialties,
+        'allergies': allergies,
       },
     );
   }
@@ -107,7 +117,7 @@ class ProfileApi {
   Future<ProfileDetails> _send(
     String method,
     String path, {
-    Map<String, String>? body,
+    Map<String, Object?>? body,
     bool messageOnly = false,
   }) async {
     final root = authService.baseUrl ?? apiBaseUrl;
@@ -186,4 +196,11 @@ class ProfileApi {
     }
     return 'The profile request failed.';
   }
+}
+
+List<String> _stringList(Object? value) {
+  if (value is! List) {
+    return const [];
+  }
+  return value.whereType<String>().toList();
 }

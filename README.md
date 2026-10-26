@@ -49,7 +49,7 @@ The Android emulator calls the API at `http://10.0.2.2:3000`. Chrome, desktop, a
 - **Appointments** lets a doctor add a future time slot. A patient sees open slots, including the doctor's name, and books one with a short reason. Cancelling a booking opens that slot again. An admin can read every row.
 - **Consultation** is an empty state until a video SDK is added.
 - **Profile** shows the database account, including a saved photo and description. It opens Settings and logs out.
-- **Settings** uploads a profile photo, changes the username, description, and password, and switches the UI color and dark mode. The photo and account fields are stored in MongoDB. Color and dark mode stay on the device.
+- **Settings** uploads a profile photo, changes the username, description, and password, and switches the UI color and dark mode. A doctor chooses one or more doctor types from a fixed list. A patient types allergy tags. The photo, account fields, doctor types, and allergies are stored in MongoDB. Color and dark mode stay on the device.
 
 On a phone the tabs sit in a bottom bar. When the window is at least 840 pixels wide, the same tabs move to a side rail.
 
@@ -63,6 +63,7 @@ lib/
   services/appointment_api.dart
   services/auth_service.dart
   services/avatar_image.dart
+  services/doctor_types.dart
   services/profile_api.dart
   theme/app_theme.dart
   theme/theme_settings.dart

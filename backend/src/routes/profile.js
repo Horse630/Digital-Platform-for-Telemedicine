@@ -43,11 +43,73 @@ function profileJson(user, token) {
     description: user.description || '',
     avatarBase64: user.avatarBase64 || '',
     avatarMime: user.avatarMime || '',
+    specialties: doctorTypes(user),
+    allergies: cleanStoredAllergies(user.allergies),
   };
   if (token) {
     body.token = token;
   }
   return body;
+}
+
+function doctorTypes(user) {
+  const stored = Array.isArray(user.specialties) ? user.specialties : [];
+  const chosen = stored.filter((item) => User.DOCTOR_TYPES.includes(item));
+  if (chosen.length > 0) {
+    return chosen;
+  }
+  if (User.DOCTOR_TYPES.includes(user.specialty)) {
+    return [user.specialty];
+  }
+  return [];
+}
+
+function cleanStoredAllergies(value) {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+  return value.filter((item) => typeof item === 'string' && item.trim());
+}
+
+function readSpecialties(value) {
+  if (!Array.isArray(value)) {
+    return { error: 'Choose doctor types from the list.' };
+  }
+  const chosen = [];
+  for (const item of value) {
+    if (!User.DOCTOR_TYPES.includes(item) || chosen.includes(item)) {
+      return { error: 'Choose doctor types from the list.' };
+    }
+    chosen.push(item);
+  }
+  return { specialties: chosen };
+}
+
+function readAllergies(value) {
+  if (!Array.isArray(value)) {
+    return { error: 'Enter allergies as a list.' };
+  }
+  if (value.length > 20) {
+    return { error: 'Keep the allergy list to 20 items.' };
+  }
+  const seen = new Set();
+  const allergies = [];
+  for (const item of value) {
+    if (typeof item !== 'string') {
+      return { error: 'Enter a short allergy name.' };
+    }
+    const name = item.trim();
+    if (!name || name.length > 40) {
+      return { error: 'Keep each allergy under 40 characters.' };
+    }
+    const key = name.toLowerCase();
+    if (seen.has(key)) {
+      continue;
+    }
+    seen.add(key);
+    allergies.push(name);
+  }
+  return { allergies };
 }
 
 function readAvatar(body) {
@@ -112,6 +174,25 @@ router.patch('/', requireUser, async (req, res) => {
   if (!avatar.skip) {
     req.user.avatarBase64 = avatar.avatarBase64;
     req.user.avatarMime = avatar.avatarMime;
+  }
+
+  if (req.user.role === 'doctor' && Object.prototype.hasOwnProperty.call(req.body || {}, 'specialties')) {
+    const specialties = readSpecialties(req.body.specialties);
+    if (specialties.error) {
+      res.status(400).json({ message: specialties.error });
+      return;
+    }
+    req.user.specialties = specialties.specialties;
+    req.user.specialty = specialties.specialties.join(', ');
+  }
+
+  if (req.user.role === 'patient' && Object.prototype.hasOwnProperty.call(req.body || {}, 'allergies')) {
+    const allergies = readAllergies(req.body.allergies);
+    if (allergies.error) {
+      res.status(400).json({ message: allergies.error });
+      return;
+    }
+    req.user.allergies = allergies.allergies;
   }
 
   try {

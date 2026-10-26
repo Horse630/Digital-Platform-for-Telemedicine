@@ -5,6 +5,22 @@ const mongoose = require('mongoose');
 const ROLES = ['admin', 'doctor', 'patient'];
 const BCRYPT_ROUNDS = 12;
 
+// Fixed choices for a doctor's type tags. Patients do not use this list.
+const DOCTOR_TYPES = [
+  'General Practice',
+  'Family Medicine',
+  'Internal Medicine',
+  'Paediatrics',
+  'Obstetrics and Gynaecology',
+  'Surgery',
+  'Orthopaedics',
+  'Dermatology',
+  'Psychiatry',
+  'Ophthalmology',
+  'Otorhinolaryngology',
+  'Cardiology',
+];
+
 const userSchema = new mongoose.Schema(
   {
     username: {
@@ -39,10 +55,15 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       match: [/^\S+@\S+\.\S+$/, 'Enter a valid email'],
     },
-    // Filled for doctors. Admin and patient documents leave these empty.
+    // One string kept for older appointment rows. Settings also stores specialties.
     specialty: {
       type: String,
       trim: true,
+    },
+    // Doctor type tags chosen in Settings. Only values from DOCTOR_TYPES.
+    specialties: {
+      type: [{ type: String, enum: DOCTOR_TYPES }],
+      default: [],
     },
     licenseNumber: {
       type: String,
@@ -51,6 +72,11 @@ const userSchema = new mongoose.Schema(
     // Filled for patients. Admin and doctor documents leave this empty.
     dateOfBirth: {
       type: Date,
+    },
+    // Allergy names typed by a patient in Settings.
+    allergies: {
+      type: [String],
+      default: [],
     },
     // Optional note the person writes on the settings page.
     description: {
@@ -97,5 +123,6 @@ userSchema.set('toJSON', {
 
 const User = mongoose.model('User', userSchema);
 User.ROLES = ROLES;
+User.DOCTOR_TYPES = DOCTOR_TYPES;
 
 module.exports = User;

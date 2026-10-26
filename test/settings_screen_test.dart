@@ -16,6 +16,7 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     var description = 'Clinic notes';
     String? savedUsername;
+    List<dynamic>? savedTypes;
 
     tester.view.physicalSize = const Size(800, 900);
     tester.view.devicePixelRatio = 1;
@@ -37,6 +38,7 @@ void main() {
               final body = jsonDecode(request.body) as Map<String, dynamic>;
               description = body['description'] as String;
               savedUsername = body['username'] as String;
+              savedTypes = body['specialties'] as List<dynamic>?;
               return http.Response(_profile(description, token: 'next-token'), 200);
             }
             final body = jsonDecode(request.body) as Map<String, dynamic>;
@@ -71,6 +73,9 @@ void main() {
 
     expect(find.text('Dark mode'), findsOneWidget);
     expect(find.text('Upload photo'), findsOneWidget);
+    await tester.ensureVisible(find.byKey(const Key('doctorType_Dermatology')));
+    await tester.tap(find.byKey(const Key('doctorType_Dermatology')));
+    await tester.pumpAndSettle();
 
     await tester.enterText(
       find.byKey(const Key('settingsDescriptionField')),
@@ -81,6 +86,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(savedUsername, 'doctor');
+    expect(savedTypes, contains('Dermatology'));
     expect(find.text('Profile saved.'), findsOneWidget);
 
     await tester.ensureVisible(find.byKey(const Key('darkModeSwitch')));
@@ -140,6 +146,85 @@ void main() {
 
     expect(find.text('Enter the same password twice.'), findsOneWidget);
     expect(find.text('Settings'), findsWidgets);
+  });
+
+  testWidgets('a patient can add an allergy tag', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    List<dynamic>? savedAllergies;
+    tester.view.physicalSize = const Size(800, 900);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      TelemedicineApp(
+        authService: AuthService(
+          baseUrl: 'http://localhost:3000',
+          client: MockClient((request) async {
+            if (request.method == 'GET' && request.url.path == '/api/appointments') {
+              return http.Response('[]', 200);
+            }
+            if (request.method == 'GET' && request.url.path == '/api/profile') {
+              return http.Response(_patientProfile(), 200);
+            }
+            if (request.method == 'PATCH' && request.url.path == '/api/profile') {
+              final body = jsonDecode(request.body) as Map<String, dynamic>;
+              savedAllergies = body['allergies'] as List<dynamic>?;
+              return http.Response(_patientProfile(allergies: savedAllergies), 200);
+            }
+            final body = jsonDecode(request.body) as Map<String, dynamic>;
+            if (body['username'] == 'patient' && body['password'] == 'Patient123!') {
+              return http.Response(_patientLogin(), 200);
+            }
+            return http.Response('{}', 401);
+          }),
+        ),
+      ),
+    );
+
+    await tester.enterText(find.byKey(const Key('usernameField')), 'patient');
+    await tester.enterText(find.byKey(const Key('passwordField')), 'Patient123!');
+    await tester.tap(find.byKey(const Key('loginButton')));
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.descendant(of: find.byType(NavigationBar), matching: find.text('Profile')),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('settingsButton')));
+    await tester.pumpAndSettle();
+
+    await tester.ensureVisible(find.byKey(const Key('allergyField')));
+    await tester.enterText(find.byKey(const Key('allergyField')), 'Peanuts');
+    await tester.tap(find.byKey(const Key('addAllergyButton')));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.byKey(const Key('saveProfileButton')));
+    await tester.tap(find.byKey(const Key('saveProfileButton')));
+    await tester.pumpAndSettle();
+
+    expect(savedAllergies, ['Peanuts']);
+    expect(find.text('Peanuts'), findsWidgets);
+  });
+}
+
+String _patientLogin() {
+  return jsonEncode({
+    'username': 'patient',
+    'role': 'patient',
+    'fullName': 'Demo Patient',
+    'token': 'patient-token',
+  });
+}
+
+String _patientProfile({List<dynamic>? allergies}) {
+  return jsonEncode({
+    'username': 'patient',
+    'role': 'patient',
+    'fullName': 'Demo Patient',
+    'description': '',
+    'avatarBase64': '',
+    'avatarMime': '',
+    'specialties': <String>[],
+    'allergies': allergies ?? <String>[],
   });
 }
 

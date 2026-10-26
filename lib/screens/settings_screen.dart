@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../services/auth_service.dart';
 import '../services/avatar_image.dart';
+import '../services/doctor_types.dart';
 import '../services/profile_api.dart';
 import '../theme/app_theme.dart';
 import '../theme/theme_settings.dart';
@@ -39,10 +40,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
   final _currentPassword = TextEditingController();
   final _newPassword = TextEditingController();
   final _confirmPassword = TextEditingController();
+  final _allergyInput = TextEditingController();
 
   late SignedInUser _user = widget.user;
   String _avatarBase64 = '';
   String _avatarMime = '';
+  List<String> _specialties = [];
+  List<String> _allergies = [];
   String? _profileError;
   String? _passwordError;
   bool _loading = true;
@@ -63,6 +67,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _currentPassword.dispose();
     _newPassword.dispose();
     _confirmPassword.dispose();
+    _allergyInput.dispose();
     super.dispose();
   }
 
@@ -82,6 +87,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _description.text = details.description;
       _avatarBase64 = details.avatarBase64;
       _avatarMime = details.avatarMime;
+      _specialties = List<String>.from(details.specialties);
+      _allergies = List<String>.from(details.allergies);
       _ready = true;
     } on ProfileException catch (error) {
       if (!mounted) {
@@ -135,6 +142,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         description: _description.text,
         avatarBase64: _avatarBase64,
         avatarMime: _avatarBase64.isEmpty ? '' : _avatarMime,
+        specialties: _specialties,
+        allergies: _allergies,
       );
       if (!mounted) {
         return;
@@ -145,6 +154,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       );
       _avatarBase64 = details.avatarBase64;
       _avatarMime = details.avatarMime;
+      _specialties = List<String>.from(details.specialties);
+      _allergies = List<String>.from(details.allergies);
       widget.onUserChanged(_user);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Profile saved.')),
@@ -348,6 +359,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 maxLines: 5,
                 maxLength: 280,
               ),
+              if (widget.user.role == 'doctor') _doctorTypes(),
+              if (widget.user.role == 'patient') _allergyEditor(),
               if (_profileError != null) ...[
                 const SizedBox(height: 8),
                 Text(
@@ -364,6 +377,124 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _doctorTypes() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8, bottom: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Doctor type', style: Theme.of(context).textTheme.titleSmall),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              for (final type in doctorTypes)
+                FilterChip(
+                  key: Key('doctorType_$type'),
+                  label: Text(type),
+                  selected: _specialties.contains(type),
+                  onSelected: _saving
+                      ? null
+                      : (selected) {
+                          setState(() {
+                            if (selected) {
+                              _specialties = [..._specialties, type];
+                            } else {
+                              _specialties = [
+                                for (final item in _specialties)
+                                  if (item != type) item,
+                              ];
+                            }
+                          });
+                        },
+                ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _addAllergy() {
+    final name = _allergyInput.text.trim();
+    if (name.isEmpty) {
+      return;
+    }
+    if (name.length > 40) {
+      setState(() => _profileError = 'Keep each allergy under 40 characters.');
+      return;
+    }
+    if (_allergies.length >= 20) {
+      setState(() => _profileError = 'Keep the allergy list to 20 items.');
+      return;
+    }
+    if (_allergies.any((item) => item.toLowerCase() == name.toLowerCase())) {
+      _allergyInput.clear();
+      return;
+    }
+    setState(() {
+      _allergies = [..._allergies, name];
+      _allergyInput.clear();
+      _profileError = null;
+    });
+  }
+
+  Widget _allergyEditor() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8, bottom: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Allergies', style: Theme.of(context).textTheme.titleSmall),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  key: const Key('allergyField'),
+                  controller: _allergyInput,
+                  decoration: const InputDecoration(hintText: 'Add an allergy'),
+                  textInputAction: TextInputAction.done,
+                  onSubmitted: (_) => _addAllergy(),
+                ),
+              ),
+              IconButton(
+                key: const Key('addAllergyButton'),
+                tooltip: 'Add allergy',
+                onPressed: _saving ? null : _addAllergy,
+                icon: const Icon(Icons.add),
+              ),
+            ],
+          ),
+          if (_allergies.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final allergy in _allergies)
+                  InputChip(
+                    label: Text(allergy),
+                    onDeleted: _saving
+                        ? null
+                        : () {
+                            setState(() {
+                              _allergies = [
+                                for (final item in _allergies)
+                                  if (item != allergy) item,
+                              ];
+                            });
+                          },
+                  ),
+              ],
+            ),
+          ],
+        ],
       ),
     );
   }

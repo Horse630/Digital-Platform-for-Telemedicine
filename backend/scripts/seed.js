@@ -61,8 +61,8 @@ const DEMO_COLLECTIONS = [
 
 async function upsertUser(account) {
   const passwordHash = await User.hashPassword(account.password);
-  // description and avatarBase64 are omitted on purpose. A later seed run
-  // must not wipe a photo or description saved from the settings page.
+  // description, avatarBase64, specialties, and allergies are omitted on purpose.
+  // A later seed run must not wipe profile edits from the settings page.
   const fields = {
     username: account.username,
     passwordHash,
