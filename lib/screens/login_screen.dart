@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import 'main_shell.dart';
 
-/// Demo sign-in screen.
+/// Sign-in screen.
 ///
-/// [AuthService] checks the account on this device. A match opens the
-/// signed-in shell. A mismatch stays on this screen.
+/// [AuthService] sends the username and password to the Node API, which
+/// checks them in MongoDB. A match opens the signed-in shell.
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  const LoginScreen({super.key, this.authService = const AuthService()});
+
+  final AuthService authService;
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -19,11 +21,11 @@ class _LoginScreenState extends State<LoginScreen> {
   final _username = TextEditingController();
   final _password = TextEditingController();
   final _passwordFocus = FocusNode();
-  final _auth = const AuthService();
 
   AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
   String? _errorMessage;
   bool _obscurePassword = true;
+  bool _submitting = false;
 
   @override
   void dispose() {
@@ -40,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => _errorMessage = null);
   }
 
-  void _submit() {
+  Future<void> _submit() async {
     final form = _formKey.currentState;
     if (form == null || !form.validate()) {
       setState(() {
@@ -50,20 +52,36 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    final signedInName = _auth.signIn(_username.text, _password.text);
-    if (signedInName == null) {
-      setState(() {
-        _errorMessage = 'Username or password is incorrect.';
-      });
-      return;
-    }
+    setState(() {
+      _submitting = true;
+      _errorMessage = null;
+    });
 
-    // Replace the login route so the system back button leaves the app.
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute<void>(
-        builder: (_) => MainShell(username: signedInName),
-      ),
-    );
+    try {
+      final user = await widget.authService.signIn(
+        _username.text,
+        _password.text,
+      );
+      if (!mounted) {
+        return;
+      }
+      // Replace the login route so the system back button leaves the app.
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute<void>(
+          builder: (_) =>
+              MainShell(user: user, authService: widget.authService),
+        ),
+      );
+    } on AuthException catch (error) {
+      if (!mounted) {
+        return;
+      }
+      setState(() => _errorMessage = error.message);
+    } finally {
+      if (mounted) {
+        setState(() => _submitting = false);
+      }
+    }
   }
 
   @override
@@ -222,12 +240,20 @@ class _LoginScreenState extends State<LoginScreen> {
                                 const SizedBox(height: 20),
                                 FilledButton(
                                   key: const Key('loginButton'),
-                                  onPressed: _submit,
-                                  child: const Text('Sign in'),
+                                  onPressed: _submitting ? null : _submit,
+                                  child: _submitting
+                                      ? const SizedBox(
+                                          height: 22,
+                                          width: 22,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                          ),
+                                        )
+                                      : const Text('Sign in'),
                                 ),
                                 const SizedBox(height: 16),
                                 Text(
-                                  'Demo sign-in until MongoDB is connected: Admin / Admin',
+                                  'Example: doctor / Doctor123! while the backend is running.',
                                   textAlign: TextAlign.center,
                                   style: Theme.of(context).textTheme.bodySmall
                                       ?.copyWith(

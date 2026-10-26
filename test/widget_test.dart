@@ -1,7 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/testing.dart';
 
 import 'package:digital_platform_for_telemedicine/main.dart';
+import 'package:digital_platform_for_telemedicine/services/auth_service.dart';
 
 void main() {
   testWidgets('empty sign-in asks for both fields', (tester) async {
@@ -17,13 +22,13 @@ void main() {
   testWidgets('a wrong password stays on the login screen', (tester) async {
     await _pumpPhone(tester);
 
-    await tester.enterText(find.byKey(const Key('usernameField')), 'Admin');
+    await tester.enterText(find.byKey(const Key('usernameField')), 'doctor');
     await tester.enterText(find.byKey(const Key('passwordField')), 'wrong');
     await tester.tap(find.byKey(const Key('loginButton')));
-    await tester.pump();
+    await tester.pumpAndSettle();
 
     expect(find.text('Username or password is incorrect.'), findsOneWidget);
-    expect(find.text('Welcome back, Admin'), findsNothing);
+    expect(find.text('Welcome back, Demo Doctor'), findsNothing);
   });
 
   testWidgets('Admin can open the dashboard, a tab, and log out', (
@@ -32,8 +37,8 @@ void main() {
     await _pumpPhone(tester);
     await _signIn(tester);
 
-    expect(find.text('Welcome back, Admin'), findsOneWidget);
-    expect(find.text('Patient dashboard'), findsOneWidget);
+    expect(find.text('Welcome back, Demo Doctor'), findsOneWidget);
+    expect(find.text('Doctor dashboard'), findsOneWidget);
 
     await tester.tap(
       find.descendant(
@@ -101,12 +106,35 @@ Future<void> _pumpSurface(WidgetTester tester, Size size) async {
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
-  await tester.pumpWidget(const TelemedicineApp());
+  await tester.pumpWidget(TelemedicineApp(authService: _testAuth()));
+}
+
+AuthService _testAuth() {
+  return AuthService(
+    baseUrl: 'http://localhost:3000',
+    client: MockClient((request) async {
+      final body = jsonDecode(request.body) as Map<String, dynamic>;
+      if (body['username'] == 'doctor' && body['password'] == 'Doctor123!') {
+        return http.Response(
+          jsonEncode({
+            'username': 'doctor',
+            'role': 'doctor',
+            'fullName': 'Demo Doctor',
+          }),
+          200,
+        );
+      }
+      return http.Response(
+        jsonEncode({'message': 'Username or password is incorrect.'}),
+        401,
+      );
+    }),
+  );
 }
 
 Future<void> _signIn(WidgetTester tester) async {
-  await tester.enterText(find.byKey(const Key('usernameField')), 'Admin');
-  await tester.enterText(find.byKey(const Key('passwordField')), 'Admin');
+  await tester.enterText(find.byKey(const Key('usernameField')), 'doctor');
+  await tester.enterText(find.byKey(const Key('passwordField')), 'Doctor123!');
   await tester.tap(find.byKey(const Key('loginButton')));
   await tester.pumpAndSettle();
 }

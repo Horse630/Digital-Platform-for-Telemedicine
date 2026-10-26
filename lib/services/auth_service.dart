@@ -1,22 +1,110 @@
-/// Local stand-in for a MongoDB user lookup.
-///
-/// Phase 1 has no database connection. [signIn] accepts one demo account
-/// so the login screen, home dashboard, and navigation can be tested.
-class AuthService {
-  const AuthService();
+import 'dart:async';
+import 'dart:convert';
 
-  static const demoUsername = 'Admin';
-  static const demoPassword = 'Admin';
+import 'package:http/http.dart' as http;
 
-  /// Returns the canonical username when the pair matches.
-  ///
-  /// Spaces around the username are ignored. The password is compared
-  /// exactly, including spaces. Returns null when the pair does not match.
-  String? signIn(String username, String password) {
-    final trimmedName = username.trim();
-    if (trimmedName == demoUsername && password == demoPassword) {
-      return demoUsername;
+import 'api_config.dart';
+
+/// Account returned by POST /api/login. The password hash stays on the server.
+class SignedInUser {
+  const SignedInUser({
+    required this.username,
+    required this.role,
+    required this.fullName,
+  });
+
+  final String username;
+  final String role;
+  final String fullName;
+
+  String get roleLabel {
+    switch (role) {
+      case 'admin':
+        return 'Admin';
+      case 'doctor':
+        return 'Doctor';
+      case 'patient':
+        return 'Patient';
+      default:
+        return role;
     }
-    return null;
+  }
+
+  String get dashboardLabel {
+    switch (role) {
+      case 'admin':
+        return 'Admin dashboard';
+      case 'doctor':
+        return 'Doctor dashboard';
+      default:
+        return 'Patient dashboard';
+    }
+  }
+}
+
+/// Shown on the login form when sign-in cannot finish.
+class AuthException implements Exception {
+  const AuthException(this.message);
+
+  final String message;
+}
+
+/// Asks the Node API to check a username and password in MongoDB.
+class AuthService {
+  const AuthService({this.client, this.baseUrl});
+
+  final http.Client? client;
+  final String? baseUrl;
+
+  static final http.Client _sharedClient = http.Client();
+
+  Future<SignedInUser> signIn(String username, String password) async {
+    final http.Client httpClient = client ?? _sharedClient;
+    final root = baseUrl ?? apiBaseUrl;
+
+    try {
+      final response = await httpClient
+          .post(
+            Uri.parse('$root/api/login'),
+            headers: const {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              'username': username.trim(),
+              'password': password,
+            }),
+          )
+          .timeout(const Duration(seconds: 8));
+
+      if (response.statusCode == 200) {
+        return _userFromBody(response.body);
+      }
+      if (response.statusCode == 401) {
+        throw const AuthException('Username or password is incorrect.');
+      }
+      throw const AuthException('Sign-in failed. Try again.');
+    } on AuthException {
+      rethrow;
+    } on TimeoutException {
+      throw const AuthException(
+        'Cannot reach the server. Start it with npm start in the backend folder.',
+      );
+    } catch (_error) {
+      throw const AuthException(
+        'Cannot reach the server. Start it with npm start in the backend folder.',
+      );
+    }
+  }
+
+  SignedInUser _userFromBody(String body) {
+    final decoded = jsonDecode(body);
+    if (decoded is! Map<String, dynamic>) {
+      throw const AuthException('Sign-in failed. Try again.');
+    }
+    final username = decoded['username'];
+    final role = decoded['role'];
+    final fullName = decoded['fullName'];
+    if (username is! String || role is! String || fullName is! String) {
+      throw const AuthException('Sign-in failed. Try again.');
+    }
+    return SignedInUser(username: username, role: role, fullName: fullName);
   }
 }

@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../services/auth_service.dart';
 import '../widgets/content_frame.dart';
 
-/// Shows the demo account and returns to the login screen.
+/// Shows the signed-in account and returns to the login screen.
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({
-    super.key,
-    required this.username,
-    required this.onLogout,
-  });
+  const ProfileScreen({super.key, required this.user, required this.onLogout});
 
-  final String username;
+  final SignedInUser user;
   final VoidCallback onLogout;
 
   @override
@@ -39,32 +36,28 @@ class ProfileScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              username,
+              user.fullName,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             const SizedBox(height: 4),
-            Text(
-              'Local demo account',
-              textAlign: TextAlign.center,
-              style: muted,
-            ),
+            Text(user.roleLabel, textAlign: TextAlign.center, style: muted),
             const SizedBox(height: 24),
-            const Card(
+            Card(
               child: Column(
                 children: [
                   ListTile(
-                    leading: Icon(Icons.storage_outlined),
-                    title: Text('Database'),
-                    subtitle: Text('MongoDB is not connected yet'),
-                  ),
-                  Divider(height: 1),
-                  ListTile(
-                    leading: Icon(Icons.phonelink_lock_outlined),
-                    title: Text('Sign-in check'),
-                    subtitle: Text(
-                      'The demo username and password are checked on this device',
+                    leading: const Icon(Icons.storage_outlined),
+                    title: const Text('Database'),
+                    subtitle: const Text(
+                      'Sign-in uses the telemedicine database',
                     ),
+                  ),
+                  const Divider(height: 1),
+                  ListTile(
+                    leading: const Icon(Icons.person_outline),
+                    title: const Text('Username'),
+                    subtitle: Text(user.username),
                   ),
                 ],
               ),

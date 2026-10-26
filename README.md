@@ -2,22 +2,31 @@
 
 Cross-platform telemedicine app for Hong Kong Baptist University COMP4878-9. It is meant to cover a remote visit and the logistics around it: appointments, video consultation, sick leave certificates, payment, and medication delivery.
 
-The frontend is Flutter and Dart. The screens still sign in with a local demo account. A Node backend in `backend/` stores sample documents in MongoDB Atlas. The Flutter app does not read that database yet.
+The frontend is Flutter and Dart. Sign-in calls a Node API in `backend/`, and that API checks the password against MongoDB Atlas. The other screens do not load the sample clinical records yet.
 
 ## Demo sign-in
 
-The login form checks one account stored in the app:
+Start the API first, then the app. The login form sends the username and password to `POST /api/login`. Spaces around the username are ignored. The password must match exactly. A failed attempt stays on the login screen.
 
-| Field | Value |
-| --- | --- |
-| Username | `Admin` |
-| Password | `Admin` |
+| Role | Username | Password |
+| --- | --- | --- |
+| Admin | `admin` | `Admin123!` |
+| Doctor | `doctor` | `Doctor123!` |
+| Patient | `patient` | `Patient123!` |
 
-The username may have spaces around it. The password must match exactly, including letter case. A failed attempt stays on the login screen. Logging out returns to that screen. Nothing is written to a database.
-
-When the Flutter app calls the backend, replace `AuthService.signIn` in `lib/services/auth_service.dart`.
+These are application accounts. They are not the Atlas login in `backend/.env`.
 
 ## Run
+
+In one PowerShell window:
+
+```powershell
+cd backend
+npm install
+npm start
+```
+
+In a second window, from the repository root:
 
 ```bash
 flutter pub get
@@ -30,13 +39,15 @@ Use an Android Studio emulator, a phone, or Chrome:
 flutter run -d chrome
 ```
 
+The Android emulator calls the API at `http://10.0.2.2:3000`. Chrome, desktop, and the iOS simulator use `http://localhost:3000`. A physical phone needs your computer's LAN address in `lib/services/api_config.dart`.
+
 ## Screens
 
-- **Login** checks the demo account above.
-- **Home** is the patient dashboard. It lists the core functions and sub-functions from the progress report. Appointments and Consultation open their tabs. The other modules explain that this build does not save data.
-- **Appointments** is an empty state until booking is stored.
+- **Login** calls `POST /api/login` and opens the shell when MongoDB accepts the account.
+- **Home** greets the signed-in person and lists the core functions and sub-functions from the progress report. Appointments and Consultation open their tabs. The other modules explain that this build does not save new data.
+- **Appointments** is an empty state until the screen reads the `appointments` collection.
 - **Consultation** is an empty state until a video SDK is added.
-- **Profile** shows the demo account and logs out.
+- **Profile** shows the database account and logs out.
 
 On a phone the tabs sit in a bottom bar. When the window is at least 840 pixels wide, the same tabs move to a side rail.
 
@@ -46,6 +57,7 @@ On a phone the tabs sit in a bottom bar. When the window is at least 840 pixels 
 lib/
   main.dart
   navigation/app_destination.dart
+  services/api_config.dart
   services/auth_service.dart
   theme/app_theme.dart
   screens/
@@ -62,6 +74,7 @@ backend/
   .env.example
   package.json
   scripts/seed.js
+  src/server.js
   src/db.js
   src/models/
     User.js
@@ -99,7 +112,7 @@ Atlas credentials belong only in `backend/.env`. Git ignores that file. `backend
 | `discussion_comments` | One doctor reply |
 | `health_readings` | Heart rate `72 bpm` |
 
-Refresh the Atlas collection list after seeding. The app still does not load these documents.
+Refresh the Atlas collection list after seeding. The login screen reads `users`. The other collections are not loaded by the app yet.
 
 ### Seed accounts
 

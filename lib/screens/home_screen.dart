@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../navigation/app_destination.dart';
+import '../services/auth_service.dart';
 import '../widgets/content_frame.dart';
 
 /// Patient dashboard.
@@ -9,9 +10,9 @@ import '../widgets/content_frame.dart';
 /// report. Appointments and Consultation open their tabs. Every other tile
 /// only explains that the module does not save data yet.
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key, required this.username, required this.onOpen});
+  const HomeScreen({super.key, required this.user, required this.onOpen});
 
-  final String username;
+  final SignedInUser user;
   final ValueChanged<AppDestination> onOpen;
 
   static const _coreModules = <_Module>[
@@ -82,12 +83,12 @@ class HomeScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              'Welcome back, $username',
+              'Welcome back, ${user.fullName}',
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             const SizedBox(height: 4),
             Text(
-              'Patient dashboard',
+              user.dashboardLabel,
               style: Theme.of(context).textTheme.bodyMedium
                   ?.copyWith(color: scheme.onSurfaceVariant),
             ),
@@ -106,7 +107,7 @@ class HomeScreen extends StatelessWidget {
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        'Signed in with the local demo account. MongoDB is not connected yet.',
+                        'Signed in through the database. The modules below are still sample entries.',
                         style: TextStyle(color: scheme.onSecondaryContainer),
                       ),
                     ),

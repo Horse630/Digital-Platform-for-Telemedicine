@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../navigation/app_destination.dart';
+import '../services/auth_service.dart';
 import 'appointments_screen.dart';
 import 'consultation_screen.dart';
 import 'home_screen.dart';
@@ -13,9 +14,10 @@ import 'profile_screen.dart';
 /// wide use a side rail, so the same pages work on a handset and on a
 /// desktop browser.
 class MainShell extends StatefulWidget {
-  const MainShell({super.key, required this.username});
+  const MainShell({super.key, required this.user, required this.authService});
 
-  final String username;
+  final SignedInUser user;
+  final AuthService authService;
 
   static const railBreakpoint = 840.0;
 
@@ -32,20 +34,22 @@ class _MainShellState extends State<MainShell> {
 
   void _logout() {
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute<void>(builder: (_) => const LoginScreen()),
+      MaterialPageRoute<void>(
+        builder: (_) => LoginScreen(authService: widget.authService),
+      ),
     );
   }
 
   Widget _pageFor(AppDestination destination) {
     switch (destination) {
       case AppDestination.home:
-        return HomeScreen(username: widget.username, onOpen: _select);
+        return HomeScreen(user: widget.user, onOpen: _select);
       case AppDestination.appointments:
         return const AppointmentsScreen();
       case AppDestination.consultation:
         return const ConsultationScreen();
       case AppDestination.profile:
-        return ProfileScreen(username: widget.username, onLogout: _logout);
+        return ProfileScreen(user: widget.user, onLogout: _logout);
     }
   }
 
