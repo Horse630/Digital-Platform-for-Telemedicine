@@ -27,6 +27,13 @@ class MainShell extends StatefulWidget {
 
 class _MainShellState extends State<MainShell> {
   int _index = AppDestination.home.index;
+  late SignedInUser _user;
+
+  @override
+  void initState() {
+    super.initState();
+    _user = widget.user;
+  }
 
   void _select(AppDestination destination) {
     setState(() => _index = destination.index);
@@ -40,19 +47,28 @@ class _MainShellState extends State<MainShell> {
     );
   }
 
+  void _applyUser(SignedInUser user) {
+    setState(() => _user = user);
+  }
+
   Widget _pageFor(AppDestination destination) {
     switch (destination) {
       case AppDestination.home:
-        return HomeScreen(user: widget.user, onOpen: _select);
+        return HomeScreen(user: _user, onOpen: _select);
       case AppDestination.appointments:
         return AppointmentsScreen(
-          user: widget.user,
+          user: _user,
           authService: widget.authService,
         );
       case AppDestination.consultation:
         return const ConsultationScreen();
       case AppDestination.profile:
-        return ProfileScreen(user: widget.user, onLogout: _logout);
+        return ProfileScreen(
+          user: _user,
+          authService: widget.authService,
+          onLogout: _logout,
+          onUserChanged: _applyUser,
+        );
     }
   }
 

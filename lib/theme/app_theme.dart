@@ -1,19 +1,46 @@
 import 'package:flutter/material.dart';
 
-/// Clinical teal theme shared by every screen.
+/// One accent the settings page can apply to the whole app.
+class ThemeChoice {
+  const ThemeChoice(this.name, this.color);
+
+  final String name;
+  final Color color;
+}
+
+/// Clinical theme shared by every screen.
 class AppTheme {
   const AppTheme._();
 
   static const seed = Color(0xFF0F766E);
 
-  static ThemeData get light {
-    final scheme = ColorScheme.fromSeed(seedColor: seed);
+  static const choices = <ThemeChoice>[
+    ThemeChoice('Teal', Color(0xFF0F766E)),
+    ThemeChoice('Blue', Color(0xFF1D4ED8)),
+    ThemeChoice('Green', Color(0xFF15803D)),
+    ThemeChoice('Purple', Color(0xFF6D28D9)),
+    ThemeChoice('Orange', Color(0xFFC2410C)),
+  ];
+
+  static ThemeData get light => themed(Brightness.light, seed);
+
+  static ThemeData themed(Brightness brightness, Color seedColor) {
+    final scheme = ColorScheme.fromSeed(
+      seedColor: seedColor,
+      brightness: brightness,
+    );
     final border = OutlineInputBorder(borderRadius: BorderRadius.circular(12));
+    final scaffold = brightness == Brightness.dark
+        ? scheme.surface
+        : Color.alphaBlend(
+            seedColor.withValues(alpha: 0.08),
+            const Color(0xFFF7F7F7),
+          );
 
     return ThemeData(
       useMaterial3: true,
       colorScheme: scheme,
-      scaffoldBackgroundColor: const Color(0xFFF4F7F7),
+      scaffoldBackgroundColor: scaffold,
       appBarTheme: AppBarTheme(
         centerTitle: false,
         backgroundColor: scheme.surface,

@@ -57,6 +57,8 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Log out'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Log out'));
     await tester.pumpAndSettle();
 
@@ -115,6 +117,19 @@ AuthService _testAuth() {
     client: MockClient((request) async {
       if (request.method == 'GET' && request.url.path == '/api/appointments') {
         return http.Response('[]', 200);
+      }
+      if (request.method == 'GET' && request.url.path == '/api/profile') {
+        return http.Response(
+          jsonEncode({
+            'username': 'doctor',
+            'role': 'doctor',
+            'fullName': 'Demo Doctor',
+            'description': '',
+            'avatarBase64': '',
+            'avatarMime': '',
+          }),
+          200,
+        );
       }
       final body = jsonDecode(request.body) as Map<String, dynamic>;
       if (body['username'] == 'doctor' && body['password'] == 'Doctor123!') {

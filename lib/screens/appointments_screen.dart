@@ -22,10 +22,8 @@ class AppointmentsScreen extends StatefulWidget {
 }
 
 class _AppointmentsScreenState extends State<AppointmentsScreen> {
-  late final AppointmentApi _api = AppointmentApi(
-    authService: widget.authService,
-    token: widget.user.token,
-  );
+  // Replaced when settings issues a new token after a username change.
+  late AppointmentApi _api;
 
   List<AppointmentRecord> _appointments = const [];
   bool _loading = true;
@@ -34,7 +32,20 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
   @override
   void initState() {
     super.initState();
+    _api = _apiFor(widget.user.token);
     _load();
+  }
+
+  @override
+  void didUpdateWidget(covariant AppointmentsScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.user.token != widget.user.token) {
+      _api = _apiFor(widget.user.token);
+    }
+  }
+
+  AppointmentApi _apiFor(String token) {
+    return AppointmentApi(authService: widget.authService, token: token);
   }
 
   Future<void> _load() async {

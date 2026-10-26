@@ -47,7 +47,8 @@ The Android emulator calls the API at `http://10.0.2.2:3000`. Chrome, desktop, a
 - **Home** greets the signed-in person and lists the core functions and sub-functions from the progress report. Appointments and Consultation open their tabs. The other modules explain that this build does not save new data.
 - **Appointments** lets a doctor add a future time slot. A patient sees open slots, including the doctor's name, and books one with a short reason. Cancelling a booking opens that slot again. An admin can read every row.
 - **Consultation** is an empty state until a video SDK is added.
-- **Profile** shows the database account and logs out.
+- **Profile** shows the database account, including a saved photo and description. It opens Settings and logs out.
+- **Settings** uploads a profile photo, changes the username, description, and password, and switches the UI color and dark mode. The photo and account fields are stored in MongoDB. Color and dark mode stay on the device.
 
 On a phone the tabs sit in a bottom bar. When the window is at least 840 pixels wide, the same tabs move to a side rail.
 
@@ -60,7 +61,10 @@ lib/
   services/api_config.dart
   services/appointment_api.dart
   services/auth_service.dart
+  services/avatar_image.dart
+  services/profile_api.dart
   theme/app_theme.dart
+  theme/theme_settings.dart
   screens/
     login_screen.dart
     main_shell.dart
@@ -68,7 +72,9 @@ lib/
     appointments_screen.dart
     consultation_screen.dart
     profile_screen.dart
+    settings_screen.dart
   widgets/
+    account_avatar.dart
     content_frame.dart
     status_placeholder.dart
 backend/
@@ -79,6 +85,7 @@ backend/
   src/authToken.js
   src/db.js
   src/routes/appointments.js
+  src/routes/profile.js
   src/models/
     User.js
     Appointment.js
@@ -94,7 +101,9 @@ backend/
 
 ## Backend
 
-Node code lives in `backend/`. MongoDB stores collections, not SQL tables. Each file in `backend/src/models/` describes one collection. Doctor, Patient, and Admin share `users`, and `role` is `doctor`, `patient`, or `admin`. Passwords in `users` are bcrypt hashes.
+Node code lives in `backend/`. MongoDB stores collections, not SQL tables. Each file in `backend/src/models/` describes one collection. Doctor, Patient, and Admin share `users`, and `role` is `doctor`, `patient`, or `admin`. Passwords in `users` are bcrypt hashes. A person can also store a description and a profile photo on that same document. The photo is base64 text, limited to a JPEG, PNG, or WebP under 512 KB.
+
+`GET /api/profile` and `PATCH /api/profile` read and update the username, description, and photo for the signed-in account. `POST /api/profile/password` checks the current password, then stores a new bcrypt hash. Changing the username returns a new bearer token. UI color and dark mode are not sent to the API.
 
 `backend/scripts/seed.js` is the starter-data script. It connects with `process.env.MONGODB_URI` and writes the sample rows below. Running it again updates those same rows. That script belongs in the project.
 
@@ -104,7 +113,7 @@ Atlas credentials belong only in `backend/.env`. Git ignores that file. `backend
 
 | Collection | Sample record |
 | --- | --- |
-| `users` | `admin`, `doctor`, and `patient` |
+| `users` | `admin`, `doctor`, and `patient`. Description and profile photo are empty until someone saves them in Settings. |
 | `appointments` | One booked sample visit on 3 Nov 2026, plus one open slot on 5 Nov 2026 |
 | `consultations` | Video visit `demo-visit-1`, status `scheduled` |
 | `sick_leave_certificates` | `SL-DEMO-0001`, marked read-only |
@@ -115,7 +124,7 @@ Atlas credentials belong only in `backend/.env`. Git ignores that file. `backend
 | `discussion_comments` | One doctor reply |
 | `health_readings` | Heart rate `72 bpm` |
 
-Refresh the Atlas collection list after seeding. Login reads `users`. The appointment screen reads and writes `appointments`. The other collections are not loaded by the app yet.
+Refresh the Atlas collection list after seeding. Login reads `users`. The appointment screen reads and writes `appointments`. Settings reads and writes the signed-in user's username, description, photo, and password hash. The other collections are not loaded by the app yet.
 
 `POST /api/login` also returns a bearer token. Appointment requests send `Authorization: Bearer <token>`. The token secret is `AUTH_TOKEN_SECRET` in `backend/.env`, separate from the Atlas password.
 
@@ -157,4 +166,4 @@ flutter test
 
 ## Later phases
 
-The collections above are sample storage only. Phase 2 adds appointment booking, PayPal Sandbox, and read-only sick leave PDFs. Video, the delivery map, the chatbot, discussion, and wearable sync come after that. The home screen entries are still navigation targets in this build.
+Appointment booking and the settings page are in this build. PayPal Sandbox, read-only sick leave PDFs, video, the delivery map, the chatbot, discussion, and wearable sync are not connected yet. The home screen entries for those modules are still navigation targets.

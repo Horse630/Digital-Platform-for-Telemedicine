@@ -52,6 +52,24 @@ const userSchema = new mongoose.Schema(
     dateOfBirth: {
       type: Date,
     },
+    // Optional note the person writes on the settings page.
+    description: {
+      type: String,
+      trim: true,
+      maxlength: 280,
+      default: '',
+    },
+    // Profile photo as base64, without a data-url prefix. Empty when unset.
+    avatarBase64: {
+      type: String,
+      default: '',
+      maxlength: 700000,
+    },
+    avatarMime: {
+      type: String,
+      enum: ['', 'image/jpeg', 'image/png', 'image/webp'],
+      default: '',
+    },
   },
   {
     collection: 'users',

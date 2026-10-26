@@ -19,6 +19,16 @@ class SignedInUser {
   final String fullName;
   final String token;
 
+  /// Used after the settings page changes the username or receives a new token.
+  SignedInUser copyWith({String? username, String? token}) {
+    return SignedInUser(
+      username: username ?? this.username,
+      role: role,
+      fullName: fullName,
+      token: token ?? this.token,
+    );
+  }
+
   String get roleLabel {
     switch (role) {
       case 'admin':
