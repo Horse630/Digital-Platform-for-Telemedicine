@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../services/auth_service.dart';
 import 'main_shell.dart';
+import 'sign_up_screen.dart';
 
 /// Sign-in screen.
 ///
@@ -82,6 +83,14 @@ class _LoginScreenState extends State<LoginScreen> {
         setState(() => _submitting = false);
       }
     }
+  }
+
+  void _openSignUp() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => SignUpScreen(authService: widget.authService),
+      ),
+    );
   }
 
   @override
@@ -251,14 +260,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                         )
                                       : const Text('Sign in'),
                                 ),
-                                const SizedBox(height: 16),
-                                Text(
-                                  'Example: doctor / Doctor123! while the backend is running.',
-                                  textAlign: TextAlign.center,
-                                  style: Theme.of(context).textTheme.bodySmall
-                                      ?.copyWith(
-                                        color: scheme.onSurfaceVariant,
-                                      ),
+                                const SizedBox(height: 8),
+                                TextButton(
+                                  key: const Key('createAccountButton'),
+                                  onPressed: _submitting ? null : _openSignUp,
+                                  child: const Text('Create an account'),
                                 ),
                               ],
                             ),

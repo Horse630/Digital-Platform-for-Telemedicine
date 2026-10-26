@@ -61,6 +61,77 @@ function escapeRegex(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+const USERNAME_PATTERN = /^[A-Za-z0-9._-]{3,40}$/;
+const EMAIL_PATTERN = /^\S+@\S+\.\S+$/;
+
+// Creates a patient or a doctor. Admin accounts are not created here.
+// Both roles send the same fields until doctor sign-up collects a license.
+app.post('/api/signup', async (req, res) => {
+  const username =
+    typeof req.body?.username === 'string' ? req.body.username.trim() : '';
+  const email = typeof req.body?.email === 'string' ? req.body.email.trim().toLowerCase() : '';
+  const password = typeof req.body?.password === 'string' ? req.body.password : '';
+  const role = typeof req.body?.role === 'string' ? req.body.role : '';
+
+  if (role !== 'patient' && role !== 'doctor') {
+    res.status(400).json({ message: 'Choose patient or doctor.' });
+    return;
+  }
+  if (!USERNAME_PATTERN.test(username)) {
+    res.status(400).json({
+      message: 'Use 3 to 40 letters, numbers, dots, underscores, or hyphens.',
+    });
+    return;
+  }
+  if (!EMAIL_PATTERN.test(email)) {
+    res.status(400).json({ message: 'Enter a valid email.' });
+    return;
+  }
+  if (password.length < 8) {
+    res.status(400).json({ message: 'Use at least 8 characters.' });
+    return;
+  }
+
+  try {
+    const takenName = await User.findOne({
+      username: new RegExp(`^${escapeRegex(username)}$`, 'i'),
+    });
+    if (takenName) {
+      res.status(409).json({ message: 'That username is already used.' });
+      return;
+    }
+    const takenEmail = await User.findOne({ email });
+    if (takenEmail) {
+      res.status(409).json({ message: 'That email is already used.' });
+      return;
+    }
+
+    const user = await User.create({
+      username,
+      email,
+      passwordHash: await User.hashPassword(password),
+      role,
+      fullName: username,
+    });
+    res.status(201).json({
+      username: user.username,
+      role: user.role,
+      fullName: user.fullName,
+      token: signToken(user),
+    });
+  } catch (error) {
+    if (error && error.code === 11000) {
+      const keys = error.keyPattern || {};
+      const message = keys.email
+        ? 'That email is already used.'
+        : 'That username is already used.';
+      res.status(409).json({ message });
+      return;
+    }
+    res.status(400).json({ message: 'Could not create the account.' });
+  }
+});
+
 app.use((error, _req, res, _next) => {
   const message = error && error.message ? error.message : 'Request failed';
   console.error(message.replace(/mongodb(\+srv)?:\/\/\S+/gi, 'mongodb://***'));

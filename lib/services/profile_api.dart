@@ -138,14 +138,14 @@ class ProfileApi {
       rethrow;
     } on TimeoutException {
       throw const ProfileException(
-        'Cannot reach the server. Start it with npm start in the backend folder.',
+        'Cannot reach the service. Check your connection and try again.',
       );
     } catch (error) {
       if (error is ProfileException) {
         rethrow;
       }
       throw const ProfileException(
-        'Cannot reach the server. Start it with npm start in the backend folder.',
+        'Cannot reach the service. Check your connection and try again.',
       );
     }
   }
@@ -182,7 +182,7 @@ class ProfileApi {
       // A failed response may have an empty body.
     }
     if (statusCode == 404) {
-      return 'The account service is not available. Stop the old API and run npm start again in the backend folder.';
+      return 'The account service is not available. Try again later.';
     }
     return 'The profile request failed.';
   }

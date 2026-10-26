@@ -14,7 +14,7 @@ class ConsultationScreen extends StatelessWidget {
     return const StatusPlaceholder(
       icon: Icons.videocam_off_outlined,
       title: 'Video visits are not available yet',
-      message: 'A video SDK will be connected in a later phase.',
+      message: 'You can book a time now. The video call will open here when it is ready.',
     );
   }
 }

@@ -97,11 +97,55 @@ class AuthService {
       rethrow;
     } on TimeoutException {
       throw const AuthException(
-        'Cannot reach the server. Start it with npm start in the backend folder.',
+        'Cannot reach the service. Check your connection and try again.',
       );
     } catch (_error) {
       throw const AuthException(
-        'Cannot reach the server. Start it with npm start in the backend folder.',
+        'Cannot reach the service. Check your connection and try again.',
+      );
+    }
+  }
+
+  /// Creates a patient or doctor account, then returns the signed-in user.
+  ///
+  /// Patient and doctor send the same fields. The server rejects a username
+  /// that already exists, ignoring letter case.
+  Future<SignedInUser> signUp({
+    required String email,
+    required String username,
+    required String password,
+    required String role,
+  }) async {
+    final http.Client httpClient = client ?? sharedClient;
+    final root = baseUrl ?? apiBaseUrl;
+
+    try {
+      final response = await httpClient
+          .post(
+            Uri.parse('$root/api/signup'),
+            headers: const {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              'email': email.trim(),
+              'username': username.trim(),
+              'password': password,
+              'role': role,
+            }),
+          )
+          .timeout(const Duration(seconds: 8));
+
+      if (response.statusCode == 201) {
+        return _userFromBody(response.body);
+      }
+      throw AuthException(_message(response.body, 'Could not create the account.'));
+    } on AuthException {
+      rethrow;
+    } on TimeoutException {
+      throw const AuthException(
+        'Cannot reach the service. Check your connection and try again.',
+      );
+    } catch (_error) {
+      throw const AuthException(
+        'Cannot reach the service. Check your connection and try again.',
       );
     }
   }
@@ -128,5 +172,17 @@ class AuthService {
       fullName: fullName,
       token: token,
     );
+  }
+
+  String _message(String body, String fallback) {
+    try {
+      final decoded = jsonDecode(body);
+      if (decoded is Map<String, dynamic> && decoded['message'] is String) {
+        return decoded['message'] as String;
+      }
+    } catch (_error) {
+      // A failed response may have an empty body.
+    }
+    return fallback;
   }
 }

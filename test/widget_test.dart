@@ -65,7 +65,7 @@ void main() {
     expect(find.widgetWithText(FilledButton, 'Sign in'), findsOneWidget);
   });
 
-  testWidgets('a later-phase module explains that it does not save data', (
+  testWidgets('an unavailable service tells the person to wait', (
     tester,
   ) async {
     await _pumpPhone(tester);
@@ -79,7 +79,7 @@ void main() {
 
     expect(
       find.text(
-        'This module is on the project schedule. This build only shows the entry point and does not save data.',
+        'This service is not available yet.',
       ),
       findsOneWidget,
     );

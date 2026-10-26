@@ -43,7 +43,8 @@ The Android emulator calls the API at `http://10.0.2.2:3000`. Chrome, desktop, a
 
 ## Screens
 
-- **Login** calls `POST /api/login` and opens the shell when MongoDB accepts the account.
+- **Login** calls `POST /api/login` and opens the shell when MongoDB accepts the account. **Create an account** opens sign-up.
+- **Sign up** asks for an email, username, and password, and a choice of patient or doctor. Both roles use those same fields. The API rejects a username that is already stored.
 - **Home** greets the signed-in person and lists the core functions and sub-functions from the progress report. Appointments and Consultation open their tabs. The other modules explain that this build does not save new data.
 - **Appointments** lets a doctor add a future time slot. A patient sees open slots, including the doctor's name, and books one with a short reason. Cancelling a booking opens that slot again. An admin can read every row.
 - **Consultation** is an empty state until a video SDK is added.
@@ -67,6 +68,7 @@ lib/
   theme/theme_settings.dart
   screens/
     login_screen.dart
+    sign_up_screen.dart
     main_shell.dart
     home_screen.dart
     appointments_screen.dart

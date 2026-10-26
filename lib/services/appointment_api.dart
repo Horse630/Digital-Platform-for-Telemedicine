@@ -133,14 +133,14 @@ class AppointmentApi {
       rethrow;
     } on TimeoutException {
       throw const AppointmentException(
-        'Cannot reach the server. Start it with npm start in the backend folder.',
+        'Cannot reach the service. Check your connection and try again.',
       );
     } catch (error) {
       if (error is AppointmentException) {
         rethrow;
       }
       throw const AppointmentException(
-        'Cannot reach the server. Start it with npm start in the backend folder.',
+        'Cannot reach the service. Check your connection and try again.',
       );
     }
   }

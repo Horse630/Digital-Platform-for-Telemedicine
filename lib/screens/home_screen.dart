@@ -92,29 +92,6 @@ class HomeScreen extends StatelessWidget {
               style: Theme.of(context).textTheme.bodyMedium
                   ?.copyWith(color: scheme.onSurfaceVariant),
             ),
-            const SizedBox(height: 16),
-            Material(
-              color: scheme.secondaryContainer,
-              borderRadius: BorderRadius.circular(12),
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.info_outline,
-                      color: scheme.onSecondaryContainer,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        'Appointments are saved in the database. The other modules are still sample entries.',
-                        style: TextStyle(color: scheme.onSecondaryContainer),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
             const SizedBox(height: 24),
             const _SectionHeader('Overview'),
             LayoutBuilder(
@@ -350,7 +327,7 @@ void _showPendingModule(BuildContext context, String title) {
       return AlertDialog(
         title: Text(title),
         content: const Text(
-          'This module is on the project schedule. This build only shows the entry point and does not save data.',
+          'This service is not available yet.',
         ),
         actions: [
           TextButton(

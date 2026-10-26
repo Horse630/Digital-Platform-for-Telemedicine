@@ -66,9 +66,64 @@ void main() {
         isA<AuthException>().having(
           (error) => error.message,
           'message',
-          contains('npm start'),
+          contains('Check your connection'),
         ),
       ),
     );
+  });
+
+  test('posts a new account and rejects a username that is already used', () async {
+    late Map<String, dynamic> sent;
+    final auth = AuthService(
+      baseUrl: 'http://example.test',
+      client: MockClient((request) async {
+        sent = jsonDecode(request.body) as Map<String, dynamic>;
+        if (sent['username'] == 'doctor') {
+          return http.Response(
+            jsonEncode({'message': 'That username is already used.'}),
+            409,
+          );
+        }
+        return http.Response(
+          jsonEncode({
+            'username': sent['username'],
+            'role': sent['role'],
+            'fullName': sent['username'],
+            'token': 'new-token',
+          }),
+          201,
+        );
+      }),
+    );
+
+    await expectLater(
+      auth.signUp(
+        email: 'doctor@telemedicine.local',
+        username: 'doctor',
+        password: 'Doctor123!',
+        role: 'doctor',
+      ),
+      throwsA(
+        isA<AuthException>().having(
+          (error) => error.message,
+          'message',
+          'That username is already used.',
+        ),
+      ),
+    );
+
+    final user = await auth.signUp(
+      email: 'new@telemedicine.local',
+      username: 'newperson',
+      password: 'NewPass123',
+      role: 'patient',
+    );
+
+    expect(sent['email'], 'new@telemedicine.local');
+    expect(sent['username'], 'newperson');
+    expect(sent['password'], 'NewPass123');
+    expect(sent['role'], 'patient');
+    expect(user.username, 'newperson');
+    expect(user.token, 'new-token');
   });
 }

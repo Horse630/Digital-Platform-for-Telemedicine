@@ -77,18 +77,8 @@ const userSchema = new mongoose.Schema(
   },
 );
 
-userSchema.pre('validate', function checkDoctorFields() {
-  if (this.role !== 'doctor') {
-    return;
-  }
-  if (!this.specialty) {
-    this.invalidate('specialty', 'A doctor needs a specialty');
-  }
-  if (!this.licenseNumber) {
-    this.invalidate('licenseNumber', 'A doctor needs a license number');
-  }
-});
-
+// Specialty and license are optional for now. Patient and doctor sign-up
+// use the same fields. A later doctor sign-up step should require them.
 userSchema.statics.hashPassword = function hashPassword(plainPassword) {
   return bcrypt.hash(plainPassword, BCRYPT_ROUNDS);
 };

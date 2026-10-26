@@ -108,12 +108,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Column(
                 children: [
                   ListTile(
-                    leading: const Icon(Icons.storage_outlined),
-                    title: const Text('Database'),
-                    subtitle: const Text('Sign-in uses the telemedicine database'),
-                  ),
-                  const Divider(height: 1),
-                  ListTile(
                     leading: const Icon(Icons.person_outline),
                     title: const Text('Username'),
                     subtitle: Text(widget.user.username),
