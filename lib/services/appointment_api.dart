@@ -15,6 +15,7 @@ class AppointmentRecord {
     required this.reason,
     required this.doctorName,
     required this.doctorSpecialty,
+    required this.doctorTypes,
     required this.patientName,
   });
 
@@ -24,6 +25,7 @@ class AppointmentRecord {
   final String reason;
   final String doctorName;
   final String doctorSpecialty;
+  final List<String> doctorTypes;
   final String? patientName;
 
   factory AppointmentRecord.fromJson(Map<String, dynamic> json) {
@@ -55,12 +57,34 @@ class AppointmentRecord {
       doctorSpecialty: doctor['specialty'] is String
           ? doctor['specialty'] as String
           : '',
+      doctorTypes: _doctorTypes(doctor),
       patientName:
           patient is Map<String, dynamic> && patient['fullName'] is String
           ? patient['fullName'] as String
           : null,
     );
   }
+}
+
+List<String> _doctorTypes(Map<String, dynamic> doctor) {
+  final stored = doctor['specialties'];
+  if (stored is List) {
+    final names = [
+      for (final item in stored)
+        if (item is String && item.trim().isNotEmpty) item.trim(),
+    ];
+    if (names.isNotEmpty) {
+      return names;
+    }
+  }
+  final specialty = doctor['specialty'];
+  if (specialty is! String || specialty.trim().isEmpty) {
+    return const [];
+  }
+  return [
+    for (final item in specialty.split(','))
+      if (item.trim().isNotEmpty) item.trim(),
+  ];
 }
 
 class AppointmentException implements Exception {

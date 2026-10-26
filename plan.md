@@ -59,6 +59,7 @@ Appointments, the only clinical workflow that saves data:
 - Screen: `lib/screens/appointments_screen.dart`. Client: `lib/services/appointment_api.dart`. Routes: `backend/src/routes/appointments.js`.
 - A doctor creates a future slot with `POST /api/appointments` and body `{ "scheduledAt" }`. Status becomes `available`. A second slot for the same doctor at the same time returns 409.
 - A patient sees future `available` slots, including the doctor's name and specialty, plus appointments where that patient is the patient. Booking is `POST /api/appointments/:id/book` with `{ "reason" }`. The reason is 1 to 200 characters. Status becomes `scheduled`.
+- On the patient appointment page, a search field matches the doctor name. A doctor-type menu uses the same fixed list as Settings (`doctorTypes` / `DOCTOR_TYPES`). Choosing one type keeps slots whose doctor has that type. Sort choices are soonest, latest, name A–Z, and name Z–A. The default sort is soonest. These controls filter the list already loaded by `GET /api/appointments`. They do not call a new route. `doctor.specialties` is included in each appointment JSON. If that array is empty, the client splits the `specialty` string on commas. The same search also filters "My appointments". A doctor and an admin do not see these controls.
 - A patient cancel of a `scheduled` row sets it back to `available` and removes `patient` and `reason`. A doctor cancel of an `available` or `scheduled` row sets `cancelled`. An admin can read every row and cannot change one. There is no route that sets `completed`.
 - The home card "Next appointment" is the fixed text `Not scheduled` in `lib/screens/home_screen.dart`. It does not read the appointments API.
 - The booking design in the code is: the doctor publishes a time, and the patient books that time. Do not add a separate "pick a doctor, then contact that doctor" flow unless the student asks.
@@ -114,11 +115,12 @@ Atlas also has system databases such as `admin`, `config`, and `local`. Those ar
 
 ## Tests
 
-`flutter test` uses `MockClient`. It checks login validation, sign-up, the doctor dashboard, the empty appointment state, logout, the side rail, settings save, doctor type tags, allergy tags, dark mode, theme color, password confirmation, and avatar byte checks. A passing test does not mean `npm start` is running or that Atlas accepted a password.
+`flutter test` uses `MockClient`. It checks login validation, sign-up, the doctor dashboard, the empty appointment state, patient appointment search, doctor-type filtering, appointment sorting, logout, the side rail, settings save, doctor type tags, allergy tags, dark mode, theme color, password confirmation, and avatar byte checks. A passing test does not mean `npm start` is running or that Atlas accepted a password.
 
 ## To do
 
 - Change the doctor sign-up process. Sign-up is still the same form for a patient and a doctor: email, username, and password. Doctor type tags are chosen later in Settings from the fixed list above. Do not add a license number or an approval step to sign-up until the student asks. The seeded doctor account is separate and already has specialty `General Practice` and license `DEMO-HK-DOCTOR-001`.
+- Doctor reputation. Show a star rating on a doctor, such as 5 or 4.8, where a patient chooses a doctor. This is not in the app or the database. `users` has no rating field, no review collection exists, and the appointment cards do not show stars. Do not invent a rating, a review screen, or seed scores until the student asks.
 
 ## Do not start unless the student asks
 

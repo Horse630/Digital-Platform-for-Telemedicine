@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../services/appointment_api.dart';
+import '../services/appointment_filter.dart';
 import '../services/auth_service.dart';
+import '../services/doctor_types.dart';
 
 /// Appointment tab.
 ///
@@ -28,6 +30,9 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
   List<AppointmentRecord> _appointments = const [];
   bool _loading = true;
   String? _error;
+  final _doctorName = TextEditingController();
+  String _doctorType = '';
+  AppointmentSort _sort = AppointmentSort.soonest;
 
   @override
   void initState() {
@@ -42,6 +47,12 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
     if (oldWidget.user.token != widget.user.token) {
       _api = _apiFor(widget.user.token);
     }
+  }
+
+  @override
+  void dispose() {
+    _doctorName.dispose();
+    super.dispose();
   }
 
   AppointmentApi _apiFor(String token) {
@@ -108,6 +119,12 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
     if (role == 'patient') {
       return _PatientSchedule(
         appointments: _appointments,
+        doctorName: _doctorName,
+        doctorType: _doctorType,
+        sort: _sort,
+        onDoctorNameChanged: () => setState(() {}),
+        onDoctorTypeChanged: (value) => setState(() => _doctorType = value),
+        onSortChanged: (value) => setState(() => _sort = value),
         onBook: _book,
         onCancel: _cancel,
       );
@@ -228,31 +245,109 @@ class _DoctorSchedule extends StatelessWidget {
 class _PatientSchedule extends StatelessWidget {
   const _PatientSchedule({
     required this.appointments,
+    required this.doctorName,
+    required this.doctorType,
+    required this.sort,
+    required this.onDoctorNameChanged,
+    required this.onDoctorTypeChanged,
+    required this.onSortChanged,
     required this.onBook,
     required this.onCancel,
   });
 
   final List<AppointmentRecord> appointments;
+  final TextEditingController doctorName;
+  final String doctorType;
+  final AppointmentSort sort;
+  final VoidCallback onDoctorNameChanged;
+  final ValueChanged<String> onDoctorTypeChanged;
+  final ValueChanged<AppointmentSort> onSortChanged;
   final Future<void> Function(AppointmentRecord appointment) onBook;
   final Future<void> Function(AppointmentRecord appointment) onCancel;
 
   @override
   Widget build(BuildContext context) {
-    final open = appointments
-        .where((item) => item.status == 'available')
-        .toList();
-    final mine = appointments
-        .where((item) => item.status != 'available')
-        .toList();
+    final query = AppointmentQuery(
+      doctorName: doctorName.text,
+      doctorType: doctorType.isEmpty ? null : doctorType,
+      sort: sort,
+    );
+    final open = filterAppointments(
+      appointments.where((item) => item.status == 'available').toList(),
+      query,
+    );
+    final mine = filterAppointments(
+      appointments.where((item) => item.status != 'available').toList(),
+      query,
+    );
 
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
+        TextField(
+          key: const Key('doctorNameSearch'),
+          controller: doctorName,
+          decoration: const InputDecoration(
+            hintText: 'Doctor name',
+            prefixIcon: Icon(Icons.search),
+            border: OutlineInputBorder(),
+            isDense: true,
+          ),
+          onChanged: (_) => onDoctorNameChanged(),
+        ),
+        const SizedBox(height: 12),
+        _FilterMenu<String>(
+          fieldKey: const Key('doctorTypeFilter'),
+          label: 'Doctor type',
+          value: doctorType,
+          items: [
+            const DropdownMenuItem(value: '', child: Text('All types')),
+            for (final type in doctorTypes)
+              DropdownMenuItem(value: type, child: Text(type)),
+          ],
+          onChanged: (value) {
+            if (value != null) {
+              onDoctorTypeChanged(value);
+            }
+          },
+        ),
+        const SizedBox(height: 12),
+        _FilterMenu<AppointmentSort>(
+          fieldKey: const Key('appointmentSort'),
+          label: 'Sort',
+          value: sort,
+          items: const [
+            DropdownMenuItem(
+              value: AppointmentSort.soonest,
+              child: Text('Soonest'),
+            ),
+            DropdownMenuItem(
+              value: AppointmentSort.latest,
+              child: Text('Latest'),
+            ),
+            DropdownMenuItem(
+              value: AppointmentSort.nameAscending,
+              child: Text('Name A–Z'),
+            ),
+            DropdownMenuItem(
+              value: AppointmentSort.nameDescending,
+              child: Text('Name Z–A'),
+            ),
+          ],
+          onChanged: (value) {
+            if (value != null) {
+              onSortChanged(value);
+            }
+          },
+        ),
+        const SizedBox(height: 16),
         Text('Open times', style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 8),
         if (open.isEmpty)
-          const _InlineNote(
-            'No open time slots. A doctor has not published a time yet.',
+          _InlineNote(
+            query.isFiltering
+                ? 'No open times match this search.'
+                : 'No open time slots. A doctor has not published a time yet.',
           ),
         for (final appointment in open) ...[
           _AppointmentCard(
@@ -266,7 +361,12 @@ class _PatientSchedule extends StatelessWidget {
         const SizedBox(height: 12),
         Text('My appointments', style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 8),
-        if (mine.isEmpty) const _InlineNote('You have no appointments.'),
+        if (mine.isEmpty)
+          _InlineNote(
+            query.isFiltering
+                ? 'No appointments match this search.'
+                : 'You have no appointments.',
+          ),
         for (final appointment in mine) ...[
           _AppointmentCard(
             appointment: appointment,
@@ -291,6 +391,42 @@ class _PatientSchedule extends StatelessWidget {
       return appointment.doctorName;
     }
     return '${appointment.doctorName} · ${appointment.doctorSpecialty}';
+  }
+}
+
+class _FilterMenu<T> extends StatelessWidget {
+  const _FilterMenu({
+    required this.fieldKey,
+    required this.label,
+    required this.value,
+    required this.items,
+    required this.onChanged,
+  });
+
+  final Key fieldKey;
+  final String label;
+  final T value;
+  final List<DropdownMenuItem<T>> items;
+  final ValueChanged<T?> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return InputDecorator(
+      decoration: InputDecoration(
+        labelText: label,
+        border: const OutlineInputBorder(),
+        isDense: true,
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<T>(
+          key: fieldKey,
+          value: value,
+          isExpanded: true,
+          items: items,
+          onChanged: onChanged,
+        ),
+      ),
+    );
   }
 }
 

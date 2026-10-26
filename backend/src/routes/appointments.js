@@ -38,6 +38,7 @@ function toAppointmentJson(appointment) {
       id: appointment.doctor._id.toString(),
       fullName: appointment.doctor.fullName,
       specialty: appointment.doctor.specialty || '',
+      specialties: doctorTypes(appointment.doctor),
     },
     patient: appointment.patient
       ? {
@@ -46,6 +47,19 @@ function toAppointmentJson(appointment) {
         }
       : null,
   };
+}
+
+function doctorTypes(doctor) {
+  const stored = Array.isArray(doctor.specialties) ? doctor.specialties : [];
+  const chosen = stored.filter((item) => User.DOCTOR_TYPES.includes(item));
+  if (chosen.length > 0) {
+    return chosen;
+  }
+  const specialty = typeof doctor.specialty === 'string' ? doctor.specialty : '';
+  return specialty
+    .split(',')
+    .map((item) => item.trim())
+    .filter((item) => User.DOCTOR_TYPES.includes(item));
 }
 
 function listQuery(user) {
@@ -65,7 +79,7 @@ function listQuery(user) {
 
 router.get('/', requireUser, async (req, res) => {
   const appointments = await Appointment.find(listQuery(req.user))
-    .populate('doctor', 'fullName specialty')
+    .populate('doctor', 'fullName specialty specialties')
     .populate('patient', 'fullName')
     .sort({ scheduledAt: 1 });
   res.json(appointments.map(toAppointmentJson));
@@ -98,7 +112,7 @@ router.post('/', requireUser, async (req, res) => {
     scheduledAt,
     status: 'available',
   });
-  await created.populate('doctor', 'fullName specialty');
+  await created.populate('doctor', 'fullName specialty specialties');
   res.status(201).json(toAppointmentJson(created));
 });
 
@@ -123,7 +137,7 @@ router.post('/:id/book', requireUser, async (req, res) => {
     res.status(409).json({ message: 'That time slot is no longer available.' });
     return;
   }
-  await booked.populate('doctor', 'fullName specialty');
+  await booked.populate('doctor', 'fullName specialty specialties');
   await booked.populate('patient', 'fullName');
   res.json(toAppointmentJson(booked));
 });
@@ -157,7 +171,7 @@ router.post('/:id/cancel', requireUser, async (req, res) => {
     return;
   }
 
-  await appointment.populate('doctor', 'fullName specialty');
+  await appointment.populate('doctor', 'fullName specialty specialties');
   await appointment.populate('patient', 'fullName');
   res.json(toAppointmentJson(appointment));
 });

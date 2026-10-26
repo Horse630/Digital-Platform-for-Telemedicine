@@ -48,7 +48,7 @@ The app icon is `assets/app_icon.png`, a teal medical cross with a video camera.
 - **Login** calls `POST /api/login` and opens the shell when MongoDB accepts the account. **Create an account** opens sign-up.
 - **Sign up** asks for an email, username, and password, and a choice of patient or doctor. Both roles use those same fields. The API rejects a username that is already stored.
 - **Home** greets the signed-in person and lists the core functions and sub-functions from the progress report. Appointments and Consultation open their tabs. The other modules explain that this build does not save new data.
-- **Appointments** lets a doctor add a future time slot. A patient sees open slots, including the doctor's name, and books one with a short reason. Cancelling a booking opens that slot again. An admin can read every row.
+- **Appointments** lets a doctor add a future time slot. A patient sees open slots, including the doctor's name and type, searches by doctor name, chooses a doctor type from a list, and sorts by time or name. Booking needs a short reason. Cancelling a booking opens that slot again. An admin can read every row.
 - **Consultation** is an empty state until a video SDK is added.
 - **Profile** shows the database account, including a saved photo and description. It opens Settings and logs out.
 - **Settings** uploads a profile photo, changes the username, description, and password, and switches the UI color and dark mode. A doctor chooses one or more doctor types from a fixed list. A patient types allergy tags. The photo, account fields, doctor types, and allergies are stored in MongoDB. Color and dark mode stay on the device.
@@ -63,6 +63,7 @@ lib/
   navigation/app_destination.dart
   services/api_config.dart
   services/appointment_api.dart
+  services/appointment_filter.dart
   services/auth_service.dart
   services/avatar_image.dart
   services/doctor_types.dart
