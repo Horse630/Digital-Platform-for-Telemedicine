@@ -7,14 +7,17 @@ const express = require('express');
 // Load backend/.env. The Atlas URI is not hard-coded.
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
+const { signToken } = require('./authToken');
 const { connectDatabase } = require('./db');
 const User = require('./models/User');
+const appointmentsRouter = require('./routes/appointments');
 
 const PORT = Number(process.env.PORT) || 3000;
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use('/api/appointments', appointmentsRouter);
 
 app.get('/api/health', (_req, res) => {
   res.json({ ok: true });
@@ -45,6 +48,7 @@ app.post('/api/login', async (req, res) => {
       username: user.username,
       role: user.role,
       fullName: user.fullName,
+      token: signToken(user),
     });
   } catch (_error) {
     res.status(500).json({ message: 'Sign-in failed. Try again.' });
@@ -54,6 +58,14 @@ app.post('/api/login', async (req, res) => {
 function escapeRegex(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
+
+app.use((error, _req, res, _next) => {
+  const message = error && error.message ? error.message : 'Request failed';
+  console.error(message.replace(/mongodb(\+srv)?:\/\/\S+/gi, 'mongodb://***'));
+  if (!res.headersSent) {
+    res.status(500).json({ message: 'The request failed. Try again.' });
+  }
+});
 
 async function start() {
   await connectDatabase(process.env.MONGODB_URI);

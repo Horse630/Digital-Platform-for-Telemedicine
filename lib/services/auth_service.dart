@@ -11,11 +11,13 @@ class SignedInUser {
     required this.username,
     required this.role,
     required this.fullName,
+    required this.token,
   });
 
   final String username;
   final String role;
   final String fullName;
+  final String token;
 
   String get roleLabel {
     switch (role) {
@@ -56,10 +58,10 @@ class AuthService {
   final http.Client? client;
   final String? baseUrl;
 
-  static final http.Client _sharedClient = http.Client();
+  static final http.Client sharedClient = http.Client();
 
   Future<SignedInUser> signIn(String username, String password) async {
-    final http.Client httpClient = client ?? _sharedClient;
+    final http.Client httpClient = client ?? sharedClient;
     final root = baseUrl ?? apiBaseUrl;
 
     try {
@@ -102,9 +104,19 @@ class AuthService {
     final username = decoded['username'];
     final role = decoded['role'];
     final fullName = decoded['fullName'];
-    if (username is! String || role is! String || fullName is! String) {
+    final token = decoded['token'];
+    if (username is! String ||
+        role is! String ||
+        fullName is! String ||
+        token is! String ||
+        token.isEmpty) {
       throw const AuthException('Sign-in failed. Try again.');
     }
-    return SignedInUser(username: username, role: role, fullName: fullName);
+    return SignedInUser(
+      username: username,
+      role: role,
+      fullName: fullName,
+      token: token,
+    );
   }
 }

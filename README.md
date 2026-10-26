@@ -2,7 +2,7 @@
 
 Cross-platform telemedicine app for Hong Kong Baptist University COMP4878-9. It is meant to cover a remote visit and the logistics around it: appointments, video consultation, sick leave certificates, payment, and medication delivery.
 
-The frontend is Flutter and Dart. Sign-in calls a Node API in `backend/`, and that API checks the password against MongoDB Atlas. The other screens do not load the sample clinical records yet.
+The frontend is Flutter and Dart. Sign-in calls a Node API in `backend/`, and that API checks the password against MongoDB Atlas. Doctors publish appointment times, and patients book those times. The other screens do not load their sample records yet.
 
 ## Demo sign-in
 
@@ -45,7 +45,7 @@ The Android emulator calls the API at `http://10.0.2.2:3000`. Chrome, desktop, a
 
 - **Login** calls `POST /api/login` and opens the shell when MongoDB accepts the account.
 - **Home** greets the signed-in person and lists the core functions and sub-functions from the progress report. Appointments and Consultation open their tabs. The other modules explain that this build does not save new data.
-- **Appointments** is an empty state until the screen reads the `appointments` collection.
+- **Appointments** lets a doctor add a future time slot. A patient sees open slots, including the doctor's name, and books one with a short reason. Cancelling a booking opens that slot again. An admin can read every row.
 - **Consultation** is an empty state until a video SDK is added.
 - **Profile** shows the database account and logs out.
 
@@ -58,6 +58,7 @@ lib/
   main.dart
   navigation/app_destination.dart
   services/api_config.dart
+  services/appointment_api.dart
   services/auth_service.dart
   theme/app_theme.dart
   screens/
@@ -75,7 +76,9 @@ backend/
   package.json
   scripts/seed.js
   src/server.js
+  src/authToken.js
   src/db.js
+  src/routes/appointments.js
   src/models/
     User.js
     Appointment.js
@@ -102,7 +105,7 @@ Atlas credentials belong only in `backend/.env`. Git ignores that file. `backend
 | Collection | Sample record |
 | --- | --- |
 | `users` | `admin`, `doctor`, and `patient` |
-| `appointments` | Sore throat visit on 3 Nov 2026, status `scheduled` |
+| `appointments` | One booked sample visit on 3 Nov 2026, plus one open slot on 5 Nov 2026 |
 | `consultations` | Video visit `demo-visit-1`, status `scheduled` |
 | `sick_leave_certificates` | `SL-DEMO-0001`, marked read-only |
 | `payments` | HKD 200 consultation fee, status `pending` |
@@ -112,7 +115,9 @@ Atlas credentials belong only in `backend/.env`. Git ignores that file. `backend
 | `discussion_comments` | One doctor reply |
 | `health_readings` | Heart rate `72 bpm` |
 
-Refresh the Atlas collection list after seeding. The login screen reads `users`. The other collections are not loaded by the app yet.
+Refresh the Atlas collection list after seeding. Login reads `users`. The appointment screen reads and writes `appointments`. The other collections are not loaded by the app yet.
+
+`POST /api/login` also returns a bearer token. Appointment requests send `Authorization: Bearer <token>`. The token secret is `AUTH_TOKEN_SECRET` in `backend/.env`, separate from the Atlas password.
 
 ### Seed accounts
 

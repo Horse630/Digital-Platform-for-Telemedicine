@@ -107,7 +107,7 @@ class HomeScreen extends StatelessWidget {
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        'Signed in through the database. The modules below are still sample entries.',
+                        'Appointments are saved in the database. The other modules are still sample entries.',
                         style: TextStyle(color: scheme.onSecondaryContainer),
                       ),
                     ),

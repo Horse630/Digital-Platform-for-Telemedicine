@@ -111,6 +111,14 @@ async function seedClinicalRecords(doctor, patient) {
     status: 'scheduled',
   });
 
+  await upsertBySeedKey(Appointment, 'demo-open-slot', {
+    doctor: doctor._id,
+    scheduledAt: new Date('2026-11-05T02:00:00.000Z'),
+    status: 'available',
+    patient: undefined,
+    reason: undefined,
+  });
+
   await upsertBySeedKey(Consultation, 'demo-consultation', {
     appointment: appointment._id,
     patient: patient._id,

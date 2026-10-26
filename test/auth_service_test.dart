@@ -19,6 +19,7 @@ void main() {
             'username': 'doctor',
             'role': 'doctor',
             'fullName': 'Demo Doctor',
+            'token': 'test-token',
           }),
           200,
         );
@@ -32,6 +33,7 @@ void main() {
     expect(user.username, 'doctor');
     expect(user.roleLabel, 'Doctor');
     expect(user.dashboardLabel, 'Doctor dashboard');
+    expect(user.token, 'test-token');
   });
 
   test('turns HTTP 401 into a login error', () async {

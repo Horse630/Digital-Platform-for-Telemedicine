@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 
-const STATUSES = ['scheduled', 'completed', 'cancelled'];
+// available: a doctor published this time and nobody has booked it.
+// scheduled: a patient booked it.
+const STATUSES = ['available', 'scheduled', 'completed', 'cancelled'];
 
 const appointmentSchema = new mongoose.Schema(
   {
@@ -9,7 +11,9 @@ const appointmentSchema = new mongoose.Schema(
     patient: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
+      required: function patientRequired() {
+        return this.status === 'scheduled' || this.status === 'completed';
+      },
     },
     doctor: {
       type: mongoose.Schema.Types.ObjectId,
@@ -17,7 +21,14 @@ const appointmentSchema = new mongoose.Schema(
       required: true,
     },
     scheduledAt: { type: Date, required: true },
-    reason: { type: String, required: true, trim: true, maxlength: 200 },
+    reason: {
+      type: String,
+      trim: true,
+      maxlength: 200,
+      required: function reasonRequired() {
+        return this.status === 'scheduled' || this.status === 'completed';
+      },
+    },
     status: { type: String, required: true, enum: STATUSES },
   },
   { collection: 'appointments', timestamps: true },

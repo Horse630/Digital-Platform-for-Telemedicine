@@ -45,7 +45,10 @@ class _MainShellState extends State<MainShell> {
       case AppDestination.home:
         return HomeScreen(user: widget.user, onOpen: _select);
       case AppDestination.appointments:
-        return const AppointmentsScreen();
+        return AppointmentsScreen(
+          user: widget.user,
+          authService: widget.authService,
+        );
       case AppDestination.consultation:
         return const ConsultationScreen();
       case AppDestination.profile:

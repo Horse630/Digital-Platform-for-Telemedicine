@@ -48,7 +48,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('No appointments yet'), findsOneWidget);
+    expect(find.text('No time slots yet'), findsOneWidget);
 
     await tester.tap(
       find.descendant(
@@ -113,6 +113,9 @@ AuthService _testAuth() {
   return AuthService(
     baseUrl: 'http://localhost:3000',
     client: MockClient((request) async {
+      if (request.method == 'GET' && request.url.path == '/api/appointments') {
+        return http.Response('[]', 200);
+      }
       final body = jsonDecode(request.body) as Map<String, dynamic>;
       if (body['username'] == 'doctor' && body['password'] == 'Doctor123!') {
         return http.Response(
@@ -120,6 +123,7 @@ AuthService _testAuth() {
             'username': 'doctor',
             'role': 'doctor',
             'fullName': 'Demo Doctor',
+            'token': 'test-token',
           }),
           200,
         );
