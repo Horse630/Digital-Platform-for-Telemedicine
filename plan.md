@@ -59,9 +59,9 @@ Appointments, the only clinical workflow that saves data:
 - Screen: `lib/screens/appointments_screen.dart`. Client: `lib/services/appointment_api.dart`. Routes: `backend/src/routes/appointments.js`.
 - A doctor creates a future slot with `POST /api/appointments` and body `{ "scheduledAt" }`. Status becomes `available`. A second slot for the same doctor at the same time returns 409. When the doctor has no rows, the Appointments tab shows `No appointment` and a **Make an appointment** button that opens the date and time pickers. The same button stays above the list when the doctor already has a slot.
 - A patient sees future `available` slots, including the doctor's name and specialty, on a separate booking page. The Appointments tab itself lists only that patient's own rows. When that list is empty, it shows `No appointment` and a **Book an appointment** button that opens the booking page. The same button stays above the list when the patient already has a booking. Booking is `POST /api/appointments/:id/book` with `{ "reason" }`. The reason is 1 to 200 characters. Status becomes `scheduled`.
-- On the booking page, a search field matches the doctor name. A doctor-type menu uses the same fixed list as Settings (`doctorTypes` / `DOCTOR_TYPES`). Choosing one type keeps slots whose doctor has that type. Sort choices are soonest, latest, name A–Z, and name Z–A. The default sort is soonest. These controls filter the list already loaded by `GET /api/appointments`. They do not call a new route. `doctor.specialties` is included in each appointment JSON. If that array is empty, the client splits the `specialty` string on commas. A doctor and an admin do not see this page. A doctor's Appointments tab is still the slot list. An admin's tab is still every row.
+- A doctor's Appointments tab and a patient's Appointments tab default to a calendar. Days with a row show a dot. Choosing a day lists that day's rows under the month. A **List** button shows the previous scrolling list, and **Calendar** switches back. An admin uses the same two formats. The booking page for open times stays a list. On that page, a search field matches the doctor name. A doctor-type menu uses the same fixed list as Settings (`doctorTypes` / `DOCTOR_TYPES`). Choosing one type keeps slots whose doctor has that type. Sort choices are soonest, latest, name A–Z, and name Z–A. The default sort is soonest. These controls filter the list already loaded by `GET /api/appointments`. They do not call a new route. `doctor.specialties` is included in each appointment JSON. If that array is empty, the client splits the `specialty` string on commas.
 - A patient cancel of a `scheduled` row sets it back to `available` and removes `patient` and `reason`. A doctor cancel of an `available` or `scheduled` row sets `cancelled`. An admin can read every row and cannot change one. There is no route that sets `completed`.
-- The home card "Next appointment" is the fixed text `Not scheduled` in `lib/screens/home_screen.dart`. It does not read the appointments API.
+- The home card "Next appointment" in `lib/screens/home_screen.dart` reads `GET /api/appointments` and shows the soonest future row with status `scheduled`. A patient sees the date, time, and doctor. A doctor sees the date, time, and patient. An open slot is not shown. When there is no booked visit, the card says `Not scheduled`. Tapping it opens the Appointments tab. Medication delivery on that card stays the fixed text `No active order`.
 - The booking design in the code is: the doctor publishes a time, and the patient books that time. Do not add a separate "pick a doctor, then contact that doctor" flow unless the student asks.
 
 Profile and settings, added after the report:
@@ -91,7 +91,7 @@ Do not claim any of the following exist. Do not add their packages or routes unl
 - No discussion board. Seed row `demo-discussion` is a question about sample tablets, status `answered`, with one doctor comment `demo-comment`. The app has no discussion screen.
 - No wearable sync. The `health` package is not installed. Seed row `demo-heart-rate` is 72 bpm on 26 Oct 2026. Schema metrics are `heart_rate`, `steps`, and `blood_oxygen`. The app has no health screen.
 - No route creates, edits, or deletes consultations, certificates, payments, deliveries, chatbot messages, discussions, comments, or health readings. `server.js` mounts `/api/health`, `/api/login`, `/api/signup`, `/api/appointments`, and `/api/profile`.
-- The home dashboard does not load live appointment or delivery counts.
+- The home dashboard does not load a live delivery count. The next-appointment card does read booked visits.
 - Phase 5 system testing and the final report are not done.
 
 ## Collections
@@ -115,7 +115,7 @@ Atlas also has system databases such as `admin`, `config`, and `local`. Those ar
 
 ## Tests
 
-`flutter test` uses `MockClient`. It checks login validation, sign-up, the doctor dashboard, the empty doctor appointment state and its **Make an appointment** button, patient appointment search, doctor-type filtering, appointment sorting, logout, the side rail, settings save, doctor type tags, allergy tags, dark mode, theme color, password confirmation, and avatar byte checks. A passing test does not mean `npm start` is running or that Atlas accepted a password.
+`flutter test` uses `MockClient`. It checks login validation, sign-up, the doctor dashboard, the empty doctor appointment state and its **Make an appointment** button, the soonest future booked visit for the home card, patient appointment search, doctor-type filtering, appointment sorting, logout, the side rail, settings save, doctor type tags, allergy tags, dark mode, theme color, password confirmation, and avatar byte checks. A passing test does not mean `npm start` is running or that Atlas accepted a password. The calendar and list switch is described above and is not covered by a widget test.
 
 ## To do
 

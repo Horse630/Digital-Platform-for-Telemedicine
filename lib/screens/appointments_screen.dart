@@ -228,41 +228,26 @@ class _DoctorSchedule extends StatelessWidget {
       );
     }
 
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-          child: SizedBox(
-            width: double.infinity,
-            child: FilledButton.icon(
-              key: const Key('addTimeSlot'),
-              onPressed: onAdd,
-              icon: const Icon(Icons.add),
-              label: const Text('Make an appointment'),
-            ),
-          ),
-        ),
-        Expanded(
-          child: ListView.separated(
-            padding: const EdgeInsets.all(16),
-            itemCount: appointments.length,
-            separatorBuilder: (_, _) => const SizedBox(height: 12),
-            itemBuilder: (context, index) {
-              final appointment = appointments[index];
-              final open = appointment.status == 'available';
-              final booked = appointment.status == 'scheduled';
-              return _AppointmentCard(
-                appointment: appointment,
-                detail: open
-                    ? 'Open for patients'
-                    : 'Patient: ${appointment.patientName ?? 'Unknown'}',
-                actionLabel: open || booked ? 'Cancel slot' : null,
-                onAction: open || booked ? () => onCancel(appointment) : null,
-              );
-            },
-          ),
-        ),
-      ],
+    return _AppointmentBrowser(
+      appointments: appointments,
+      action: FilledButton.icon(
+        key: const Key('addTimeSlot'),
+        onPressed: onAdd,
+        icon: const Icon(Icons.add),
+        label: const Text('Make an appointment'),
+      ),
+      cardBuilder: (appointment) {
+        final open = appointment.status == 'available';
+        final booked = appointment.status == 'scheduled';
+        return _AppointmentCard(
+          appointment: appointment,
+          detail: open
+              ? 'Open for patients'
+              : 'Patient: ${appointment.patientName ?? 'Unknown'}',
+          actionLabel: open || booked ? 'Cancel slot' : null,
+          onAction: open || booked ? () => onCancel(appointment) : null,
+        );
+      },
     );
   }
 }
@@ -291,34 +276,25 @@ class _MyAppointments extends StatelessWidget {
       );
     }
 
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        Align(
-          alignment: Alignment.centerRight,
-          child: FilledButton(
-            key: const Key('openBookingButton'),
-            onPressed: onOpenBooking,
-            child: const Text('Book an appointment'),
-          ),
-        ),
-        const SizedBox(height: 12),
-        for (final appointment in appointments) ...[
-          _AppointmentCard(
-            appointment: appointment,
-            detail: appointment.reason.isEmpty
-                ? _doctorDetail(appointment)
-                : appointment.reason,
-            actionLabel: appointment.status == 'scheduled'
-                ? 'Cancel booking'
-                : null,
-            onAction: appointment.status == 'scheduled'
-                ? () => onCancel(appointment)
-                : null,
-          ),
-          const SizedBox(height: 12),
-        ],
-      ],
+    return _AppointmentBrowser(
+      appointments: appointments,
+      action: FilledButton(
+        key: const Key('openBookingButton'),
+        onPressed: onOpenBooking,
+        child: const Text('Book an appointment'),
+      ),
+      cardBuilder: (appointment) {
+        return _AppointmentCard(
+          appointment: appointment,
+          detail: appointment.reason.isEmpty
+              ? _doctorDetail(appointment)
+              : appointment.reason,
+          actionLabel: appointment.status == 'scheduled' ? 'Cancel booking' : null,
+          onAction: appointment.status == 'scheduled'
+              ? () => onCancel(appointment)
+              : null,
+        );
+      },
     );
   }
 }
@@ -495,12 +471,9 @@ class _AdminSchedule extends StatelessWidget {
         message: 'Doctors have not published a time slot.',
       );
     }
-    return ListView.separated(
-      padding: const EdgeInsets.all(16),
-      itemCount: appointments.length,
-      separatorBuilder: (_, _) => const SizedBox(height: 12),
-      itemBuilder: (context, index) {
-        final appointment = appointments[index];
+    return _AppointmentBrowser(
+      appointments: appointments,
+      cardBuilder: (appointment) {
         final person = appointment.patientName ?? 'No patient yet';
         return _AppointmentCard(
           appointment: appointment,
@@ -509,6 +482,285 @@ class _AdminSchedule extends StatelessWidget {
       },
     );
   }
+}
+
+enum _ScheduleView { calendar, list }
+
+class _AppointmentBrowser extends StatefulWidget {
+  const _AppointmentBrowser({
+    required this.appointments,
+    required this.cardBuilder,
+    this.action,
+  });
+
+  final List<AppointmentRecord> appointments;
+  final Widget Function(AppointmentRecord appointment) cardBuilder;
+  final Widget? action;
+
+  @override
+  State<_AppointmentBrowser> createState() => _AppointmentBrowserState();
+}
+
+class _AppointmentBrowserState extends State<_AppointmentBrowser> {
+  _ScheduleView _view = _ScheduleView.calendar;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (widget.action != null) ...[
+                widget.action!,
+                const SizedBox(height: 12),
+              ],
+              SegmentedButton<_ScheduleView>(
+                showSelectedIcon: false,
+                segments: const [
+                  ButtonSegment(
+                    value: _ScheduleView.calendar,
+                    label: Text('Calendar'),
+                    icon: Icon(Icons.calendar_month_outlined),
+                  ),
+                  ButtonSegment(
+                    value: _ScheduleView.list,
+                    label: Text('List'),
+                    icon: Icon(Icons.view_list_outlined),
+                  ),
+                ],
+                selected: {_view},
+                onSelectionChanged: (selected) {
+                  setState(() => _view = selected.first);
+                },
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: _view == _ScheduleView.calendar
+              ? _CalendarSchedule(
+                  appointments: widget.appointments,
+                  cardBuilder: widget.cardBuilder,
+                )
+              : ListView.separated(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: widget.appointments.length,
+                  separatorBuilder: (_, _) => const SizedBox(height: 12),
+                  itemBuilder: (context, index) {
+                    return widget.cardBuilder(widget.appointments[index]);
+                  },
+                ),
+        ),
+      ],
+    );
+  }
+}
+
+class _CalendarSchedule extends StatefulWidget {
+  const _CalendarSchedule({
+    required this.appointments,
+    required this.cardBuilder,
+  });
+
+  final List<AppointmentRecord> appointments;
+  final Widget Function(AppointmentRecord appointment) cardBuilder;
+
+  @override
+  State<_CalendarSchedule> createState() => _CalendarScheduleState();
+}
+
+class _CalendarScheduleState extends State<_CalendarSchedule> {
+  late DateTime _month;
+  late DateTime _selected;
+
+  @override
+  void initState() {
+    super.initState();
+    final first = _earliestDay(widget.appointments);
+    _selected = first;
+    _month = DateTime(first.year, first.month);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final marked = {
+      for (final item in widget.appointments) _calendarDay(item.scheduledAt),
+    };
+    final onDay = [
+      for (final item in widget.appointments)
+        if (_calendarDay(item.scheduledAt) == _selected) item,
+    ]..sort((a, b) => a.scheduledAt.compareTo(b.scheduledAt));
+    final scheme = Theme.of(context).colorScheme;
+    final localizations = MaterialLocalizations.of(context);
+
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        Row(
+          children: [
+            IconButton(
+              tooltip: 'Previous month',
+              onPressed: () {
+                setState(() {
+                  _month = DateTime(_month.year, _month.month - 1);
+                });
+              },
+              icon: const Icon(Icons.chevron_left),
+            ),
+            Expanded(
+              child: Text(
+                localizations.formatMonthYear(_month),
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            ),
+            IconButton(
+              tooltip: 'Next month',
+              onPressed: () {
+                setState(() {
+                  _month = DateTime(_month.year, _month.month + 1);
+                });
+              },
+              icon: const Icon(Icons.chevron_right),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            for (final label in const ['M', 'T', 'W', 'T', 'F', 'S', 'S'])
+              Expanded(
+                child: Text(
+                  label,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
+          ],
+        ),
+        const SizedBox(height: 4),
+        _MonthDays(
+          month: _month,
+          selected: _selected,
+          marked: marked,
+          onSelect: (day) => setState(() => _selected = day),
+        ),
+        const SizedBox(height: 16),
+        Text(
+          localizations.formatMediumDate(_selected),
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        const SizedBox(height: 8),
+        if (onDay.isEmpty)
+          Text(
+            'No appointment on this day.',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: scheme.onSurfaceVariant,
+            ),
+          )
+        else
+          for (final appointment in onDay) ...[
+            widget.cardBuilder(appointment),
+            const SizedBox(height: 12),
+          ],
+      ],
+    );
+  }
+}
+
+class _MonthDays extends StatelessWidget {
+  const _MonthDays({
+    required this.month,
+    required this.selected,
+    required this.marked,
+    required this.onSelect,
+  });
+
+  final DateTime month;
+  final DateTime selected;
+  final Set<DateTime> marked;
+  final ValueChanged<DateTime> onSelect;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final first = DateTime(month.year, month.month);
+    final days = DateTime(month.year, month.month + 1, 0).day;
+    final leading = first.weekday - 1;
+    final total = leading + days;
+    final cells = total + (7 - total % 7) % 7;
+
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: cells,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 7,
+        mainAxisExtent: 44,
+      ),
+      itemBuilder: (context, index) {
+        final dayNumber = index - leading + 1;
+        if (dayNumber < 1 || dayNumber > days) {
+          return const SizedBox.shrink();
+        }
+        final day = DateTime(month.year, month.month, dayNumber);
+        final isSelected = day == selected;
+        final hasAppointment = marked.contains(day);
+        return InkWell(
+          onTap: () => onSelect(day),
+          borderRadius: BorderRadius.circular(22),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  color: isSelected ? scheme.primary : null,
+                  shape: BoxShape.circle,
+                ),
+                child: SizedBox(
+                  width: 28,
+                  height: 28,
+                  child: Center(
+                    child: Text(
+                      '$dayNumber',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: isSelected ? scheme.onPrimary : null,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 2),
+              SizedBox(
+                width: 4,
+                height: 4,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: hasAppointment ? scheme.primary : Colors.transparent,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+DateTime _calendarDay(DateTime value) {
+  final local = value.toLocal();
+  return DateTime(local.year, local.month, local.day);
+}
+
+DateTime _earliestDay(List<AppointmentRecord> appointments) {
+  final sorted = [...appointments]
+    ..sort((a, b) => a.scheduledAt.compareTo(b.scheduledAt));
+  return _calendarDay(sorted.first.scheduledAt);
 }
 
 class _AppointmentCard extends StatelessWidget {

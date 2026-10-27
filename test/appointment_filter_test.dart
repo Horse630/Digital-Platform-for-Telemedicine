@@ -50,6 +50,42 @@ void main() {
 
     expect(result.map((item) => item.id), ['late-chan', 'early-lee', 'mid-lee']);
   });
+
+  test('the next appointment is the soonest future booked visit', () {
+    final now = DateTime.utc(2026, 11, 6);
+    final next = nextScheduledAppointment(
+      [
+        _slot(
+          id: 'open',
+          name: 'Lee',
+          types: const ['Cardiology'],
+          at: DateTime.utc(2026, 11, 6, 3),
+          status: 'available',
+        ),
+        _slot(
+          id: 'later',
+          name: 'Chan',
+          types: const ['Dermatology'],
+          at: DateTime.utc(2026, 11, 8),
+        ),
+        _slot(
+          id: 'soon',
+          name: 'Lee',
+          types: const ['Cardiology'],
+          at: DateTime.utc(2026, 11, 7),
+        ),
+        _slot(
+          id: 'past',
+          name: 'Lee',
+          types: const ['Cardiology'],
+          at: DateTime.utc(2026, 11, 1),
+        ),
+      ],
+      now: now,
+    );
+
+    expect(next?.id, 'soon');
+  });
 }
 
 AppointmentRecord _slot({
@@ -57,11 +93,12 @@ AppointmentRecord _slot({
   required String name,
   required List<String> types,
   required DateTime at,
+  String status = 'scheduled',
 }) {
   return AppointmentRecord(
     id: id,
     scheduledAt: at,
-    status: 'available',
+    status: status,
     reason: '',
     doctorName: name,
     doctorSpecialty: types.join(', '),

@@ -54,7 +54,12 @@ class _MainShellState extends State<MainShell> {
   Widget _pageFor(AppDestination destination) {
     switch (destination) {
       case AppDestination.home:
-        return HomeScreen(user: _user, onOpen: _select);
+        return HomeScreen(
+          user: _user,
+          authService: widget.authService,
+          active: _index == AppDestination.home.index,
+          onOpen: _select,
+        );
       case AppDestination.appointments:
         return AppointmentsScreen(
           user: _user,

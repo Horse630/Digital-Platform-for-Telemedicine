@@ -46,6 +46,22 @@ bool _matches(AppointmentRecord item, String name, String? type) {
   return true;
 }
 
+/// The soonest future row with status `scheduled`. Open slots are not a booking.
+AppointmentRecord? nextScheduledAppointment(
+  List<AppointmentRecord> appointments, {
+  DateTime? now,
+}) {
+  final clock = now ?? DateTime.now();
+  final upcoming = [
+    for (final item in appointments)
+      if (item.status == 'scheduled' && item.scheduledAt.isAfter(clock)) item,
+  ]..sort((a, b) => a.scheduledAt.compareTo(b.scheduledAt));
+  if (upcoming.isEmpty) {
+    return null;
+  }
+  return upcoming.first;
+}
+
 int _compare(AppointmentRecord a, AppointmentRecord b, AppointmentSort sort) {
   switch (sort) {
     case AppointmentSort.soonest:
