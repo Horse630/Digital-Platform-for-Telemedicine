@@ -78,6 +78,13 @@ const userSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
+    // Address a patient types in Settings for a later medication delivery.
+    deliveryAddress: {
+      type: String,
+      trim: true,
+      maxlength: 200,
+      default: '',
+    },
     // Optional note the person writes on the settings page.
     description: {
       type: String,

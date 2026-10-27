@@ -1486,6 +1486,30 @@ abstract class AppLocalizations {
   /// **'Allergies'**
   String get allergies;
 
+  /// No description provided for @deliveryAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery address'**
+  String get deliveryAddress;
+
+  /// No description provided for @deliveryAddressHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Address for medication delivery'**
+  String get deliveryAddressHint;
+
+  /// No description provided for @deliveryMapHint.
+  ///
+  /// In en, this message translates to:
+  /// **'This map shows Hong Kong. Delivery tracking is not available yet.'**
+  String get deliveryMapHint;
+
+  /// No description provided for @msgDeliveryAddressTooLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep the delivery address under 200 characters.'**
+  String get msgDeliveryAddressTooLong;
+
   /// No description provided for @addAllergyHint.
   ///
   /// In en, this message translates to:

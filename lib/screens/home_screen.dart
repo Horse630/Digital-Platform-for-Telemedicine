@@ -7,6 +7,7 @@ import '../services/appointment_filter.dart';
 import '../services/auth_service.dart';
 import '../services/discussion_api.dart';
 import '../widgets/content_frame.dart';
+import 'delivery_map_screen.dart';
 import 'discussions_screen.dart';
 import 'sick_leave_screen.dart';
 
@@ -15,8 +16,9 @@ import 'sick_leave_screen.dart';
 /// The tiles follow the core functions and sub-functions in the progress
 /// report. The next-appointment card reads the signed-in person's bookings.
 /// Appointments and Consultation open their tabs. Discussion opens the
-/// public question board. Sick leave opens certificates. Every other tile
-/// only explains that the module does not save data yet.
+/// public question board. Sick leave opens certificates. Medication delivery
+/// opens a map of Hong Kong. Every other tile only explains that the module
+/// does not save data yet.
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
     super.key,
@@ -105,6 +107,14 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _openModule(BuildContext context, _Module module) async {
+    if (module.opensDelivery) {
+      await Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => const DeliveryMapScreen(),
+        ),
+      );
+      return;
+    }
     if (module.opensSickLeave) {
       await Navigator.of(context).push(
         MaterialPageRoute<void>(
@@ -167,6 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
         icon: Icons.local_shipping_outlined,
         title: l10n.medicationDelivery,
         subtitle: l10n.medicationDeliverySubtitle,
+        opensDelivery: true,
       ),
     ];
   }
@@ -226,8 +237,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   icon: Icons.local_shipping_outlined,
                   label: l10n.medicationDelivery,
                   value: l10n.noActiveOrder,
-                  onTap: () =>
-                      _showPendingModule(context, l10n.medicationDelivery),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const DeliveryMapScreen(),
+                    ),
+                  ),
                 );
 
                 if (constraints.maxWidth < 560) {
@@ -277,6 +291,7 @@ class _Module {
     this.destination,
     this.opensDiscussion = false,
     this.opensSickLeave = false,
+    this.opensDelivery = false,
   });
 
   final IconData icon;
@@ -285,6 +300,7 @@ class _Module {
   final AppDestination? destination;
   final bool opensDiscussion;
   final bool opensSickLeave;
+  final bool opensDelivery;
 }
 
 class _SectionHeader extends StatelessWidget {

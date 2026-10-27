@@ -14,7 +14,8 @@ import '../widgets/content_frame.dart';
 
 /// Profile photo, account fields, password, language, and the device theme.
 ///
-/// Photo, username, description, and password are saved through the Node API.
+/// Photo, username, description, a patient's delivery address, and password
+/// are saved through the Node API.
 /// Color, dark mode, font size, and language stay on this device.
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({
@@ -43,6 +44,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   final _newPassword = TextEditingController();
   final _confirmPassword = TextEditingController();
   final _allergyInput = TextEditingController();
+  final _deliveryAddress = TextEditingController();
 
   late SignedInUser _user = widget.user;
   String _avatarBase64 = '';
@@ -70,6 +72,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _newPassword.dispose();
     _confirmPassword.dispose();
     _allergyInput.dispose();
+    _deliveryAddress.dispose();
     super.dispose();
   }
 
@@ -91,6 +94,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _avatarMime = details.avatarMime;
       _specialties = List<String>.from(details.specialties);
       _allergies = List<String>.from(details.allergies);
+      _deliveryAddress.text = details.deliveryAddress;
       _ready = true;
     } on ProfileException catch (error) {
       if (!mounted) {
@@ -146,6 +150,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         avatarMime: _avatarBase64.isEmpty ? '' : _avatarMime,
         specialties: _specialties,
         allergies: _allergies,
+        deliveryAddress: _deliveryAddress.text,
       );
       if (!mounted) {
         return;
@@ -158,6 +163,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _avatarMime = details.avatarMime;
       _specialties = List<String>.from(details.specialties);
       _allergies = List<String>.from(details.allergies);
+      _deliveryAddress.text = details.deliveryAddress;
       widget.onUserChanged(_user);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(context.l10n.profileSaved)),
@@ -456,6 +462,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               if (widget.user.role == 'doctor') _doctorTypes(),
               if (widget.user.role == 'patient') _allergyEditor(),
+              if (widget.user.role == 'patient') _deliveryAddressField(),
               if (_profileError != null) ...[
                 const SizedBox(height: 8),
                 Text(
@@ -472,6 +479,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _deliveryAddressField() {
+    final l10n = context.l10n;
+    return Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: TextFormField(
+        key: const Key('deliveryAddressField'),
+        controller: _deliveryAddress,
+        decoration: InputDecoration(
+          labelText: l10n.deliveryAddress,
+          hintText: l10n.deliveryAddressHint,
+          alignLabelWithHint: true,
+        ),
+        minLines: 2,
+        maxLines: 3,
+        maxLength: 200,
+        textInputAction: TextInputAction.newline,
+        validator: (value) {
+          if ((value ?? '').trim().length > 200) {
+            return l10n.msgDeliveryAddressTooLong;
+          }
+          return null;
+        },
       ),
     );
   }

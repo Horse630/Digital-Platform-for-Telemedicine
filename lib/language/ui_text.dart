@@ -140,6 +140,8 @@ String localizeMessage(AppLocalizations l10n, String message) {
       return l10n.msgEnterAddress;
     case 'Keep the address under 200 characters.':
       return l10n.msgAddressTooLong;
+    case 'Keep the delivery address under 200 characters.':
+      return l10n.msgDeliveryAddressTooLong;
     case 'Enter what the patient is unfit for.':
       return l10n.msgEnterUnfit;
     case 'Keep that line under 120 characters.':

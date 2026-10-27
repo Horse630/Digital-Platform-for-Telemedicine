@@ -709,6 +709,18 @@ class AppLocalizationsZh extends AppLocalizations {
   String get allergies => '過敏';
 
   @override
+  String get deliveryAddress => '配送地址';
+
+  @override
+  String get deliveryAddressHint => '藥物送到這個地址';
+
+  @override
+  String get deliveryMapHint => '這張地圖顯示香港。藥物配送追蹤尚未提供。';
+
+  @override
+  String get msgDeliveryAddressTooLong => '配送地址請少於 200 個字。';
+
+  @override
   String get addAllergyHint => '輸入一項過敏';
 
   @override
@@ -1596,6 +1608,18 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get allergies => '过敏';
 
   @override
+  String get deliveryAddress => '配送地址';
+
+  @override
+  String get deliveryAddressHint => '药物送到这个地址';
+
+  @override
+  String get deliveryMapHint => '这张地图显示香港。药物配送追踪尚未提供。';
+
+  @override
+  String get msgDeliveryAddressTooLong => '配送地址请少于 200 个字。';
+
+  @override
   String get addAllergyHint => '输入一项过敏';
 
   @override
@@ -2481,6 +2505,18 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get allergies => '過敏';
+
+  @override
+  String get deliveryAddress => '配送地址';
+
+  @override
+  String get deliveryAddressHint => '藥物送到這個地址';
+
+  @override
+  String get deliveryMapHint => '這張地圖顯示香港。藥物配送追蹤尚未提供。';
+
+  @override
+  String get msgDeliveryAddressTooLong => '配送地址請少於 200 個字。';
 
   @override
   String get addAllergyHint => '輸入一項過敏';

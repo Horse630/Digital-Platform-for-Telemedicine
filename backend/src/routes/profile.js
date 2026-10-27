@@ -45,6 +45,7 @@ function profileJson(user, token) {
     avatarMime: user.avatarMime || '',
     specialties: doctorTypes(user),
     allergies: cleanStoredAllergies(user.allergies),
+    deliveryAddress: user.deliveryAddress || '',
   };
   if (token) {
     body.token = token;
@@ -83,6 +84,17 @@ function readSpecialties(value) {
     chosen.push(item);
   }
   return { specialties: chosen };
+}
+
+function readDeliveryAddress(value) {
+  if (typeof value !== 'string') {
+    return { error: 'Keep the delivery address under 200 characters.' };
+  }
+  const address = value.trim();
+  if (address.length > 200) {
+    return { error: 'Keep the delivery address under 200 characters.' };
+  }
+  return { deliveryAddress: address };
 }
 
 function readAllergies(value) {
@@ -193,6 +205,15 @@ router.patch('/', requireUser, async (req, res) => {
       return;
     }
     req.user.allergies = allergies.allergies;
+  }
+
+  if (req.user.role === 'patient' && Object.prototype.hasOwnProperty.call(req.body || {}, 'deliveryAddress')) {
+    const address = readDeliveryAddress(req.body.deliveryAddress);
+    if (address.error) {
+      res.status(400).json({ message: address.error });
+      return;
+    }
+    req.user.deliveryAddress = address.deliveryAddress;
   }
 
   try {

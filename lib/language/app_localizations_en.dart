@@ -726,6 +726,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get allergies => 'Allergies';
 
   @override
+  String get deliveryAddress => 'Delivery address';
+
+  @override
+  String get deliveryAddressHint => 'Address for medication delivery';
+
+  @override
+  String get deliveryMapHint =>
+      'This map shows Hong Kong. Delivery tracking is not available yet.';
+
+  @override
+  String get msgDeliveryAddressTooLong =>
+      'Keep the delivery address under 200 characters.';
+
+  @override
   String get addAllergyHint => 'Add an allergy';
 
   @override

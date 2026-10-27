@@ -17,6 +17,7 @@ class ProfileDetails {
     required this.avatarMime,
     this.specialties = const [],
     this.allergies = const [],
+    this.deliveryAddress = '',
     this.token,
   });
 
@@ -28,6 +29,7 @@ class ProfileDetails {
   final String avatarMime;
   final List<String> specialties;
   final List<String> allergies;
+  final String deliveryAddress;
   final String? token;
 
   factory ProfileDetails.fromJson(Map<String, dynamic> json) {
@@ -53,6 +55,9 @@ class ProfileDetails {
           : '',
       specialties: _stringList(json['specialties']),
       allergies: _stringList(json['allergies']),
+      deliveryAddress: json['deliveryAddress'] is String
+          ? json['deliveryAddress'] as String
+          : '',
       token: token is String && token.isNotEmpty ? token : null,
     );
   }
@@ -82,6 +87,7 @@ class ProfileApi {
     required String avatarMime,
     List<String> specialties = const [],
     List<String> allergies = const [],
+    String deliveryAddress = '',
   }) {
     return _send(
       'PATCH',
@@ -93,6 +99,7 @@ class ProfileApi {
         'avatarMime': avatarMime,
         'specialties': specialties,
         'allergies': allergies,
+        'deliveryAddress': deliveryAddress.trim(),
       },
     );
   }
