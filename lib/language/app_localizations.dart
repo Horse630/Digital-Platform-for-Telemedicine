@@ -622,6 +622,60 @@ abstract class AppLocalizations {
   /// **'Cancel booking'**
   String get cancelBooking;
 
+  /// No description provided for @confirmCancelTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel this appointment?'**
+  String get confirmCancelTitle;
+
+  /// No description provided for @confirmCancelSlotMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Patients will no longer be able to book this time.'**
+  String get confirmCancelSlotMessage;
+
+  /// No description provided for @confirmCancelVisitMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This visit will be cancelled.'**
+  String get confirmCancelVisitMessage;
+
+  /// No description provided for @confirmCancelBookingMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This booking will be cancelled and the time will open again.'**
+  String get confirmCancelBookingMessage;
+
+  /// No description provided for @confirmRemoveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove this appointment?'**
+  String get confirmRemoveTitle;
+
+  /// No description provided for @confirmRemoveMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This cancelled record will be deleted.'**
+  String get confirmRemoveMessage;
+
+  /// No description provided for @remove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get remove;
+
+  /// No description provided for @keep.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep'**
+  String get keep;
+
+  /// No description provided for @msgOnlyCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Only a cancelled appointment can be removed.'**
+  String get msgOnlyCancelled;
+
   /// No description provided for @chooseFutureTime.
   ///
   /// In en, this message translates to:

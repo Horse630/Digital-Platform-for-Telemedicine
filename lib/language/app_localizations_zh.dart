@@ -275,6 +275,33 @@ class AppLocalizationsZh extends AppLocalizations {
   String get cancelBooking => '取消預約';
 
   @override
+  String get confirmCancelTitle => '要取消這項預約嗎？';
+
+  @override
+  String get confirmCancelSlotMessage => '病人將不能再預約這個時段。';
+
+  @override
+  String get confirmCancelVisitMessage => '這次看診會被取消。';
+
+  @override
+  String get confirmCancelBookingMessage => '這項預約會取消，時段會重新開放。';
+
+  @override
+  String get confirmRemoveTitle => '要刪除這項預約嗎？';
+
+  @override
+  String get confirmRemoveMessage => '這筆已取消的紀錄會被刪除。';
+
+  @override
+  String get remove => '刪除';
+
+  @override
+  String get keep => '保留';
+
+  @override
+  String get msgOnlyCancelled => '只有已取消的預約可以刪除。';
+
+  @override
   String get chooseFutureTime => '請選擇一個未來的時間。';
 
   @override
@@ -791,6 +818,33 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get cancelBooking => '取消预约';
 
   @override
+  String get confirmCancelTitle => '要取消这项预约吗？';
+
+  @override
+  String get confirmCancelSlotMessage => '患者将不能再预约这个时段。';
+
+  @override
+  String get confirmCancelVisitMessage => '这次问诊会被取消。';
+
+  @override
+  String get confirmCancelBookingMessage => '这项预约会取消，时段会重新开放。';
+
+  @override
+  String get confirmRemoveTitle => '要删除这项预约吗？';
+
+  @override
+  String get confirmRemoveMessage => '这笔已取消的记录会被删除。';
+
+  @override
+  String get remove => '删除';
+
+  @override
+  String get keep => '保留';
+
+  @override
+  String get msgOnlyCancelled => '只有已取消的预约可以删除。';
+
+  @override
   String get chooseFutureTime => '请选择一个未来的时间。';
 
   @override
@@ -1305,6 +1359,33 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get cancelBooking => '取消預約';
+
+  @override
+  String get confirmCancelTitle => '要取消這項預約嗎？';
+
+  @override
+  String get confirmCancelSlotMessage => '病人將不能再預約這個時段。';
+
+  @override
+  String get confirmCancelVisitMessage => '這次看診會被取消。';
+
+  @override
+  String get confirmCancelBookingMessage => '這項預約會取消，時段會重新開放。';
+
+  @override
+  String get confirmRemoveTitle => '要刪除這項預約嗎？';
+
+  @override
+  String get confirmRemoveMessage => '這筆已取消的紀錄會被刪除。';
+
+  @override
+  String get remove => '刪除';
+
+  @override
+  String get keep => '保留';
+
+  @override
+  String get msgOnlyCancelled => '只有已取消的預約可以刪除。';
 
   @override
   String get chooseFutureTime => '請選擇一個未來的時間。';

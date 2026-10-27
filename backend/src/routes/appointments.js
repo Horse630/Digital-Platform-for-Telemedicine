@@ -176,4 +176,29 @@ router.post('/:id/cancel', requireUser, async (req, res) => {
   res.json(toAppointmentJson(appointment));
 });
 
+router.delete('/:id', requireUser, async (req, res) => {
+  const appointment = await Appointment.findById(req.params.id);
+  if (!appointment) {
+    res.status(404).json({ message: 'Appointment not found.' });
+    return;
+  }
+  if (appointment.status !== 'cancelled') {
+    res.status(400).json({ message: 'Only a cancelled appointment can be removed.' });
+    return;
+  }
+
+  const isDoctor = req.user.role === 'doctor' && appointment.doctor.equals(req.user._id);
+  const isPatient =
+    req.user.role === 'patient' &&
+    appointment.patient &&
+    appointment.patient.equals(req.user._id);
+  if (!isDoctor && !isPatient) {
+    res.status(403).json({ message: 'You cannot change this appointment.' });
+    return;
+  }
+
+  await appointment.deleteOne();
+  res.json({ ok: true });
+});
+
 module.exports = router;

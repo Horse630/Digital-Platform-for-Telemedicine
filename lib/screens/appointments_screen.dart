@@ -110,6 +110,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
         appointments: _appointments,
         onAdd: _addSlot,
         onCancel: _cancel,
+        onRemove: _remove,
       );
     }
     if (role == 'patient') {
@@ -121,6 +122,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
         appointments: mine,
         onOpenBooking: _openBooking,
         onCancel: _cancel,
+        onRemove: _remove,
       );
     }
     return _AdminSchedule(appointments: _appointments);
@@ -202,8 +204,85 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
     }
   }
 
-  Future<void> _cancel(AppointmentRecord appointment) {
-    return _run(_api.cancel(appointment.id));
+  Future<void> _cancel(AppointmentRecord appointment) async {
+    final l10n = context.l10n;
+    final confirmed = await _confirm(
+      title: l10n.confirmCancelTitle,
+      message: _cancelWarning(l10n, appointment),
+      confirmLabel: widget.user.role == 'patient'
+          ? l10n.cancelBooking
+          : l10n.cancelSlot,
+    );
+    if (!confirmed || !mounted) {
+      return;
+    }
+    await _run(_api.cancel(appointment.id));
+  }
+
+  String _cancelWarning(AppLocalizations l10n, AppointmentRecord appointment) {
+    if (widget.user.role == 'patient') {
+      return l10n.confirmCancelBookingMessage;
+    }
+    if (appointment.status == 'available') {
+      return l10n.confirmCancelSlotMessage;
+    }
+    return l10n.confirmCancelVisitMessage;
+  }
+
+  Future<void> _remove(AppointmentRecord appointment) async {
+    final l10n = context.l10n;
+    final confirmed = await _confirm(
+      title: l10n.confirmRemoveTitle,
+      message: l10n.confirmRemoveMessage,
+      confirmLabel: l10n.remove,
+    );
+    if (!confirmed || !mounted) {
+      return;
+    }
+    await _run(_api.remove(appointment.id));
+  }
+
+  Future<bool> _confirm({
+    required String title,
+    required String message,
+    required String confirmLabel,
+  }) async {
+    final answer = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        final scheme = Theme.of(dialogContext).colorScheme;
+        return AlertDialog(
+          title: Text(title),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(message),
+              const SizedBox(height: 20),
+              Align(
+                child: FilledButton(
+                  style: FilledButton.styleFrom(
+                    backgroundColor: scheme.surfaceContainerHighest,
+                    foregroundColor: scheme.onSurfaceVariant,
+                    visualDensity: VisualDensity.compact,
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                  ),
+                  onPressed: () => Navigator.of(dialogContext).pop(false),
+                  child: Text(dialogContext.l10n.keep),
+                ),
+              ),
+              const SizedBox(height: 8),
+              FilledButton(
+                onPressed: () => Navigator.of(dialogContext).pop(true),
+                child: Text(confirmLabel),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+    return answer ?? false;
   }
 }
 
@@ -212,11 +291,13 @@ class _DoctorSchedule extends StatelessWidget {
     required this.appointments,
     required this.onAdd,
     required this.onCancel,
+    required this.onRemove,
   });
 
   final List<AppointmentRecord> appointments;
   final VoidCallback onAdd;
   final Future<void> Function(AppointmentRecord appointment) onCancel;
+  final Future<void> Function(AppointmentRecord appointment) onRemove;
 
   @override
   Widget build(BuildContext context) {
@@ -250,6 +331,9 @@ class _DoctorSchedule extends StatelessWidget {
               : l10n.patientLine(appointment.patientName ?? l10n.unknown),
           actionLabel: open || booked ? l10n.cancelSlot : null,
           onAction: open || booked ? () => onCancel(appointment) : null,
+          onRemove: appointment.status == 'cancelled'
+              ? () => onRemove(appointment)
+              : null,
         );
       },
     );
@@ -261,11 +345,13 @@ class _MyAppointments extends StatelessWidget {
     required this.appointments,
     required this.onOpenBooking,
     required this.onCancel,
+    required this.onRemove,
   });
 
   final List<AppointmentRecord> appointments;
   final VoidCallback onOpenBooking;
   final Future<void> Function(AppointmentRecord appointment) onCancel;
+  final Future<void> Function(AppointmentRecord appointment) onRemove;
 
   @override
   Widget build(BuildContext context) {
@@ -297,6 +383,9 @@ class _MyAppointments extends StatelessWidget {
           actionLabel: appointment.status == 'scheduled' ? l10n.cancelBooking : null,
           onAction: appointment.status == 'scheduled'
               ? () => onCancel(appointment)
+              : null,
+          onRemove: appointment.status == 'cancelled'
+              ? () => onRemove(appointment)
               : null,
         );
       },
@@ -782,12 +871,14 @@ class _AppointmentCard extends StatelessWidget {
     required this.detail,
     this.actionLabel,
     this.onAction,
+    this.onRemove,
   });
 
   final AppointmentRecord appointment;
   final String detail;
   final String? actionLabel;
   final VoidCallback? onAction;
+  final VoidCallback? onRemove;
 
   @override
   Widget build(BuildContext context) {
@@ -801,9 +892,28 @@ class _AppointmentCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              '$date, $time',
-              style: Theme.of(context).textTheme.titleMedium,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Text(
+                    '$date, $time',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                ),
+                if (onRemove != null)
+                  IconButton(
+                    tooltip: context.l10n.remove,
+                    visualDensity: VisualDensity.compact,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(
+                      minWidth: 32,
+                      minHeight: 32,
+                    ),
+                    onPressed: onRemove,
+                    icon: const Icon(Icons.close),
+                  ),
+              ],
             ),
             const SizedBox(height: 4),
             Text(detail),

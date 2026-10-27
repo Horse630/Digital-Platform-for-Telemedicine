@@ -124,6 +124,10 @@ class AppointmentApi {
     return _send('POST', '/api/appointments/$id/cancel');
   }
 
+  Future<void> remove(String id) {
+    return _send('DELETE', '/api/appointments/$id');
+  }
+
   Future<List<AppointmentRecord>> _send(
     String method,
     String path, {
@@ -142,6 +146,10 @@ class AppointmentApi {
       if (method == 'GET') {
         response = await client
             .get(uri, headers: headers)
+            .timeout(const Duration(seconds: 8));
+      } else if (method == 'DELETE') {
+        response = await client
+            .delete(uri, headers: headers)
             .timeout(const Duration(seconds: 8));
       } else {
         response = await client

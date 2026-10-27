@@ -279,6 +279,35 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cancelBooking => 'Cancel booking';
 
   @override
+  String get confirmCancelTitle => 'Cancel this appointment?';
+
+  @override
+  String get confirmCancelSlotMessage =>
+      'Patients will no longer be able to book this time.';
+
+  @override
+  String get confirmCancelVisitMessage => 'This visit will be cancelled.';
+
+  @override
+  String get confirmCancelBookingMessage =>
+      'This booking will be cancelled and the time will open again.';
+
+  @override
+  String get confirmRemoveTitle => 'Remove this appointment?';
+
+  @override
+  String get confirmRemoveMessage => 'This cancelled record will be deleted.';
+
+  @override
+  String get remove => 'Remove';
+
+  @override
+  String get keep => 'Keep';
+
+  @override
+  String get msgOnlyCancelled => 'Only a cancelled appointment can be removed.';
+
+  @override
   String get chooseFutureTime => 'Choose a time in the future.';
 
   @override

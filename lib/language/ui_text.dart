@@ -92,6 +92,8 @@ String localizeMessage(AppLocalizations l10n, String message) {
       return l10n.msgAppointmentMissing;
     case 'You cannot change this appointment.':
       return l10n.msgCannotChange;
+    case 'Only a cancelled appointment can be removed.':
+      return l10n.msgOnlyCancelled;
     default:
       return message;
   }
