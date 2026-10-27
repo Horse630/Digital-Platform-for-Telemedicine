@@ -45,6 +45,7 @@ The report's phases are the plan, not the current build.
 Login, shell, and theme:
 
 - `lib/screens/login_screen.dart` posts to `POST /api/login`. A failed login stays on that screen. Success replaces the route with `lib/screens/main_shell.dart`. **Create an account** opens `lib/screens/sign_up_screen.dart`.
+- The login screen also has three temporary buttons: Admin, Doctor, and Patient. Each one signs in as the matching seeded account (`admin` / `Admin123!`, `doctor` / `Doctor123!`, `patient` / `Patient123!`) without typing. The username and password fields stay. Remove these buttons later. See To do.
 - `POST /api/signup` in `backend/src/server.js` accepts `email`, `username`, `password`, and `role`. `role` must be `patient` or `doctor`. It rejects `admin`. The username is checked without case sensitivity against `users`. A duplicate username returns 409, `That username is already used.` A duplicate email returns 409, `That email is already used.` The password must be at least 8 characters. The new document stores `fullName` as the username because sign-up does not ask for a separate name. Success returns the same JSON as login, including a token, and the app opens the shell.
 - Patient and doctor sign-up send the same fields. `User.js` no longer rejects a doctor who has no specialty or license number. The seeded doctor still has those values.
 - `POST /api/login` in `backend/src/server.js` trims the username, matches it without case sensitivity, checks bcrypt, and returns `username`, `role`, `fullName`, and `token`.
@@ -120,6 +121,7 @@ Atlas also has system databases such as `admin`, `config`, and `local`. Those ar
 
 ## To do
 
+- Remove the three demo sign-in buttons on the login screen (`demoAdminButton`, `demoDoctorButton`, and `demoPatientButton` in `lib/screens/login_screen.dart`). They sign in as the seeded admin, doctor, and patient accounts without a typed password. Take them out before real patients use the app. Keep the username and password form.
 - Change the doctor sign-up process. Sign-up is still the same form for a patient and a doctor: email, username, and password. Doctor type tags are chosen later in Settings from the fixed list above. Do not add a license number or an approval step to sign-up until the student asks. The seeded doctor account is separate and already has specialty `General Practice` and license `DEMO-HK-DOCTOR-001`.
 - Doctor reputation. Show a star rating on a doctor, such as 5 or 4.8, where a patient chooses a doctor. This is not in the app or the database. `users` has no rating field, no review collection exists, and the appointment cards do not show stars. Do not invent a rating, a review screen, or seed scores until the student asks.
 

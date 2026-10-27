@@ -184,6 +184,12 @@ abstract class AppLocalizations {
   /// **'Sign in'**
   String get signIn;
 
+  /// No description provided for @continueAs.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue as'**
+  String get continueAs;
+
   /// No description provided for @createAccount.
   ///
   /// In en, this message translates to:

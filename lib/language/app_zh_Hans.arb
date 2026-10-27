@@ -14,6 +14,7 @@
   "atLeast8": "请至少使用 8 个字符。",
   "samePasswordTwice": "请输入两次相同的密码。",
   "signIn": "登录",
+  "continueAs": "直接登录",
   "createAccount": "创建账号",
   "createAccountAction": "创建账号",
   "creating": "创建中...",

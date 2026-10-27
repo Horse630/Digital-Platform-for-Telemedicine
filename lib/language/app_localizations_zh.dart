@@ -52,6 +52,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get signIn => '登入';
 
   @override
+  String get continueAs => '直接登入';
+
+  @override
   String get createAccount => '建立帳號';
 
   @override
@@ -565,6 +568,9 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get signIn => '登录';
 
   @override
+  String get continueAs => '直接登录';
+
+  @override
   String get createAccount => '创建账号';
 
   @override
@@ -1076,6 +1082,9 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get signIn => '登入';
+
+  @override
+  String get continueAs => '直接登入';
 
   @override
   String get createAccount => '建立帳號';

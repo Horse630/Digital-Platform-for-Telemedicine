@@ -45,7 +45,7 @@ The app icon is `assets/app_icon.png`, a teal medical cross with a video camera.
 
 ## Screens
 
-- **Login** calls `POST /api/login` and opens the shell when MongoDB accepts the account. **Create an account** opens sign-up.
+- **Login** calls `POST /api/login` and opens the shell when MongoDB accepts the account. Three buttons sign in as the seeded admin, doctor, or patient without typing. **Create an account** opens sign-up.
 - **Sign up** asks for an email, username, and password, and a choice of patient or doctor. Both roles use those same fields. The API rejects a username that is already stored.
 - **Home** greets the signed-in person and lists the core functions and sub-functions from the progress report. The next-appointment card shows that person's soonest booked visit, or "Not scheduled" when there is none. Appointments and Consultation open their tabs. The other modules explain that this build does not save new data.
 - **Appointments** lists a doctor's own time slots and a patient's own bookings. The default view is a calendar. A **List** button switches to the scrolling cards, and **Calendar** switches back. An empty list shows "No appointment" and a button: **Make an appointment** for a doctor, **Book an appointment** for a patient. The booking page searches by doctor name, filters by doctor type, and sorts by time or name. Booking needs a short reason. Cancelling a booking opens that slot again. An admin can read every row in either format.

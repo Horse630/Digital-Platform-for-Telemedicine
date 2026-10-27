@@ -86,6 +86,12 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  Future<void> _signInAs(String username, String password) async {
+    _username.text = username;
+    _password.text = password;
+    await _submit();
+  }
+
   void _openSignUp() {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
@@ -261,6 +267,45 @@ class _LoginScreenState extends State<LoginScreen> {
                                           ),
                                         )
                                       : Text(l10n.signIn),
+                                ),
+                                const SizedBox(height: 16),
+                                Text(
+                                  l10n.continueAs,
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context).textTheme.bodySmall
+                                      ?.copyWith(color: scheme.onSurfaceVariant),
+                                ),
+                                const SizedBox(height: 8),
+                                Wrap(
+                                  alignment: WrapAlignment.center,
+                                  spacing: 8,
+                                  runSpacing: 8,
+                                  children: [
+                                    OutlinedButton(
+                                      key: const Key('demoAdminButton'),
+                                      onPressed: _submitting
+                                          ? null
+                                          : () => _signInAs('admin', 'Admin123!'),
+                                      child: Text(l10n.admin),
+                                    ),
+                                    OutlinedButton(
+                                      key: const Key('demoDoctorButton'),
+                                      onPressed: _submitting
+                                          ? null
+                                          : () => _signInAs('doctor', 'Doctor123!'),
+                                      child: Text(l10n.doctor),
+                                    ),
+                                    OutlinedButton(
+                                      key: const Key('demoPatientButton'),
+                                      onPressed: _submitting
+                                          ? null
+                                          : () => _signInAs(
+                                              'patient',
+                                              'Patient123!',
+                                            ),
+                                      child: Text(l10n.patient),
+                                    ),
+                                  ],
                                 ),
                                 const SizedBox(height: 8),
                                 TextButton(

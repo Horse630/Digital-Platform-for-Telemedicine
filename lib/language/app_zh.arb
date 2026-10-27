@@ -14,6 +14,7 @@
   "atLeast8": "請至少使用 8 個字元。",
   "samePasswordTwice": "請輸入兩次相同的密碼。",
   "signIn": "登入",
+  "continueAs": "直接登入",
   "createAccount": "建立帳號",
   "createAccountAction": "建立帳號",
   "creating": "建立中...",
