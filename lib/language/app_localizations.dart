@@ -472,6 +472,246 @@ abstract class AppLocalizations {
   /// **'Read-only certificate'**
   String get sickLeaveSubtitle;
 
+  /// No description provided for @sickLeaveDoctorHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose an appointed patient, then fill in the certificate. It cannot be edited afterwards.'**
+  String get sickLeaveDoctorHint;
+
+  /// No description provided for @sickLeavePatientHint.
+  ///
+  /// In en, this message translates to:
+  /// **'A certificate from your doctor is read-only. You can download a copy.'**
+  String get sickLeavePatientHint;
+
+  /// No description provided for @issueCertificate.
+  ///
+  /// In en, this message translates to:
+  /// **'Issue a certificate'**
+  String get issueCertificate;
+
+  /// No description provided for @selectAppointment.
+  ///
+  /// In en, this message translates to:
+  /// **'Appointed patient'**
+  String get selectAppointment;
+
+  /// No description provided for @noAppointedPatients.
+  ///
+  /// In en, this message translates to:
+  /// **'No appointed patient yet.'**
+  String get noAppointedPatients;
+
+  /// No description provided for @noSickLeave.
+  ///
+  /// In en, this message translates to:
+  /// **'No certificate yet.'**
+  String get noSickLeave;
+
+  /// No description provided for @patientAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Patient address'**
+  String get patientAddress;
+
+  /// No description provided for @unfitFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Unfit for'**
+  String get unfitFor;
+
+  /// No description provided for @sickFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'From'**
+  String get sickFrom;
+
+  /// No description provided for @sickUntil.
+  ///
+  /// In en, this message translates to:
+  /// **'Until'**
+  String get sickUntil;
+
+  /// No description provided for @numberOfDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Number of days'**
+  String get numberOfDays;
+
+  /// No description provided for @sickness.
+  ///
+  /// In en, this message translates to:
+  /// **'Sickness'**
+  String get sickness;
+
+  /// No description provided for @doctorSignature.
+  ///
+  /// In en, this message translates to:
+  /// **'Doctor\'s signature'**
+  String get doctorSignature;
+
+  /// No description provided for @dateOfIssue.
+  ///
+  /// In en, this message translates to:
+  /// **'Date of issue'**
+  String get dateOfIssue;
+
+  /// No description provided for @referenceNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Reference No.'**
+  String get referenceNumber;
+
+  /// No description provided for @toWhom.
+  ///
+  /// In en, this message translates to:
+  /// **'To whom it may concern:'**
+  String get toWhom;
+
+  /// No description provided for @certifyDoctor.
+  ///
+  /// In en, this message translates to:
+  /// **'I,'**
+  String get certifyDoctor;
+
+  /// No description provided for @herebyCertify.
+  ///
+  /// In en, this message translates to:
+  /// **'Hereby certify that'**
+  String get herebyCertify;
+
+  /// No description provided for @sickCertTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sick certification'**
+  String get sickCertTitle;
+
+  /// No description provided for @downloadCertificate.
+  ///
+  /// In en, this message translates to:
+  /// **'Download'**
+  String get downloadCertificate;
+
+  /// No description provided for @licenceNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Licence no.'**
+  String get licenceNumber;
+
+  /// No description provided for @msgOnlyDoctorIssues.
+  ///
+  /// In en, this message translates to:
+  /// **'Only a doctor can issue a certificate.'**
+  String get msgOnlyDoctorIssues;
+
+  /// No description provided for @msgChoosePatient.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose an appointed patient.'**
+  String get msgChoosePatient;
+
+  /// No description provided for @msgEnterAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the patient address.'**
+  String get msgEnterAddress;
+
+  /// No description provided for @msgAddressTooLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep the address under 200 characters.'**
+  String get msgAddressTooLong;
+
+  /// No description provided for @msgEnterUnfit.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter what the patient is unfit for.'**
+  String get msgEnterUnfit;
+
+  /// No description provided for @msgUnfitTooLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep that line under 120 characters.'**
+  String get msgUnfitTooLong;
+
+  /// No description provided for @msgEnterSickness.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the sickness.'**
+  String get msgEnterSickness;
+
+  /// No description provided for @msgSicknessTooLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep the sickness under 300 characters.'**
+  String get msgSicknessTooLong;
+
+  /// No description provided for @msgEnterSignature.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your signature.'**
+  String get msgEnterSignature;
+
+  /// No description provided for @msgSignatureTooLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep the signature under 80 characters.'**
+  String get msgSignatureTooLong;
+
+  /// No description provided for @msgEnterStartDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the start date.'**
+  String get msgEnterStartDate;
+
+  /// No description provided for @msgEnterEndDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the end date.'**
+  String get msgEnterEndDate;
+
+  /// No description provided for @msgBadSickDates.
+  ///
+  /// In en, this message translates to:
+  /// **'The end date must be on or after the start date.'**
+  String get msgBadSickDates;
+
+  /// No description provided for @msgCertificateExists.
+  ///
+  /// In en, this message translates to:
+  /// **'A certificate already exists for that appointment.'**
+  String get msgCertificateExists;
+
+  /// No description provided for @msgAppointmentMissingSick.
+  ///
+  /// In en, this message translates to:
+  /// **'That appointment was not found.'**
+  String get msgAppointmentMissingSick;
+
+  /// No description provided for @msgCannotOpenCertificate.
+  ///
+  /// In en, this message translates to:
+  /// **'You cannot open this certificate.'**
+  String get msgCannotOpenCertificate;
+
+  /// No description provided for @msgCertificateNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'That certificate was not found.'**
+  String get msgCertificateNotFound;
+
+  /// No description provided for @msgSickLeaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The sick leave request failed.'**
+  String get msgSickLeaveFailed;
+
+  /// No description provided for @msgSickLeaveUnread.
+  ///
+  /// In en, this message translates to:
+  /// **'The sick leave list could not be read.'**
+  String get msgSickLeaveUnread;
+
   /// No description provided for @payment.
   ///
   /// In en, this message translates to:

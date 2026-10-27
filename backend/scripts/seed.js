@@ -137,7 +137,11 @@ async function seedClinicalRecords(doctor, patient) {
     issuedOn: scheduledAt,
     validFrom: new Date('2026-11-03T00:00:00.000Z'),
     validTo: new Date('2026-11-04T00:00:00.000Z'),
-    summary: 'Sample certificate for one day. This is demo text.',
+    dayCount: 2,
+    patientAddress: 'Kowloon, Hong Kong',
+    unfitFor: 'work',
+    summary: 'Sample sore throat',
+    signature: 'Demo Doctor',
     readOnly: true,
   });
 

@@ -198,6 +198,126 @@ class AppLocalizationsZh extends AppLocalizations {
   String get sickLeaveSubtitle => '只供閱讀的證明';
 
   @override
+  String get sickLeaveDoctorHint => '選擇已預約的病人，然後填寫證明。發出後不能再改。';
+
+  @override
+  String get sickLeavePatientHint => '醫生發出的證明只供閱讀，你可以下載。';
+
+  @override
+  String get issueCertificate => '簽發證明';
+
+  @override
+  String get selectAppointment => '已預約的病人';
+
+  @override
+  String get noAppointedPatients => '還沒有已預約的病人。';
+
+  @override
+  String get noSickLeave => '還沒有證明。';
+
+  @override
+  String get patientAddress => '病人地址';
+
+  @override
+  String get unfitFor => '不適宜';
+
+  @override
+  String get sickFrom => '由';
+
+  @override
+  String get sickUntil => '至';
+
+  @override
+  String get numberOfDays => '日數';
+
+  @override
+  String get sickness => '病況';
+
+  @override
+  String get doctorSignature => '醫生簽名';
+
+  @override
+  String get dateOfIssue => '簽發日期';
+
+  @override
+  String get referenceNumber => '參考編號';
+
+  @override
+  String get toWhom => '敬啟者：';
+
+  @override
+  String get certifyDoctor => '本人';
+
+  @override
+  String get herebyCertify => '現證明';
+
+  @override
+  String get sickCertTitle => '病假證明';
+
+  @override
+  String get downloadCertificate => '下載';
+
+  @override
+  String get licenceNumber => '牌照編號';
+
+  @override
+  String get msgOnlyDoctorIssues => '只有醫生可以簽發證明。';
+
+  @override
+  String get msgChoosePatient => '請選擇已預約的病人。';
+
+  @override
+  String get msgEnterAddress => '請輸入病人地址。';
+
+  @override
+  String get msgAddressTooLong => '地址請少於 200 個字。';
+
+  @override
+  String get msgEnterUnfit => '請填寫不適宜的事項。';
+
+  @override
+  String get msgUnfitTooLong => '這一行請少於 120 個字。';
+
+  @override
+  String get msgEnterSickness => '請填寫病況。';
+
+  @override
+  String get msgSicknessTooLong => '病況請少於 300 個字。';
+
+  @override
+  String get msgEnterSignature => '請輸入簽名。';
+
+  @override
+  String get msgSignatureTooLong => '簽名請少於 80 個字。';
+
+  @override
+  String get msgEnterStartDate => '請選擇開始日期。';
+
+  @override
+  String get msgEnterEndDate => '請選擇結束日期。';
+
+  @override
+  String get msgBadSickDates => '結束日期不可早於開始日期。';
+
+  @override
+  String get msgCertificateExists => '這次預約已經有證明。';
+
+  @override
+  String get msgAppointmentMissingSick => '找不到該預約。';
+
+  @override
+  String get msgCannotOpenCertificate => '你不能開啟這張證明。';
+
+  @override
+  String get msgCertificateNotFound => '找不到這張證明。';
+
+  @override
+  String get msgSickLeaveFailed => '病假請求失敗。';
+
+  @override
+  String get msgSickLeaveUnread => '無法讀取病假列表。';
+
+  @override
   String get payment => '付款';
 
   @override
@@ -965,6 +1085,126 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get sickLeaveSubtitle => '只供阅读的证明';
 
   @override
+  String get sickLeaveDoctorHint => '选择已预约的患者，然后填写证明。发出后不能再改。';
+
+  @override
+  String get sickLeavePatientHint => '医生发出的证明只供阅读，你可以下载。';
+
+  @override
+  String get issueCertificate => '签发证明';
+
+  @override
+  String get selectAppointment => '已预约的患者';
+
+  @override
+  String get noAppointedPatients => '还没有已预约的患者。';
+
+  @override
+  String get noSickLeave => '还没有证明。';
+
+  @override
+  String get patientAddress => '患者地址';
+
+  @override
+  String get unfitFor => '不适宜';
+
+  @override
+  String get sickFrom => '由';
+
+  @override
+  String get sickUntil => '至';
+
+  @override
+  String get numberOfDays => '天数';
+
+  @override
+  String get sickness => '病情';
+
+  @override
+  String get doctorSignature => '医生签名';
+
+  @override
+  String get dateOfIssue => '签发日期';
+
+  @override
+  String get referenceNumber => '参考编号';
+
+  @override
+  String get toWhom => '敬启者：';
+
+  @override
+  String get certifyDoctor => '本人';
+
+  @override
+  String get herebyCertify => '现证明';
+
+  @override
+  String get sickCertTitle => '病假证明';
+
+  @override
+  String get downloadCertificate => '下载';
+
+  @override
+  String get licenceNumber => '执照编号';
+
+  @override
+  String get msgOnlyDoctorIssues => '只有医生可以签发证明。';
+
+  @override
+  String get msgChoosePatient => '请选择已预约的患者。';
+
+  @override
+  String get msgEnterAddress => '请输入患者地址。';
+
+  @override
+  String get msgAddressTooLong => '地址请少于 200 个字。';
+
+  @override
+  String get msgEnterUnfit => '请填写不适宜的事项。';
+
+  @override
+  String get msgUnfitTooLong => '这一行请少于 120 个字。';
+
+  @override
+  String get msgEnterSickness => '请填写病情。';
+
+  @override
+  String get msgSicknessTooLong => '病情请少于 300 个字。';
+
+  @override
+  String get msgEnterSignature => '请输入签名。';
+
+  @override
+  String get msgSignatureTooLong => '签名请少于 80 个字。';
+
+  @override
+  String get msgEnterStartDate => '请选择开始日期。';
+
+  @override
+  String get msgEnterEndDate => '请选择结束日期。';
+
+  @override
+  String get msgBadSickDates => '结束日期不可早于开始日期。';
+
+  @override
+  String get msgCertificateExists => '这次预约已经有证明。';
+
+  @override
+  String get msgAppointmentMissingSick => '找不到该预约。';
+
+  @override
+  String get msgCannotOpenCertificate => '你不能打开这张证明。';
+
+  @override
+  String get msgCertificateNotFound => '找不到这张证明。';
+
+  @override
+  String get msgSickLeaveFailed => '病假请求失败。';
+
+  @override
+  String get msgSickLeaveUnread => '无法读取病假列表。';
+
+  @override
   String get payment => '付款';
 
   @override
@@ -1730,6 +1970,126 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get sickLeaveSubtitle => '只供閱讀的證明';
+
+  @override
+  String get sickLeaveDoctorHint => '選擇已預約的病人，然後填寫證明。發出後不能再改。';
+
+  @override
+  String get sickLeavePatientHint => '醫生發出的證明只供閱讀，你可以下載。';
+
+  @override
+  String get issueCertificate => '簽發證明';
+
+  @override
+  String get selectAppointment => '已預約的病人';
+
+  @override
+  String get noAppointedPatients => '還沒有已預約的病人。';
+
+  @override
+  String get noSickLeave => '還沒有證明。';
+
+  @override
+  String get patientAddress => '病人地址';
+
+  @override
+  String get unfitFor => '不適宜';
+
+  @override
+  String get sickFrom => '由';
+
+  @override
+  String get sickUntil => '至';
+
+  @override
+  String get numberOfDays => '日數';
+
+  @override
+  String get sickness => '病況';
+
+  @override
+  String get doctorSignature => '醫生簽名';
+
+  @override
+  String get dateOfIssue => '簽發日期';
+
+  @override
+  String get referenceNumber => '參考編號';
+
+  @override
+  String get toWhom => '敬啟者：';
+
+  @override
+  String get certifyDoctor => '本人';
+
+  @override
+  String get herebyCertify => '現證明';
+
+  @override
+  String get sickCertTitle => '病假證明';
+
+  @override
+  String get downloadCertificate => '下載';
+
+  @override
+  String get licenceNumber => '牌照編號';
+
+  @override
+  String get msgOnlyDoctorIssues => '只有醫生可以簽發證明。';
+
+  @override
+  String get msgChoosePatient => '請選擇已預約的病人。';
+
+  @override
+  String get msgEnterAddress => '請輸入病人地址。';
+
+  @override
+  String get msgAddressTooLong => '地址請少於 200 個字。';
+
+  @override
+  String get msgEnterUnfit => '請填寫不適宜的事項。';
+
+  @override
+  String get msgUnfitTooLong => '這一行請少於 120 個字。';
+
+  @override
+  String get msgEnterSickness => '請填寫病況。';
+
+  @override
+  String get msgSicknessTooLong => '病況請少於 300 個字。';
+
+  @override
+  String get msgEnterSignature => '請輸入簽名。';
+
+  @override
+  String get msgSignatureTooLong => '簽名請少於 80 個字。';
+
+  @override
+  String get msgEnterStartDate => '請選擇開始日期。';
+
+  @override
+  String get msgEnterEndDate => '請選擇結束日期。';
+
+  @override
+  String get msgBadSickDates => '結束日期不可早於開始日期。';
+
+  @override
+  String get msgCertificateExists => '這次預約已經有證明。';
+
+  @override
+  String get msgAppointmentMissingSick => '找不到該預約。';
+
+  @override
+  String get msgCannotOpenCertificate => '你不能開啟這張證明。';
+
+  @override
+  String get msgCertificateNotFound => '找不到這張證明。';
+
+  @override
+  String get msgSickLeaveFailed => '病假請求失敗。';
+
+  @override
+  String get msgSickLeaveUnread => '無法讀取病假列表。';
 
   @override
   String get payment => '付款';

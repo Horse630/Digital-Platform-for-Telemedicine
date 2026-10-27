@@ -72,10 +72,10 @@ void main() {
     await _pumpPhone(tester);
     await _signIn(tester);
 
-    final sickLeave = find.text('Sick leave');
-    await tester.ensureVisible(sickLeave);
+    final payment = find.text('Payment');
+    await tester.ensureVisible(payment);
     await tester.pumpAndSettle();
-    await tester.tap(sickLeave);
+    await tester.tap(payment);
     await tester.pumpAndSettle();
 
     expect(

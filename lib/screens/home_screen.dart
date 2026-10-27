@@ -8,14 +8,15 @@ import '../services/auth_service.dart';
 import '../services/discussion_api.dart';
 import '../widgets/content_frame.dart';
 import 'discussions_screen.dart';
+import 'sick_leave_screen.dart';
 
 /// Home dashboard.
 ///
 /// The tiles follow the core functions and sub-functions in the progress
 /// report. The next-appointment card reads the signed-in person's bookings.
 /// Appointments and Consultation open their tabs. Discussion opens the
-/// public question board. Every other tile only explains that the module
-/// does not save data yet.
+/// public question board. Sick leave opens certificates. Every other tile
+/// only explains that the module does not save data yet.
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
     super.key,
@@ -104,6 +105,17 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _openModule(BuildContext context, _Module module) async {
+    if (module.opensSickLeave) {
+      await Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => SickLeaveScreen(
+            authService: widget.authService,
+            user: widget.user,
+          ),
+        ),
+      );
+      return;
+    }
     if (module.opensDiscussion) {
       await Navigator.of(context).push(
         MaterialPageRoute<void>(
@@ -144,6 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
         icon: Icons.description_outlined,
         title: l10n.sickLeave,
         subtitle: l10n.sickLeaveSubtitle,
+        opensSickLeave: true,
       ),
       _Module(
         icon: Icons.payments_outlined,
@@ -263,6 +276,7 @@ class _Module {
     required this.subtitle,
     this.destination,
     this.opensDiscussion = false,
+    this.opensSickLeave = false,
   });
 
   final IconData icon;
@@ -270,6 +284,7 @@ class _Module {
   final String subtitle;
   final AppDestination? destination;
   final bool opensDiscussion;
+  final bool opensSickLeave;
 }
 
 class _SectionHeader extends StatelessWidget {

@@ -132,6 +132,44 @@ String localizeMessage(AppLocalizations l10n, String message) {
       return l10n.msgOnlyPosterCanRemove;
     case 'Only the doctor who wrote this reply can change it.':
       return l10n.msgOnlyReplyAuthor;
+    case 'Only a doctor can issue a certificate.':
+      return l10n.msgOnlyDoctorIssues;
+    case 'Choose an appointed patient.':
+      return l10n.msgChoosePatient;
+    case 'Enter the patient address.':
+      return l10n.msgEnterAddress;
+    case 'Keep the address under 200 characters.':
+      return l10n.msgAddressTooLong;
+    case 'Enter what the patient is unfit for.':
+      return l10n.msgEnterUnfit;
+    case 'Keep that line under 120 characters.':
+      return l10n.msgUnfitTooLong;
+    case 'Enter the sickness.':
+      return l10n.msgEnterSickness;
+    case 'Keep the sickness under 300 characters.':
+      return l10n.msgSicknessTooLong;
+    case 'Enter your signature.':
+      return l10n.msgEnterSignature;
+    case 'Keep the signature under 80 characters.':
+      return l10n.msgSignatureTooLong;
+    case 'Enter the start date.':
+      return l10n.msgEnterStartDate;
+    case 'Enter the end date.':
+      return l10n.msgEnterEndDate;
+    case 'The end date must be on or after the start date.':
+      return l10n.msgBadSickDates;
+    case 'A certificate already exists for that appointment.':
+      return l10n.msgCertificateExists;
+    case 'That appointment was not found.':
+      return l10n.msgAppointmentMissingSick;
+    case 'You cannot open this certificate.':
+      return l10n.msgCannotOpenCertificate;
+    case 'That certificate was not found.':
+      return l10n.msgCertificateNotFound;
+    case 'The sick leave request failed.':
+      return l10n.msgSickLeaveFailed;
+    case 'The sick leave list could not be read.':
+      return l10n.msgSickLeaveUnread;
     default:
       return message;
   }

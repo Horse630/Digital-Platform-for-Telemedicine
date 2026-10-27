@@ -196,4 +196,4 @@ flutter test
 
 ## Later phases
 
-Appointment booking, settings, and the public discussion board are in this build. PayPal Sandbox, read-only sick leave PDFs, video, the delivery map, the chatbot, and wearable sync are not connected yet. The home screen entries for those modules are still navigation targets.
+Appointment booking, settings, the public discussion board, and sick leave certificates are in this build. A doctor fills a certificate for an appointed patient. A patient can only read it and download a copy. PayPal Sandbox, video, the delivery map, the chatbot, and wearable sync are not connected yet. The home screen entries for those modules are still navigation targets.

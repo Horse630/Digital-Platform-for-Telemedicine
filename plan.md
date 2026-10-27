@@ -35,7 +35,7 @@ The report's phases are the plan, not the current build.
 | Report phase | Report asked for | In the code now |
 | --- | --- | --- |
 | Phase 1, through late October | Login, patient dashboard, navigation, backend, MongoDB connection | Done. Settings was added later and is not in the report. |
-| Phase 2, November | Appointment scheduling, PayPal Sandbox, read-only sick-leave PDFs | Appointment scheduling is done. PayPal and PDF generation are not. |
+| Phase 2, November | Appointment scheduling, PayPal Sandbox, read-only sick-leave PDFs | Appointment scheduling and sick leave certificates are done. PayPal is not. |
 | Phase 3, December to January | Video SDK and Hong Kong Vector Map delivery tracking | Not started. No video or map package is installed. |
 | Phase 4, February to March | HKBU chatbot, discussion board, wearable health sync | Discussion is done. The chatbot and wearable sync are not started. Their seed documents exist. The app does not load them. |
 | Phase 5, April | Full testing, UI polish, final report | Not started. `flutter test` covers the current screens with a fake HTTP client. Those tests do not prove Atlas is running. |
@@ -80,7 +80,7 @@ Profile and settings, added after the report:
 
 Navigation placeholders:
 
-- Home lists the report's core and sub-functions. Appointments and Consultation open their tabs. Discussion opens the public question board. Sick leave, Payment, Medication delivery, AI chatbot, and IoT health open a dialog that says the service is not available yet (`lib/screens/home_screen.dart`). The dialog does not mention the database, the build, or sample data.
+- Home lists the report's core and sub-functions. Appointments and Consultation open their tabs. Discussion opens the public question board. Sick leave opens the certificate screens. Payment, Medication delivery, AI chatbot, and IoT health open a dialog that says the service is not available yet (`lib/screens/home_screen.dart`). The dialog does not mention the database, the build, or sample data.
 - Consultation (`lib/screens/consultation_screen.dart`) says video visits are not available yet.
 
 ## Not done
@@ -89,11 +89,11 @@ Do not claim any of the following exist. Do not add their packages or routes unl
 
 - No video call. `pubspec.yaml` does not depend on `agora_rtc_engine`, `stream_video_flutter`, or `videosdk`. The report names all three and does not pick one. `consultations` has a `channelName` string only. Seed row `demo-consultation` uses `demo-visit-1` and status `scheduled`. Status values in the schema are `scheduled`, `live`, and `ended`. Nothing in the app sets `live` or `ended`.
 - No PayPal call. `payments.provider` defaults to the string `paypal_sandbox`. Seed row `demo-payment` is HKD 200, purpose `consultation`, status `pending`. Schema statuses are `pending`, `paid`, and `failed`. Purposes are `consultation` and `delivery`. No payment route exists.
-- No PDF. `syncfusion_flutter_pdf` is not installed. `sick_leave_certificates` is a schema plus seed row `demo-sick-leave`, certificate number `SL-DEMO-0001`, `readOnly: true`. The app cannot open or generate it.
+- Sick leave certificates are stored and shown. A doctor issues one for a booked appointment (`POST /api/sick-leave`). The patient, that doctor, and an admin can read it. It is always `readOnly`, and there is no edit route. Download builds a PDF on the device with the `pdf` package. `syncfusion_flutter_pdf` is not installed. The sample row is `demo-sick-leave`, certificate number `SL-DEMO-0001`. A database that was seeded before these fields existed will not show the address, sickness details, or signature on that sample until `npm run seed` is run again.
 - No map and no live delivery tracking. The Hong Kong Vector Map API is not called. Seed row `demo-delivery` is `Sample tablets`, quantity 1, status `preparing`, destination `Kowloon, Hong Kong`. Schema statuses are `preparing`, `in_transit`, and `delivered`.
 - No HKBU chatbot. Seed rows `demo-chat-user` and `demo-chat-assistant` are fixed sentences. Speakers in the schema are `user` and `assistant`. The Messages tab is direct messages between two accounts. It does not use `chatbot_messages`.
 - No wearable sync. The `health` package is not installed. Seed row `demo-heart-rate` is 72 bpm on 26 Oct 2026. Schema metrics are `heart_rate`, `steps`, and `blood_oxygen`. The app has no health screen.
-- No route creates, edits, or deletes consultations, certificates, payments, deliveries, chatbot messages, or health readings. `server.js` mounts `/api/health`, `/api/login`, `/api/signup`, `/api/appointments`, `/api/messages`, `/api/discussions`, and `/api/profile`.
+- No route creates, edits, or deletes consultations, payments, deliveries, chatbot messages, or health readings. Certificates can be created and read at `/api/sick-leave`, and they cannot be edited. `server.js` mounts `/api/health`, `/api/login`, `/api/signup`, `/api/appointments`, `/api/messages`, `/api/discussions`, `/api/sick-leave`, and `/api/profile`.
 - The home dashboard does not load a live delivery count. The next-appointment card does read booked visits.
 - Phase 5 system testing and the final report are not done.
 
@@ -107,7 +107,7 @@ MongoDB collections, not SQL tables. All of these model files are in `backend/sr
 | `appointments` | Yes. The appointments screen. | Seed: `demo-appointment` on 3 Nov 2026 at 02:00 UTC, status `scheduled`, reason `Sample sore throat visit`. Seed: `demo-open-slot` on 5 Nov 2026 at 02:00 UTC, status `available`. |
 | `direct_messages` | Yes. The Messages tab and the message button on an appointment card. | Empty until someone sends a message. Each row stores `sender`, `recipient`, `text` (1 to 500 characters), and `readAt`. `readAt` stays empty until the recipient opens that conversation. |
 | `consultations` | No | Schema and one seed row. |
-| `sick_leave_certificates` | No | Schema and one seed row. |
+| `sick_leave_certificates` | Yes. The Sick leave tile on Home. | Seed: `demo-sick-leave`, number `SL-DEMO-0001`, linked to the demo appointment. A doctor fills the address, unfit-for line, dates, sickness, and signature. The patient can only read and download it. |
 | `payments` | No | Schema and one seed row. |
 | `deliveries` | No | Schema and one seed row. |
 | `chatbot_messages` | No | Schema and two seed rows. |
@@ -138,11 +138,10 @@ Atlas also has system databases such as `admin`, `config`, and `local`. Those ar
 These report functions are not built. Appointment booking and the discussion board are already in the app, so the report's older wording for those two is not copied here.
 
 - Online face-to-face video call. The report asks for a real-time video and audio visit between a doctor and a patient. The Consultation tab (`lib/screens/consultation_screen.dart`) only says video visits are not available yet. The report names `agora_rtc_engine`, `stream_video_flutter`, and `videosdk`, and it does not pick one. `consultations` is a schema and one seed row. Do not install a video package or start a call until the student asks.
-- Read-only sick leave certificates. The report asks for a system-generated certificate that cannot be edited. `syncfusion_flutter_pdf` is not installed. `sick_leave_certificates` is a schema and seed row `demo-sick-leave`. The Home tile only says the service is not available yet. Do not generate a PDF until the student asks.
 - Medication delivery tracking. The report asks for live tracking of prescribed medication, using the Hong Kong Vector Map API. No map call exists. `deliveries` is a schema and seed row `demo-delivery`. The Home card still says `No active order`. Do not add the map until the student asks.
 - AI chatbot. The report asks for an assistant for system guidance and general medical support, using the HKBU GenAI API. The Messages tab is direct chat between two accounts. It does not use `chatbot_messages`. Do not call that API until the student asks.
 - Wearable health sync. The report asks for an IoT connection that reads wearable data through the `health` package. That package is not installed. `health_readings` is a schema and seed row `demo-heart-rate`. Do not add a health screen until the student asks.
 
 ## Do not start unless the student asks
 
-The unfinished report items above are recorded as to-do only. Do not start PayPal, PDF certificates, a video SDK, the Vector Map, the HKBU chatbot, or wearable sync until the student asks to build that item. Also do not rewrite the backend in Dart, do not connect Flutter to MongoDB, and do not invent a second appointment flow. The appointment booking screen and the discussion board already replace the report's older description of those two functions.
+The unfinished report items above are recorded as to-do only. Do not start PayPal, a video SDK, the Vector Map, the HKBU chatbot, or wearable sync until the student asks to build that item. Sick leave certificates are already in the app. Also do not rewrite the backend in Dart, do not connect Flutter to MongoDB, and do not invent a second appointment flow. The appointment booking screen and the discussion board already replace the report's older description of those two functions.

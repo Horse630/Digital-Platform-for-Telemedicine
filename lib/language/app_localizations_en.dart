@@ -202,6 +202,130 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sickLeaveSubtitle => 'Read-only certificate';
 
   @override
+  String get sickLeaveDoctorHint =>
+      'Choose an appointed patient, then fill in the certificate. It cannot be edited afterwards.';
+
+  @override
+  String get sickLeavePatientHint =>
+      'A certificate from your doctor is read-only. You can download a copy.';
+
+  @override
+  String get issueCertificate => 'Issue a certificate';
+
+  @override
+  String get selectAppointment => 'Appointed patient';
+
+  @override
+  String get noAppointedPatients => 'No appointed patient yet.';
+
+  @override
+  String get noSickLeave => 'No certificate yet.';
+
+  @override
+  String get patientAddress => 'Patient address';
+
+  @override
+  String get unfitFor => 'Unfit for';
+
+  @override
+  String get sickFrom => 'From';
+
+  @override
+  String get sickUntil => 'Until';
+
+  @override
+  String get numberOfDays => 'Number of days';
+
+  @override
+  String get sickness => 'Sickness';
+
+  @override
+  String get doctorSignature => 'Doctor\'s signature';
+
+  @override
+  String get dateOfIssue => 'Date of issue';
+
+  @override
+  String get referenceNumber => 'Reference No.';
+
+  @override
+  String get toWhom => 'To whom it may concern:';
+
+  @override
+  String get certifyDoctor => 'I,';
+
+  @override
+  String get herebyCertify => 'Hereby certify that';
+
+  @override
+  String get sickCertTitle => 'Sick certification';
+
+  @override
+  String get downloadCertificate => 'Download';
+
+  @override
+  String get licenceNumber => 'Licence no.';
+
+  @override
+  String get msgOnlyDoctorIssues => 'Only a doctor can issue a certificate.';
+
+  @override
+  String get msgChoosePatient => 'Choose an appointed patient.';
+
+  @override
+  String get msgEnterAddress => 'Enter the patient address.';
+
+  @override
+  String get msgAddressTooLong => 'Keep the address under 200 characters.';
+
+  @override
+  String get msgEnterUnfit => 'Enter what the patient is unfit for.';
+
+  @override
+  String get msgUnfitTooLong => 'Keep that line under 120 characters.';
+
+  @override
+  String get msgEnterSickness => 'Enter the sickness.';
+
+  @override
+  String get msgSicknessTooLong => 'Keep the sickness under 300 characters.';
+
+  @override
+  String get msgEnterSignature => 'Enter your signature.';
+
+  @override
+  String get msgSignatureTooLong => 'Keep the signature under 80 characters.';
+
+  @override
+  String get msgEnterStartDate => 'Enter the start date.';
+
+  @override
+  String get msgEnterEndDate => 'Enter the end date.';
+
+  @override
+  String get msgBadSickDates =>
+      'The end date must be on or after the start date.';
+
+  @override
+  String get msgCertificateExists =>
+      'A certificate already exists for that appointment.';
+
+  @override
+  String get msgAppointmentMissingSick => 'That appointment was not found.';
+
+  @override
+  String get msgCannotOpenCertificate => 'You cannot open this certificate.';
+
+  @override
+  String get msgCertificateNotFound => 'That certificate was not found.';
+
+  @override
+  String get msgSickLeaveFailed => 'The sick leave request failed.';
+
+  @override
+  String get msgSickLeaveUnread => 'The sick leave list could not be read.';
+
+  @override
   String get payment => 'Payment';
 
   @override
