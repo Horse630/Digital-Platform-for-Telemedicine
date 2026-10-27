@@ -22,7 +22,7 @@ Future<void> main() async {
 Future<ThemeSettings> _loadTheme() async {
   try {
     return await ThemeSettings.load();
-  } catch (_error) {
+  } catch (_) {
     return ThemeSettings();
   }
 }
@@ -30,7 +30,7 @@ Future<ThemeSettings> _loadTheme() async {
 Future<LanguageSettings> _loadLanguage() async {
   try {
     return await LanguageSettings.load();
-  } catch (_error) {
+  } catch (_) {
     return LanguageSettings();
   }
 }

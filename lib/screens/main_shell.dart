@@ -7,6 +7,7 @@ import 'appointments_screen.dart';
 import 'consultation_screen.dart';
 import 'home_screen.dart';
 import 'login_screen.dart';
+import 'messages_screen.dart';
 import 'profile_screen.dart';
 
 /// Signed-in frame: app bar, one page, and the tab control.
@@ -28,6 +29,7 @@ class MainShell extends StatefulWidget {
 
 class _MainShellState extends State<MainShell> {
   int _index = AppDestination.home.index;
+  int _unreadMessages = 0;
   late SignedInUser _user;
 
   @override
@@ -52,6 +54,13 @@ class _MainShellState extends State<MainShell> {
     setState(() => _user = user);
   }
 
+  void _setUnreadMessages(int count) {
+    if (count == _unreadMessages) {
+      return;
+    }
+    setState(() => _unreadMessages = count);
+  }
+
   Widget _pageFor(AppDestination destination) {
     switch (destination) {
       case AppDestination.home:
@@ -65,6 +74,13 @@ class _MainShellState extends State<MainShell> {
         return AppointmentsScreen(
           user: _user,
           authService: widget.authService,
+        );
+      case AppDestination.messages:
+        return MessagesScreen(
+          authService: widget.authService,
+          token: _user.token,
+          active: _index == AppDestination.messages.index,
+          onUnreadChanged: _setUnreadMessages,
         );
       case AppDestination.consultation:
         return const ConsultationScreen();
@@ -97,7 +113,11 @@ class _MainShellState extends State<MainShell> {
       body: wide
           ? Row(
               children: [
-                _SideRail(selectedIndex: _index, onSelect: _select),
+                _SideRail(
+                  selectedIndex: _index,
+                  unreadMessages: _unreadMessages,
+                  onSelect: _select,
+                ),
                 const VerticalDivider(width: 1),
                 Expanded(child: pages),
               ],
@@ -105,15 +125,24 @@ class _MainShellState extends State<MainShell> {
           : pages,
       bottomNavigationBar: wide
           ? null
-          : _BottomBar(selectedIndex: _index, onSelect: _select),
+          : _BottomBar(
+              selectedIndex: _index,
+              unreadMessages: _unreadMessages,
+              onSelect: _select,
+            ),
     );
   }
 }
 
 class _BottomBar extends StatelessWidget {
-  const _BottomBar({required this.selectedIndex, required this.onSelect});
+  const _BottomBar({
+    required this.selectedIndex,
+    required this.unreadMessages,
+    required this.onSelect,
+  });
 
   final int selectedIndex;
+  final int unreadMessages;
   final ValueChanged<AppDestination> onSelect;
 
   @override
@@ -127,8 +156,12 @@ class _BottomBar extends StatelessWidget {
       destinations: [
         for (final destination in AppDestination.values)
           NavigationDestination(
-            icon: Icon(destination.icon),
-            selectedIcon: Icon(destination.selectedIcon),
+            icon: _navIcon(destination, destination.icon, unreadMessages),
+            selectedIcon: _navIcon(
+              destination,
+              destination.selectedIcon,
+              unreadMessages,
+            ),
             label: destination.localizedLabel(context.l10n),
           ),
       ],
@@ -137,9 +170,14 @@ class _BottomBar extends StatelessWidget {
 }
 
 class _SideRail extends StatelessWidget {
-  const _SideRail({required this.selectedIndex, required this.onSelect});
+  const _SideRail({
+    required this.selectedIndex,
+    required this.unreadMessages,
+    required this.onSelect,
+  });
 
   final int selectedIndex;
+  final int unreadMessages;
   final ValueChanged<AppDestination> onSelect;
 
   @override
@@ -154,11 +192,29 @@ class _SideRail extends StatelessWidget {
       destinations: [
         for (final destination in AppDestination.values)
           NavigationRailDestination(
-            icon: Icon(destination.icon),
-            selectedIcon: Icon(destination.selectedIcon),
+            icon: _navIcon(destination, destination.icon, unreadMessages),
+            selectedIcon: _navIcon(
+              destination,
+              destination.selectedIcon,
+              unreadMessages,
+            ),
             label: Text(destination.localizedLabel(context.l10n)),
           ),
       ],
     );
   }
+}
+
+Widget _navIcon(AppDestination destination, IconData icon, int unreadMessages) {
+  final child = Icon(icon);
+  if (destination != AppDestination.messages || unreadMessages <= 0) {
+    return child;
+  }
+  final label = unreadMessages > 99 ? '99+' : '$unreadMessages';
+  return Badge(
+    label: Text(label),
+    backgroundColor: const Color(0xFFE53935),
+    textColor: Colors.white,
+    child: child,
+  );
 }

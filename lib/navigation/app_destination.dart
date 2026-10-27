@@ -6,6 +6,7 @@ import '../language/app_localizations.dart';
 enum AppDestination {
   home(Icons.home_outlined, Icons.home),
   appointments(Icons.calendar_month_outlined, Icons.calendar_month),
+  messages(Icons.chat_bubble_outline, Icons.chat_bubble),
   consultation(Icons.video_chat_outlined, Icons.video_chat),
   profile(Icons.person_outline, Icons.person);
 
@@ -20,6 +21,8 @@ enum AppDestination {
         return l10n.navHome;
       case AppDestination.appointments:
         return l10n.navAppointments;
+      case AppDestination.messages:
+        return l10n.navMessages;
       case AppDestination.consultation:
         return l10n.navConsultation;
       case AppDestination.profile:

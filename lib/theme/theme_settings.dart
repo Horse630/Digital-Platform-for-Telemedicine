@@ -7,8 +7,7 @@ import 'app_theme.dart';
 ///
 /// These values stay on this device. MongoDB does not store them.
 class ThemeSettings extends ChangeNotifier {
-  ThemeSettings({this._mode = ThemeMode.light, Color seed = AppTheme.seed})
-    : _seed = seed;
+  ThemeSettings({this._mode = ThemeMode.light, this._seed = AppTheme.seed});
 
   static const modeKey = 'ui_theme_mode';
   static const seedKey = 'ui_theme_seed';
@@ -56,7 +55,7 @@ class ThemeSettings extends ChangeNotifier {
         seedKey,
         seed.toARGB32().toRadixString(16).padLeft(8, '0'),
       );
-    } catch (_error) {
+    } catch (_) {
       // The choice still applies until the app is closed.
     }
   }

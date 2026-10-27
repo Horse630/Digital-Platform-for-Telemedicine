@@ -35,7 +35,7 @@ Uint8List? _bytes(String value) {
       return null;
     }
     return decoded;
-  } catch (_error) {
+  } catch (_) {
     return null;
   }
 }

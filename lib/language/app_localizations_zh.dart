@@ -99,6 +99,51 @@ class AppLocalizationsZh extends AppLocalizations {
   String get navAppointments => '預約';
 
   @override
+  String get navMessages => '訊息';
+
+  @override
+  String get noMessages => '還沒有訊息。';
+
+  @override
+  String get noMessagesHint => '可以從預約向醫生或病人傳訊息。';
+
+  @override
+  String get messageAction => '傳訊息';
+
+  @override
+  String get send => '傳送';
+
+  @override
+  String get messageHint => '輸入訊息';
+
+  @override
+  String get messageSent => '已傳送';
+
+  @override
+  String get messageRead => '已讀';
+
+  @override
+  String get patientProfile => '病人資料';
+
+  @override
+  String get msgEnterMessage => '請輸入訊息。';
+
+  @override
+  String get msgMessageTooLong => '訊息請保持在 500 字以內。';
+
+  @override
+  String get msgCannotMessageYourself => '不能傳訊息給自己。';
+
+  @override
+  String get msgPersonNotFound => '找不到這個人。';
+
+  @override
+  String get msgMessagesUnread => '無法讀取訊息。';
+
+  @override
+  String get msgMessageFailed => '訊息要求失敗。';
+
+  @override
   String get navConsultation => '諮詢';
 
   @override
@@ -651,6 +696,51 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get navAppointments => '预约';
 
   @override
+  String get navMessages => '消息';
+
+  @override
+  String get noMessages => '还没有消息。';
+
+  @override
+  String get noMessagesHint => '可以从预约向医生或患者发消息。';
+
+  @override
+  String get messageAction => '发消息';
+
+  @override
+  String get send => '发送';
+
+  @override
+  String get messageHint => '输入消息';
+
+  @override
+  String get messageSent => '已发送';
+
+  @override
+  String get messageRead => '已读';
+
+  @override
+  String get patientProfile => '患者资料';
+
+  @override
+  String get msgEnterMessage => '请输入消息。';
+
+  @override
+  String get msgMessageTooLong => '消息请保持在 500 字以内。';
+
+  @override
+  String get msgCannotMessageYourself => '不能给自己发消息。';
+
+  @override
+  String get msgPersonNotFound => '找不到这个人。';
+
+  @override
+  String get msgMessagesUnread => '无法读取消息。';
+
+  @override
+  String get msgMessageFailed => '消息请求失败。';
+
+  @override
   String get navConsultation => '咨询';
 
   @override
@@ -1201,6 +1291,51 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get navAppointments => '預約';
+
+  @override
+  String get navMessages => '訊息';
+
+  @override
+  String get noMessages => '還沒有訊息。';
+
+  @override
+  String get noMessagesHint => '可以從預約向醫生或病人傳訊息。';
+
+  @override
+  String get messageAction => '傳訊息';
+
+  @override
+  String get send => '傳送';
+
+  @override
+  String get messageHint => '輸入訊息';
+
+  @override
+  String get messageSent => '已傳送';
+
+  @override
+  String get messageRead => '已讀';
+
+  @override
+  String get patientProfile => '病人資料';
+
+  @override
+  String get msgEnterMessage => '請輸入訊息。';
+
+  @override
+  String get msgMessageTooLong => '訊息請保持在 500 字以內。';
+
+  @override
+  String get msgCannotMessageYourself => '不能傳訊息給自己。';
+
+  @override
+  String get msgPersonNotFound => '找不到這個人。';
+
+  @override
+  String get msgMessagesUnread => '無法讀取訊息。';
+
+  @override
+  String get msgMessageFailed => '訊息要求失敗。';
 
   @override
   String get navConsultation => '諮詢';

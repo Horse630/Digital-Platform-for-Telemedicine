@@ -6,6 +6,7 @@ const User = require('../models/User');
 
 const router = express.Router();
 const doctorFields = 'fullName specialty specialties description avatarBase64';
+const patientFields = 'fullName description avatarBase64 allergies';
 
 // The Flutter app sends the token from POST /api/login.
 async function requireUser(req, res, next) {
@@ -47,6 +48,11 @@ function toAppointmentJson(appointment) {
       ? {
           id: appointment.patient._id.toString(),
           fullName: appointment.patient.fullName,
+          description: appointment.patient.description || '',
+          avatarBase64: appointment.patient.avatarBase64 || '',
+          allergies: Array.isArray(appointment.patient.allergies)
+            ? appointment.patient.allergies
+            : [],
         }
       : null,
   };
@@ -83,7 +89,7 @@ function listQuery(user) {
 router.get('/', requireUser, async (req, res) => {
   const appointments = await Appointment.find(listQuery(req.user))
     .populate('doctor', doctorFields)
-    .populate('patient', 'fullName')
+    .populate('patient', patientFields)
     .sort({ scheduledAt: 1 });
   res.json(appointments.map(toAppointmentJson));
 });
@@ -141,7 +147,7 @@ router.post('/:id/book', requireUser, async (req, res) => {
     return;
   }
   await booked.populate('doctor', doctorFields);
-  await booked.populate('patient', 'fullName');
+  await booked.populate('patient', patientFields);
   res.json(toAppointmentJson(booked));
 });
 
@@ -175,7 +181,7 @@ router.post('/:id/cancel', requireUser, async (req, res) => {
   }
 
   await appointment.populate('doctor', doctorFields);
-  await appointment.populate('patient', 'fullName');
+  await appointment.populate('patient', patientFields);
   res.json(toAppointmentJson(appointment));
 });
 

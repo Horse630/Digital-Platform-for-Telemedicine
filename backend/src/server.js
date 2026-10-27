@@ -19,6 +19,7 @@ app.use(cors());
 // Profile photos are sent as base64, so the JSON body can be larger than the default 100 KB.
 app.use(express.json({ limit: '2mb' }));
 app.use('/api/appointments', appointmentsRouter);
+app.use('/api/messages', require('./routes/messages'));
 app.use('/api/profile', require('./routes/profile'));
 
 app.get('/api/health', (_req, res) => {

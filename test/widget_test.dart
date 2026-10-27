@@ -119,6 +119,9 @@ AuthService _testAuth() {
       if (request.method == 'GET' && request.url.path == '/api/appointments') {
         return http.Response('[]', 200);
       }
+      if (request.method == 'GET' && request.url.path == '/api/messages') {
+        return http.Response('[]', 200);
+      }
       if (request.method == 'GET' && request.url.path == '/api/profile') {
         return http.Response(
           jsonEncode({

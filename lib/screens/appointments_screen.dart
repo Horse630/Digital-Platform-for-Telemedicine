@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../language/ui_text.dart';
 import '../services/appointment_api.dart';
 import '../widgets/account_avatar.dart';
+import 'chat_thread_screen.dart';
 import '../services/appointment_filter.dart';
 import '../services/auth_service.dart';
 import '../services/doctor_types.dart';
@@ -112,6 +113,11 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
         onAdd: _addSlot,
         onCancel: _cancel,
         onRemove: _remove,
+        onMessage: (appointment) => _openChat(
+          userId: appointment.patientId,
+          fullName: appointment.patientName ?? '',
+          avatarBase64: appointment.patientAvatarBase64,
+        ),
       );
     }
     if (role == 'patient') {
@@ -124,6 +130,11 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
         onOpenBooking: _openBooking,
         onCancel: _cancel,
         onRemove: _remove,
+        onMessage: (appointment) => _openChat(
+          userId: appointment.doctorId,
+          fullName: appointment.doctorName,
+          avatarBase64: appointment.doctorAvatarBase64,
+        ),
       );
     }
     return _AdminSchedule(appointments: _appointments);
@@ -171,6 +182,11 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
       MaterialPageRoute<void>(
         builder: (routeContext) => _OpenTimesPage(
           appointments: open,
+          onMessage: (appointment) => _openChat(
+            userId: appointment.doctorId,
+            fullName: appointment.doctorName,
+            avatarBase64: appointment.doctorAvatarBase64,
+          ),
           onBook: (appointment) async {
             final booked = await _book(appointment);
             if (booked && routeContext.mounted) {
@@ -203,6 +219,24 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
       );
       return false;
     }
+  }
+
+  void _openChat({
+    required String userId,
+    required String fullName,
+    required String avatarBase64,
+  }) {
+    if (userId.isEmpty) {
+      return;
+    }
+    openDirectChat(
+      context,
+      authService: widget.authService,
+      token: widget.user.token,
+      userId: userId,
+      fullName: fullName,
+      avatarBase64: avatarBase64,
+    );
   }
 
   Future<void> _cancel(AppointmentRecord appointment) async {
@@ -293,12 +327,14 @@ class _DoctorSchedule extends StatelessWidget {
     required this.onAdd,
     required this.onCancel,
     required this.onRemove,
+    required this.onMessage,
   });
 
   final List<AppointmentRecord> appointments;
   final VoidCallback onAdd;
   final Future<void> Function(AppointmentRecord appointment) onCancel;
   final Future<void> Function(AppointmentRecord appointment) onRemove;
+  final void Function(AppointmentRecord appointment) onMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -325,11 +361,16 @@ class _DoctorSchedule extends StatelessWidget {
       cardBuilder: (appointment) {
         final open = appointment.status == 'available';
         final booked = appointment.status == 'scheduled';
+        final hasPatient = appointment.patientId.isNotEmpty;
         return _AppointmentCard(
           appointment: appointment,
-          detail: open
+          detail: hasPatient
+              ? appointment.reason
+              : open
               ? l10n.openForPatients
               : l10n.patientLine(appointment.patientName ?? l10n.unknown),
+          showPatient: hasPatient,
+          onMessage: hasPatient ? () => onMessage(appointment) : null,
           actionLabel: open || booked ? l10n.cancelSlot : null,
           onAction: open || booked ? () => onCancel(appointment) : null,
           onRemove: appointment.status == 'cancelled'
@@ -347,12 +388,14 @@ class _MyAppointments extends StatelessWidget {
     required this.onOpenBooking,
     required this.onCancel,
     required this.onRemove,
+    required this.onMessage,
   });
 
   final List<AppointmentRecord> appointments;
   final VoidCallback onOpenBooking;
   final Future<void> Function(AppointmentRecord appointment) onCancel;
   final Future<void> Function(AppointmentRecord appointment) onRemove;
+  final void Function(AppointmentRecord appointment) onMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -382,6 +425,9 @@ class _MyAppointments extends StatelessWidget {
               ? localizedSpecialtyLine(l10n, appointment.doctorSpecialty)
               : appointment.reason,
           showDoctor: true,
+          onMessage: appointment.doctorId.isEmpty
+              ? null
+              : () => onMessage(appointment),
           actionLabel: appointment.status == 'scheduled' ? l10n.cancelBooking : null,
           onAction: appointment.status == 'scheduled'
               ? () => onCancel(appointment)
@@ -396,10 +442,15 @@ class _MyAppointments extends StatelessWidget {
 }
 
 class _OpenTimesPage extends StatefulWidget {
-  const _OpenTimesPage({required this.appointments, required this.onBook});
+  const _OpenTimesPage({
+    required this.appointments,
+    required this.onBook,
+    required this.onMessage,
+  });
 
   final List<AppointmentRecord> appointments;
   final Future<void> Function(AppointmentRecord appointment) onBook;
+  final void Function(AppointmentRecord appointment) onMessage;
 
   @override
   State<_OpenTimesPage> createState() => _OpenTimesPageState();
@@ -504,6 +555,9 @@ class _OpenTimesPageState extends State<_OpenTimesPage> {
               appointment: appointment,
               detail: localizedSpecialtyLine(l10n, appointment.doctorSpecialty),
               showDoctor: true,
+              onMessage: appointment.doctorId.isEmpty
+                  ? null
+                  : () => widget.onMessage(appointment),
               actionLabel: l10n.book,
               onAction: () => widget.onBook(appointment),
             ),
@@ -551,6 +605,58 @@ void _showDoctorProfile(BuildContext context, AppointmentRecord appointment) {
                 appointment.doctorDescription.trim().isEmpty
                     ? text.noDescription
                     : appointment.doctorDescription.trim(),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: Text(text.close),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+void _showPatientProfile(BuildContext context, AppointmentRecord appointment) {
+  showDialog<void>(
+    context: context,
+    builder: (dialogContext) {
+      final text = dialogContext.l10n;
+      final description = appointment.patientDescription.trim();
+      return AlertDialog(
+        title: Text(text.patientProfile),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _PatientMark(appointment: appointment, radius: 36),
+              const SizedBox(height: 12),
+              Text(
+                appointment.patientName ?? text.unknown,
+                textAlign: TextAlign.center,
+                style: Theme.of(dialogContext).textTheme.titleLarge,
+              ),
+              if (appointment.patientAllergies.isNotEmpty) ...[
+                const SizedBox(height: 12),
+                Text(text.allergies, style: Theme.of(dialogContext).textTheme.titleSmall),
+                const SizedBox(height: 8),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    for (final allergy in appointment.patientAllergies)
+                      Chip(label: Text(allergy)),
+                  ],
+                ),
+              ],
+              const SizedBox(height: 12),
+              Text(
+                description.isEmpty ? text.noDescription : description,
                 textAlign: TextAlign.center,
               ),
             ],
@@ -913,6 +1019,89 @@ DateTime _earliestDay(List<AppointmentRecord> appointments) {
   return _calendarDay(sorted.first.scheduledAt);
 }
 
+class _ContactRow extends StatelessWidget {
+  const _ContactRow({
+    required this.mark,
+    required this.name,
+    required this.onProfile,
+    required this.onMessage,
+  });
+
+  final Widget mark;
+  final String name;
+  final VoidCallback onProfile;
+  final VoidCallback? onMessage;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Row(
+        children: [
+          mark,
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(name, style: Theme.of(context).textTheme.titleSmall),
+                Wrap(
+                  spacing: 8,
+                  children: [
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        visualDensity: VisualDensity.compact,
+                        padding: EdgeInsets.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      onPressed: onProfile,
+                      child: Text(l10n.viewDoctorProfile),
+                    ),
+                    if (onMessage != null)
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          visualDensity: VisualDensity.compact,
+                          padding: EdgeInsets.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        onPressed: onMessage,
+                        child: Text(l10n.messageAction),
+                      ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PatientMark extends StatelessWidget {
+  const _PatientMark({required this.appointment, this.radius = 22});
+
+  final AppointmentRecord appointment;
+  final double radius;
+
+  @override
+  Widget build(BuildContext context) {
+    if (appointment.patientAvatarBase64.isNotEmpty) {
+      return AccountAvatar(
+        avatarBase64: appointment.patientAvatarBase64,
+        radius: radius,
+      );
+    }
+    final scheme = Theme.of(context).colorScheme;
+    return CircleAvatar(
+      radius: radius,
+      backgroundColor: scheme.primaryContainer,
+      child: Icon(Icons.person, size: radius, color: scheme.onPrimaryContainer),
+    );
+  }
+}
+
 class _DoctorMark extends StatelessWidget {
   const _DoctorMark({required this.appointment, this.radius = 22});
 
@@ -947,7 +1136,9 @@ class _AppointmentCard extends StatelessWidget {
     this.actionLabel,
     this.onAction,
     this.onRemove,
+    this.onMessage,
     this.showDoctor = false,
+    this.showPatient = false,
   });
 
   final AppointmentRecord appointment;
@@ -955,7 +1146,9 @@ class _AppointmentCard extends StatelessWidget {
   final String? actionLabel;
   final VoidCallback? onAction;
   final VoidCallback? onRemove;
+  final VoidCallback? onMessage;
   final bool showDoctor;
+  final bool showPatient;
 
   @override
   Widget build(BuildContext context) {
@@ -969,39 +1162,20 @@ class _AppointmentCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (showDoctor) ...[
-              Row(
-                children: [
-                  _DoctorMark(appointment: appointment),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          appointment.doctorName,
-                          style: Theme.of(context).textTheme.titleSmall,
-                        ),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: TextButton(
-                            style: TextButton.styleFrom(
-                              visualDensity: VisualDensity.compact,
-                              padding: EdgeInsets.zero,
-                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            ),
-                            onPressed: () =>
-                                _showDoctorProfile(context, appointment),
-                            child: Text(context.l10n.viewDoctorProfile),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+            if (showDoctor)
+              _ContactRow(
+                mark: _DoctorMark(appointment: appointment),
+                name: appointment.doctorName,
+                onProfile: () => _showDoctorProfile(context, appointment),
+                onMessage: onMessage,
               ),
-              const SizedBox(height: 12),
-            ],
+            if (showPatient)
+              _ContactRow(
+                mark: _PatientMark(appointment: appointment),
+                name: appointment.patientName ?? context.l10n.unknown,
+                onProfile: () => _showPatientProfile(context, appointment),
+                onMessage: onMessage,
+              ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

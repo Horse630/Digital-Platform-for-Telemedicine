@@ -32,6 +32,9 @@ void main() {
                 request.url.path == '/api/appointments') {
               return http.Response('[]', 200);
             }
+            if (request.method == 'GET' && request.url.path == '/api/messages') {
+              return http.Response('[]', 200);
+            }
             if (request.method == 'GET' && request.url.path == '/api/profile') {
               return http.Response(_profile(description), 200);
             }
@@ -186,6 +189,9 @@ void main() {
                 request.url.path == '/api/appointments') {
               return http.Response('[]', 200);
             }
+            if (request.method == 'GET' && request.url.path == '/api/messages') {
+              return http.Response('[]', 200);
+            }
             if (request.method == 'GET' && request.url.path == '/api/profile') {
               return http.Response(_patientProfile(), 200);
             }
@@ -287,6 +293,9 @@ AuthService _auth() {
     baseUrl: 'http://localhost:3000',
     client: MockClient((request) async {
       if (request.method == 'GET' && request.url.path == '/api/appointments') {
+        return http.Response('[]', 200);
+      }
+      if (request.method == 'GET' && request.url.path == '/api/messages') {
         return http.Response('[]', 200);
       }
       if (request.method == 'GET' && request.url.path == '/api/profile') {

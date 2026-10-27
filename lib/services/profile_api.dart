@@ -188,7 +188,7 @@ class ProfileApi {
       if (decoded is Map<String, dynamic> && decoded['message'] is String) {
         return decoded['message'] as String;
       }
-    } catch (_error) {
+    } catch (_) {
       // A failed response may have an empty body.
     }
     if (statusCode == 404) {

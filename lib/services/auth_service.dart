@@ -99,7 +99,7 @@ class AuthService {
       throw const AuthException(
         'Cannot reach the service. Check your connection and try again.',
       );
-    } catch (_error) {
+    } catch (_) {
       throw const AuthException(
         'Cannot reach the service. Check your connection and try again.',
       );
@@ -143,7 +143,7 @@ class AuthService {
       throw const AuthException(
         'Cannot reach the service. Check your connection and try again.',
       );
-    } catch (_error) {
+    } catch (_) {
       throw const AuthException(
         'Cannot reach the service. Check your connection and try again.',
       );
@@ -180,7 +180,7 @@ class AuthService {
       if (decoded is Map<String, dynamic> && decoded['message'] is String) {
         return decoded['message'] as String;
       }
-    } catch (_error) {
+    } catch (_) {
       // A failed response may have an empty body.
     }
     return fallback;

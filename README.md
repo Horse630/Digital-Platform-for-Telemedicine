@@ -50,6 +50,8 @@ The app icon is `assets/app_icon.png`, a teal medical cross with a video camera.
 - **Home** greets the signed-in person and lists the core functions and sub-functions from the progress report. The next-appointment card shows that person's soonest booked visit, or "Not scheduled" when there is none. Appointments and Consultation open their tabs. The other modules explain that this build does not save new data.
 - **Appointments** lists a doctor's own time slots and a patient's own bookings. The default view is a calendar. A **List** button switches to the scrolling cards, and **Calendar** switches back. An empty list shows "No appointment" and a button: **Make an appointment** for a doctor, **Book an appointment** for a patient. The booking page searches by doctor name, filters by doctor type, and sorts by time or name. Booking needs a short reason. Cancelling asks for confirmation. A patient cancel opens that slot again. A doctor cancel marks the row cancelled, and a cross on that card can delete it after another confirmation. An admin can read every row in either format and cannot change one.
 - **Doctor profile on a patient's card.** A patient's own bookings and the booking page show the doctor's saved photo, or a doctor icon when there is no photo, plus **View profile**. That profile shows the doctor's name, photo, doctor types, and description. It does not show the username, email, or password. The appointment response already includes `description` and `avatarBase64`, so this button does not call a separate profile route.
+- **Patient profile on a doctor's card.** When a visit has a patient, the card shows that patient's photo, or a person icon, plus **View profile**. That profile shows the name, photo, allergies, and description. It does not show the username, email, or password.
+- **Messages** is the middle tab. It lists people this account has messaged, or who have messaged this account, with the latest line and time. A green count on a row shows how many of that person's messages are still unread. A red count on the Messages icon shows the total. Opening a person shows the conversation and marks those messages read. Under a message you sent, the time sits with one tick when it is sent and two ticks when the other person has opened it. A **Message** button on a patient's doctor card, or on a doctor's patient card, opens that same conversation.
 - **Consultation** is an empty state until a video SDK is added.
 - **Profile** shows the database account, including a saved photo and description. It opens Settings and logs out.
 - **Settings** uploads a profile photo, changes the username, description, and password, and switches the language, UI color, and dark mode. A doctor chooses one or more doctor types from a fixed list. A patient types allergy tags. The photo, account fields, doctor types, and allergies are stored in MongoDB. Language, color, and dark mode stay on the device. The app starts in English until a language is chosen.
@@ -68,6 +70,8 @@ lib/
     app_zh_Hant.arb
     app_zh_Hans.arb
     language_settings.dart
+    ui_text.dart
+  l10n/app_localizations.dart
   navigation/app_destination.dart
   services/api_config.dart
   services/appointment_api.dart
@@ -75,6 +79,7 @@ lib/
   services/auth_service.dart
   services/avatar_image.dart
   services/doctor_types.dart
+  services/message_api.dart
   services/profile_api.dart
   theme/app_theme.dart
   theme/theme_settings.dart
@@ -84,6 +89,8 @@ lib/
     main_shell.dart
     home_screen.dart
     appointments_screen.dart
+    messages_screen.dart
+    chat_thread_screen.dart
     consultation_screen.dart
     profile_screen.dart
     settings_screen.dart
@@ -99,10 +106,12 @@ backend/
   src/authToken.js
   src/db.js
   src/routes/appointments.js
+  src/routes/messages.js
   src/routes/profile.js
   src/models/
     User.js
     Appointment.js
+    DirectMessage.js
     Consultation.js
     SickLeaveCertificate.js
     Payment.js
@@ -119,7 +128,7 @@ Node code lives in `backend/`. MongoDB stores collections, not SQL tables. Each 
 
 `GET /api/profile` and `PATCH /api/profile` read and update the username, description, and photo for the signed-in account. `POST /api/profile/password` checks the current password, then stores a new bcrypt hash. Changing the username returns a new bearer token. UI color, dark mode, and language stay on the device. The client can show English, Traditional Chinese, or Simplified Chinese. The default is English until a language is chosen in Settings. Server messages and the Node terminal stay in English.
 
-A doctor can save one or more doctor types from a fixed list, and a patient can save allergy tags. Appointment JSON includes the doctor's types, description, and photo so a patient can open that profile from an appointment card.
+A doctor can save one or more doctor types from a fixed list, and a patient can save allergy tags. Appointment JSON includes the doctor's types, description, and photo, and, when a patient is booked, that patient's description, photo, and allergies. `GET /api/messages` and `POST /api/messages/:userId` read and write `direct_messages`. Opening a conversation sets `readAt` on messages sent to the signed-in person.
 
 `backend/scripts/seed.js` is the starter-data script. It connects with `process.env.MONGODB_URI` and writes the sample rows below. Running it again updates those same rows. That script belongs in the project.
 
@@ -131,6 +140,7 @@ Atlas credentials belong only in `backend/.env`. Git ignores that file. `backend
 | --- | --- |
 | `users` | `admin`, `doctor`, and `patient`. Description and profile photo are empty until someone saves them in Settings. |
 | `appointments` | One booked sample visit on 3 Nov 2026, plus one open slot on 5 Nov 2026 |
+| `direct_messages` | Empty until a doctor and a patient send a message |
 | `consultations` | Video visit `demo-visit-1`, status `scheduled` |
 | `sick_leave_certificates` | `SL-DEMO-0001`, marked read-only |
 | `payments` | HKD 200 consultation fee, status `pending` |
@@ -140,7 +150,7 @@ Atlas credentials belong only in `backend/.env`. Git ignores that file. `backend
 | `discussion_comments` | One doctor reply |
 | `health_readings` | Heart rate `72 bpm` |
 
-Refresh the Atlas collection list after seeding. Login reads `users`. The appointment screen reads and writes `appointments`, including deleting a cancelled row. Settings reads and writes the signed-in user's username, description, photo, password hash, doctor types, and allergies. The other collections are not loaded by the app yet.
+Refresh the Atlas collection list after seeding. Login reads `users`. The appointment screen reads and writes `appointments`, including deleting a cancelled row. Settings reads and writes the signed-in user's username, description, photo, password hash, doctor types, and allergies. The Messages tab reads and writes `direct_messages`. Consultations, certificates, payments, deliveries, chatbot messages, discussions, and health readings are not loaded by the app yet.
 
 `POST /api/login` also returns a bearer token. Appointment requests send `Authorization: Bearer <token>`. The token secret is `AUTH_TOKEN_SECRET` in `backend/.env`, separate from the Atlas password.
 

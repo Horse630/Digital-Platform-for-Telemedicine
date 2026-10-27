@@ -17,8 +17,13 @@ class AppointmentRecord {
     required this.doctorSpecialty,
     required this.doctorTypes,
     required this.patientName,
+    this.doctorId = '',
     this.doctorDescription = '',
     this.doctorAvatarBase64 = '',
+    this.patientId = '',
+    this.patientDescription = '',
+    this.patientAvatarBase64 = '',
+    this.patientAllergies = const [],
   });
 
   final String id;
@@ -29,8 +34,13 @@ class AppointmentRecord {
   final String doctorSpecialty;
   final List<String> doctorTypes;
   final String? patientName;
+  final String doctorId;
   final String doctorDescription;
   final String doctorAvatarBase64;
+  final String patientId;
+  final String patientDescription;
+  final String patientAvatarBase64;
+  final List<String> patientAllergies;
 
   factory AppointmentRecord.fromJson(Map<String, dynamic> json) {
     final doctor = json['doctor'];
@@ -58,6 +68,7 @@ class AppointmentRecord {
       status: status,
       reason: json['reason'] is String ? json['reason'] as String : '',
       doctorName: doctorName,
+      doctorId: doctor['id'] is String ? doctor['id'] as String : '',
       doctorSpecialty: doctor['specialty'] is String
           ? doctor['specialty'] as String
           : '',
@@ -72,8 +83,34 @@ class AppointmentRecord {
           patient is Map<String, dynamic> && patient['fullName'] is String
           ? patient['fullName'] as String
           : null,
+      patientId: patient is Map<String, dynamic> && patient['id'] is String
+          ? patient['id'] as String
+          : '',
+      patientDescription:
+          patient is Map<String, dynamic> && patient['description'] is String
+          ? patient['description'] as String
+          : '',
+      patientAvatarBase64:
+          patient is Map<String, dynamic> && patient['avatarBase64'] is String
+          ? patient['avatarBase64'] as String
+          : '',
+      patientAllergies: _stringList(patient),
     );
   }
+}
+
+List<String> _stringList(Object? person) {
+  if (person is! Map<String, dynamic>) {
+    return const [];
+  }
+  final stored = person['allergies'];
+  if (stored is! List) {
+    return const [];
+  }
+  return [
+    for (final item in stored)
+      if (item is String && item.trim().isNotEmpty) item.trim(),
+  ];
 }
 
 List<String> _doctorTypes(Map<String, dynamic> doctor) {
@@ -212,7 +249,7 @@ class AppointmentApi {
       if (decoded is Map<String, dynamic> && decoded['message'] is String) {
         return decoded['message'] as String;
       }
-    } catch (_error) {
+    } catch (_) {
       // A failed response may have an empty body.
     }
     return 'The appointment request failed.';

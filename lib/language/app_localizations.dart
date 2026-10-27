@@ -274,6 +274,96 @@ abstract class AppLocalizations {
   /// **'Appointments'**
   String get navAppointments;
 
+  /// No description provided for @navMessages.
+  ///
+  /// In en, this message translates to:
+  /// **'Messages'**
+  String get navMessages;
+
+  /// No description provided for @noMessages.
+  ///
+  /// In en, this message translates to:
+  /// **'No messages yet.'**
+  String get noMessages;
+
+  /// No description provided for @noMessagesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Message a doctor or a patient from an appointment.'**
+  String get noMessagesHint;
+
+  /// No description provided for @messageAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Message'**
+  String get messageAction;
+
+  /// No description provided for @send.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get send;
+
+  /// No description provided for @messageHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Write a message'**
+  String get messageHint;
+
+  /// No description provided for @messageSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent'**
+  String get messageSent;
+
+  /// No description provided for @messageRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Read'**
+  String get messageRead;
+
+  /// No description provided for @patientProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Patient profile'**
+  String get patientProfile;
+
+  /// No description provided for @msgEnterMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a message.'**
+  String get msgEnterMessage;
+
+  /// No description provided for @msgMessageTooLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep the message under 500 characters.'**
+  String get msgMessageTooLong;
+
+  /// No description provided for @msgCannotMessageYourself.
+  ///
+  /// In en, this message translates to:
+  /// **'You cannot message yourself.'**
+  String get msgCannotMessageYourself;
+
+  /// No description provided for @msgPersonNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'That person was not found.'**
+  String get msgPersonNotFound;
+
+  /// No description provided for @msgMessagesUnread.
+  ///
+  /// In en, this message translates to:
+  /// **'The message list could not be read.'**
+  String get msgMessagesUnread;
+
+  /// No description provided for @msgMessageFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The message request failed.'**
+  String get msgMessageFailed;
+
   /// No description provided for @navConsultation.
   ///
   /// In en, this message translates to:

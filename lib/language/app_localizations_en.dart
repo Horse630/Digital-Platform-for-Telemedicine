@@ -101,6 +101,52 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navAppointments => 'Appointments';
 
   @override
+  String get navMessages => 'Messages';
+
+  @override
+  String get noMessages => 'No messages yet.';
+
+  @override
+  String get noMessagesHint =>
+      'Message a doctor or a patient from an appointment.';
+
+  @override
+  String get messageAction => 'Message';
+
+  @override
+  String get send => 'Send';
+
+  @override
+  String get messageHint => 'Write a message';
+
+  @override
+  String get messageSent => 'Sent';
+
+  @override
+  String get messageRead => 'Read';
+
+  @override
+  String get patientProfile => 'Patient profile';
+
+  @override
+  String get msgEnterMessage => 'Enter a message.';
+
+  @override
+  String get msgMessageTooLong => 'Keep the message under 500 characters.';
+
+  @override
+  String get msgCannotMessageYourself => 'You cannot message yourself.';
+
+  @override
+  String get msgPersonNotFound => 'That person was not found.';
+
+  @override
+  String get msgMessagesUnread => 'The message list could not be read.';
+
+  @override
+  String get msgMessageFailed => 'The message request failed.';
+
+  @override
   String get navConsultation => 'Consultation';
 
   @override

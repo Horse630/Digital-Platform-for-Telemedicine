@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 
-import 'app_localizations.dart';
+import 'package:digital_platform_for_telemedicine/language/app_localizations.dart';
 
-export 'app_localizations.dart';
+export 'package:digital_platform_for_telemedicine/language/app_localizations.dart';
 
 extension AppLocalizationsContext on BuildContext {
   AppLocalizations get l10n => AppLocalizations.of(this);
@@ -94,6 +94,18 @@ String localizeMessage(AppLocalizations l10n, String message) {
       return l10n.msgCannotChange;
     case 'Only a cancelled appointment can be removed.':
       return l10n.msgOnlyCancelled;
+    case 'Enter a message.':
+      return l10n.msgEnterMessage;
+    case 'Keep the message under 500 characters.':
+      return l10n.msgMessageTooLong;
+    case 'You cannot message yourself.':
+      return l10n.msgCannotMessageYourself;
+    case 'That person was not found.':
+      return l10n.msgPersonNotFound;
+    case 'The message list could not be read.':
+      return l10n.msgMessagesUnread;
+    case 'The message request failed.':
+      return l10n.msgMessageFailed;
     default:
       return message;
   }
