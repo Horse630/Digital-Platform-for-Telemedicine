@@ -518,6 +518,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get colorStaysOnDevice => 'Color and dark mode stay on this device.';
 
   @override
+  String get fontSize => 'Font size';
+
+  @override
+  String get fontSizeSmall => 'Small';
+
+  @override
+  String get fontSizeNormal => 'Default';
+
+  @override
+  String get fontSizeLarge => 'Large';
+
+  @override
+  String get fontSizeExtra => 'Extra large';
+
+  @override
+  String get fontSizeStaysOnDevice =>
+      'The font size stays on this device and applies to every page.';
+
+  @override
   String get account => 'Account';
 
   @override

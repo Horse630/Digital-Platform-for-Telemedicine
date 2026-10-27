@@ -15,7 +15,7 @@ import '../widgets/content_frame.dart';
 /// Profile photo, account fields, password, language, and the device theme.
 ///
 /// Photo, username, description, and password are saved through the Node API.
-/// Color, dark mode, and language stay on this device.
+/// Color, dark mode, font size, and language stay on this device.
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({
     super.key,
@@ -317,6 +317,44 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     choice.color.toARGB32(),
                                 onTap: () => settings.setSeed(choice.color),
                               ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          l10n.fontSize,
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          l10n.fontSizeStaysOnDevice,
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                        const SizedBox(height: 12),
+                        Wrap(
+                          key: const Key('fontSizePicker'),
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: [
+                            ChoiceChip(
+                              label: Text(l10n.fontSizeSmall),
+                              selected: settings.fontSize == 'small',
+                              onSelected: (_) => settings.setFontSize('small'),
+                            ),
+                            ChoiceChip(
+                              label: Text(l10n.fontSizeNormal),
+                              selected: settings.fontSize == 'normal',
+                              onSelected: (_) => settings.setFontSize('normal'),
+                            ),
+                            ChoiceChip(
+                              label: Text(l10n.fontSizeLarge),
+                              selected: settings.fontSize == 'large',
+                              onSelected: (_) => settings.setFontSize('large'),
+                            ),
+                            ChoiceChip(
+                              label: Text(l10n.fontSizeExtra),
+                              selected: settings.fontSize == 'extra',
+                              onSelected: (_) => settings.setFontSize('extra'),
+                            ),
                           ],
                         ),
                       ],

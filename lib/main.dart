@@ -97,6 +97,14 @@ class _TelemedicineAppState extends State<TelemedicineApp> {
           theme: AppTheme.themed(Brightness.light, _settings.seed),
           darkTheme: AppTheme.themed(Brightness.dark, _settings.seed),
           themeMode: _settings.mode,
+          builder: (context, child) {
+            return MediaQuery(
+              data: MediaQuery.of(context).copyWith(
+                textScaler: TextScaler.linear(_settings.textScale),
+              ),
+              child: child ?? const SizedBox.shrink(),
+            );
+          },
           home: LoginScreen(authService: widget.authService),
         ),
       ),

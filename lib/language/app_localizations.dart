@@ -1084,6 +1084,42 @@ abstract class AppLocalizations {
   /// **'Color and dark mode stay on this device.'**
   String get colorStaysOnDevice;
 
+  /// No description provided for @fontSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Font size'**
+  String get fontSize;
+
+  /// No description provided for @fontSizeSmall.
+  ///
+  /// In en, this message translates to:
+  /// **'Small'**
+  String get fontSizeSmall;
+
+  /// No description provided for @fontSizeNormal.
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get fontSizeNormal;
+
+  /// No description provided for @fontSizeLarge.
+  ///
+  /// In en, this message translates to:
+  /// **'Large'**
+  String get fontSizeLarge;
+
+  /// No description provided for @fontSizeExtra.
+  ///
+  /// In en, this message translates to:
+  /// **'Extra large'**
+  String get fontSizeExtra;
+
+  /// No description provided for @fontSizeStaysOnDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'The font size stays on this device and applies to every page.'**
+  String get fontSizeStaysOnDevice;
+
   /// No description provided for @account.
   ///
   /// In en, this message translates to:

@@ -508,6 +508,24 @@ class AppLocalizationsZh extends AppLocalizations {
   String get colorStaysOnDevice => '顏色和深色模式只保存在這台裝置。';
 
   @override
+  String get fontSize => '字體大小';
+
+  @override
+  String get fontSizeSmall => '小';
+
+  @override
+  String get fontSizeNormal => '標準';
+
+  @override
+  String get fontSizeLarge => '大';
+
+  @override
+  String get fontSizeExtra => '特大';
+
+  @override
+  String get fontSizeStaysOnDevice => '字體大小只保存在這台裝置，並套用到每一頁。';
+
+  @override
   String get account => '帳號';
 
   @override
@@ -1221,6 +1239,24 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get colorStaysOnDevice => '颜色和深色模式只保存在这台设备。';
 
   @override
+  String get fontSize => '字体大小';
+
+  @override
+  String get fontSizeSmall => '小';
+
+  @override
+  String get fontSizeNormal => '标准';
+
+  @override
+  String get fontSizeLarge => '大';
+
+  @override
+  String get fontSizeExtra => '特大';
+
+  @override
+  String get fontSizeStaysOnDevice => '字体大小只保存在这台设备，并应用到每一页。';
+
+  @override
   String get account => '账号';
 
   @override
@@ -1932,6 +1968,24 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get colorStaysOnDevice => '顏色和深色模式只保存在這台裝置。';
+
+  @override
+  String get fontSize => '字體大小';
+
+  @override
+  String get fontSizeSmall => '小';
+
+  @override
+  String get fontSizeNormal => '標準';
+
+  @override
+  String get fontSizeLarge => '大';
+
+  @override
+  String get fontSizeExtra => '特大';
+
+  @override
+  String get fontSizeStaysOnDevice => '字體大小只保存在這台裝置，並套用到每一頁。';
 
   @override
   String get account => '帳號';

@@ -11,9 +11,12 @@ void main() {
 
     await settings.setDark(true);
     await settings.setSeed(AppTheme.choices[1].color);
+    await settings.setFontSize('large');
     final loaded = await ThemeSettings.load();
 
     expect(loaded.isDark, isTrue);
     expect(loaded.seed.toARGB32(), AppTheme.choices[1].color.toARGB32());
+    expect(loaded.fontSize, 'large');
+    expect(loaded.textScale, 1.2);
   });
 }
