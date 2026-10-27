@@ -5,6 +5,7 @@ const Appointment = require('../models/Appointment');
 const User = require('../models/User');
 
 const router = express.Router();
+const doctorFields = 'fullName specialty specialties description avatarBase64';
 
 // The Flutter app sends the token from POST /api/login.
 async function requireUser(req, res, next) {
@@ -39,6 +40,8 @@ function toAppointmentJson(appointment) {
       fullName: appointment.doctor.fullName,
       specialty: appointment.doctor.specialty || '',
       specialties: doctorTypes(appointment.doctor),
+      description: appointment.doctor.description || '',
+      avatarBase64: appointment.doctor.avatarBase64 || '',
     },
     patient: appointment.patient
       ? {
@@ -79,7 +82,7 @@ function listQuery(user) {
 
 router.get('/', requireUser, async (req, res) => {
   const appointments = await Appointment.find(listQuery(req.user))
-    .populate('doctor', 'fullName specialty specialties')
+    .populate('doctor', doctorFields)
     .populate('patient', 'fullName')
     .sort({ scheduledAt: 1 });
   res.json(appointments.map(toAppointmentJson));
@@ -112,7 +115,7 @@ router.post('/', requireUser, async (req, res) => {
     scheduledAt,
     status: 'available',
   });
-  await created.populate('doctor', 'fullName specialty specialties');
+  await created.populate('doctor', doctorFields);
   res.status(201).json(toAppointmentJson(created));
 });
 
@@ -137,7 +140,7 @@ router.post('/:id/book', requireUser, async (req, res) => {
     res.status(409).json({ message: 'That time slot is no longer available.' });
     return;
   }
-  await booked.populate('doctor', 'fullName specialty specialties');
+  await booked.populate('doctor', doctorFields);
   await booked.populate('patient', 'fullName');
   res.json(toAppointmentJson(booked));
 });
@@ -171,7 +174,7 @@ router.post('/:id/cancel', requireUser, async (req, res) => {
     return;
   }
 
-  await appointment.populate('doctor', 'fullName specialty specialties');
+  await appointment.populate('doctor', doctorFields);
   await appointment.populate('patient', 'fullName');
   res.json(toAppointmentJson(appointment));
 });

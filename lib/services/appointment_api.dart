@@ -17,6 +17,8 @@ class AppointmentRecord {
     required this.doctorSpecialty,
     required this.doctorTypes,
     required this.patientName,
+    this.doctorDescription = '',
+    this.doctorAvatarBase64 = '',
   });
 
   final String id;
@@ -27,6 +29,8 @@ class AppointmentRecord {
   final String doctorSpecialty;
   final List<String> doctorTypes;
   final String? patientName;
+  final String doctorDescription;
+  final String doctorAvatarBase64;
 
   factory AppointmentRecord.fromJson(Map<String, dynamic> json) {
     final doctor = json['doctor'];
@@ -58,6 +62,12 @@ class AppointmentRecord {
           ? doctor['specialty'] as String
           : '',
       doctorTypes: _doctorTypes(doctor),
+      doctorDescription: doctor['description'] is String
+          ? doctor['description'] as String
+          : '',
+      doctorAvatarBase64: doctor['avatarBase64'] is String
+          ? doctor['avatarBase64'] as String
+          : '',
       patientName:
           patient is Map<String, dynamic> && patient['fullName'] is String
           ? patient['fullName'] as String

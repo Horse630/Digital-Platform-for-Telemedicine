@@ -233,6 +233,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get doctorName => 'Doctor name';
 
   @override
+  String get viewDoctorProfile => 'View profile';
+
+  @override
+  String get doctorProfile => 'Doctor profile';
+
+  @override
+  String get noDescription => 'No description yet.';
+
+  @override
   String get allTypes => 'All types';
 
   @override

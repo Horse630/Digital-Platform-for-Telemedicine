@@ -532,6 +532,24 @@ abstract class AppLocalizations {
   /// **'Doctor name'**
   String get doctorName;
 
+  /// No description provided for @viewDoctorProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'View profile'**
+  String get viewDoctorProfile;
+
+  /// No description provided for @doctorProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Doctor profile'**
+  String get doctorProfile;
+
+  /// No description provided for @noDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'No description yet.'**
+  String get noDescription;
+
   /// No description provided for @allTypes.
   ///
   /// In en, this message translates to:

@@ -230,6 +230,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get doctorName => '醫生姓名';
 
   @override
+  String get viewDoctorProfile => '查看資料';
+
+  @override
+  String get doctorProfile => '醫生資料';
+
+  @override
+  String get noDescription => '尚未填寫簡介。';
+
+  @override
   String get allTypes => '全部科別';
 
   @override
@@ -773,6 +782,15 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get doctorName => '医生姓名';
 
   @override
+  String get viewDoctorProfile => '查看资料';
+
+  @override
+  String get doctorProfile => '医生资料';
+
+  @override
+  String get noDescription => '尚未填写简介。';
+
+  @override
   String get allTypes => '全部科室';
 
   @override
@@ -1314,6 +1332,15 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get doctorName => '醫生姓名';
+
+  @override
+  String get viewDoctorProfile => '查看資料';
+
+  @override
+  String get doctorProfile => '醫生資料';
+
+  @override
+  String get noDescription => '尚未填寫簡介。';
 
   @override
   String get allTypes => '全部科別';

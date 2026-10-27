@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../language/ui_text.dart';
 import '../services/appointment_api.dart';
+import '../widgets/account_avatar.dart';
 import '../services/appointment_filter.dart';
 import '../services/auth_service.dart';
 import '../services/doctor_types.dart';
@@ -378,8 +379,9 @@ class _MyAppointments extends StatelessWidget {
         return _AppointmentCard(
           appointment: appointment,
           detail: appointment.reason.isEmpty
-              ? _doctorDetail(l10n, appointment)
+              ? localizedSpecialtyLine(l10n, appointment.doctorSpecialty)
               : appointment.reason,
+          showDoctor: true,
           actionLabel: appointment.status == 'scheduled' ? l10n.cancelBooking : null,
           onAction: appointment.status == 'scheduled'
               ? () => onCancel(appointment)
@@ -500,7 +502,8 @@ class _OpenTimesPageState extends State<_OpenTimesPage> {
           for (final appointment in open) ...[
             _AppointmentCard(
               appointment: appointment,
-              detail: _doctorDetail(l10n, appointment),
+              detail: localizedSpecialtyLine(l10n, appointment.doctorSpecialty),
+              showDoctor: true,
               actionLabel: l10n.book,
               onAction: () => widget.onBook(appointment),
             ),
@@ -512,11 +515,56 @@ class _OpenTimesPageState extends State<_OpenTimesPage> {
   }
 }
 
-String _doctorDetail(AppLocalizations l10n, AppointmentRecord appointment) {
-  if (appointment.doctorSpecialty.isEmpty) {
-    return appointment.doctorName;
-  }
-  return '${appointment.doctorName} · ${localizedSpecialtyLine(l10n, appointment.doctorSpecialty)}';
+void _showDoctorProfile(BuildContext context, AppointmentRecord appointment) {
+  final types = appointment.doctorTypes;
+  showDialog<void>(
+    context: context,
+    builder: (dialogContext) {
+      final text = dialogContext.l10n;
+      return AlertDialog(
+        title: Text(text.doctorProfile),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _DoctorMark(appointment: appointment, radius: 36),
+              const SizedBox(height: 12),
+              Text(
+                appointment.doctorName,
+                textAlign: TextAlign.center,
+                style: Theme.of(dialogContext).textTheme.titleLarge,
+              ),
+              if (types.isNotEmpty) ...[
+                const SizedBox(height: 12),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    for (final type in types)
+                      Chip(label: Text(localizedDoctorType(text, type))),
+                  ],
+                ),
+              ],
+              const SizedBox(height: 12),
+              Text(
+                appointment.doctorDescription.trim().isEmpty
+                    ? text.noDescription
+                    : appointment.doctorDescription.trim(),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: Text(text.close),
+          ),
+        ],
+      );
+    },
+  );
 }
 
 class _FilterMenu<T> extends StatelessWidget {
@@ -865,6 +913,33 @@ DateTime _earliestDay(List<AppointmentRecord> appointments) {
   return _calendarDay(sorted.first.scheduledAt);
 }
 
+class _DoctorMark extends StatelessWidget {
+  const _DoctorMark({required this.appointment, this.radius = 22});
+
+  final AppointmentRecord appointment;
+  final double radius;
+
+  @override
+  Widget build(BuildContext context) {
+    if (appointment.doctorAvatarBase64.isNotEmpty) {
+      return AccountAvatar(
+        avatarBase64: appointment.doctorAvatarBase64,
+        radius: radius,
+      );
+    }
+    final scheme = Theme.of(context).colorScheme;
+    return CircleAvatar(
+      radius: radius,
+      backgroundColor: scheme.primaryContainer,
+      child: Icon(
+        Icons.medical_services_outlined,
+        size: radius,
+        color: scheme.onPrimaryContainer,
+      ),
+    );
+  }
+}
+
 class _AppointmentCard extends StatelessWidget {
   const _AppointmentCard({
     required this.appointment,
@@ -872,6 +947,7 @@ class _AppointmentCard extends StatelessWidget {
     this.actionLabel,
     this.onAction,
     this.onRemove,
+    this.showDoctor = false,
   });
 
   final AppointmentRecord appointment;
@@ -879,6 +955,7 @@ class _AppointmentCard extends StatelessWidget {
   final String? actionLabel;
   final VoidCallback? onAction;
   final VoidCallback? onRemove;
+  final bool showDoctor;
 
   @override
   Widget build(BuildContext context) {
@@ -892,6 +969,39 @@ class _AppointmentCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if (showDoctor) ...[
+              Row(
+                children: [
+                  _DoctorMark(appointment: appointment),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          appointment.doctorName,
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: TextButton(
+                            style: TextButton.styleFrom(
+                              visualDensity: VisualDensity.compact,
+                              padding: EdgeInsets.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            onPressed: () =>
+                                _showDoctorProfile(context, appointment),
+                            child: Text(context.l10n.viewDoctorProfile),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+            ],
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -915,8 +1025,10 @@ class _AppointmentCard extends StatelessWidget {
                   ),
               ],
             ),
-            const SizedBox(height: 4),
-            Text(detail),
+            if (detail.isNotEmpty) ...[
+              const SizedBox(height: 4),
+              Text(detail),
+            ],
             const SizedBox(height: 4),
             Text(
               localizedStatus(context.l10n, appointment.status),
