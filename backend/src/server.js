@@ -20,6 +20,7 @@ app.use(cors());
 app.use(express.json({ limit: '2mb' }));
 app.use('/api/appointments', appointmentsRouter);
 app.use('/api/messages', require('./routes/messages'));
+app.use('/api/discussions', require('./routes/discussions'));
 app.use('/api/profile', require('./routes/profile'));
 
 app.get('/api/health', (_req, res) => {

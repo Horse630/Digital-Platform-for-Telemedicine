@@ -106,6 +106,30 @@ String localizeMessage(AppLocalizations l10n, String message) {
       return l10n.msgMessagesUnread;
     case 'The message request failed.':
       return l10n.msgMessageFailed;
+    case 'Only a patient can ask a question.':
+      return l10n.msgOnlyPatientCanAsk;
+    case 'Only a doctor can reply.':
+      return l10n.msgOnlyDoctorCanReply;
+    case 'Enter a title.':
+      return l10n.msgEnterTitle;
+    case 'Keep the title under 120 characters.':
+      return l10n.msgTitleTooLong;
+    case 'Enter your question.':
+      return l10n.msgEnterQuestion;
+    case 'Keep the question under 1000 characters.':
+      return l10n.msgQuestionTooLong;
+    case 'Enter a reply.':
+      return l10n.msgEnterReply;
+    case 'Keep the reply under 1000 characters.':
+      return l10n.msgReplyTooLong;
+    case 'That question was not found.':
+      return l10n.msgQuestionNotFound;
+    case 'The discussion request failed.':
+      return l10n.msgDiscussionFailed;
+    case 'The discussion list could not be read.':
+      return l10n.msgDiscussionsUnread;
+    case 'Only the person who posted can remove it.':
+      return l10n.msgOnlyPosterCanRemove;
     default:
       return message;
   }

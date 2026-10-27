@@ -207,7 +207,126 @@ class AppLocalizationsEn extends AppLocalizations {
   String get discussion => 'Discussion';
 
   @override
-  String get discussionSubtitle => 'Ask the care team';
+  String get discussionSubtitle => 'Public questions for doctors';
+
+  @override
+  String get askQuestion => 'Ask a question';
+
+  @override
+  String get questionTitle => 'Title';
+
+  @override
+  String get questionBody => 'Your question';
+
+  @override
+  String get postQuestion => 'Post';
+
+  @override
+  String get noDiscussions => 'No questions yet.';
+
+  @override
+  String get noDiscussionsHint =>
+      'Everyone can read a question. Only a doctor can reply, and more than one doctor may reply.';
+
+  @override
+  String get discussionOpen => 'Waiting for a reply';
+
+  @override
+  String get discussionAnswered => 'Answered';
+
+  @override
+  String get publicReply => 'Public replies';
+
+  @override
+  String get noRepliesYet => 'No reply yet.';
+
+  @override
+  String get replyHint => 'Write advice or a short explanation';
+
+  @override
+  String get replyAction => 'Reply';
+
+  @override
+  String get allComments => 'All comments';
+
+  @override
+  String get myComments => 'My comments';
+
+  @override
+  String get noStoredReplies => 'You have not stored a reply.';
+
+  @override
+  String get likeAction => 'Like';
+
+  @override
+  String get storeAction => 'Store';
+
+  @override
+  String get storedAction => 'Stored';
+
+  @override
+  String get publicDiscussions => 'Public discussions';
+
+  @override
+  String get myDiscussions => 'My discussions';
+
+  @override
+  String get noMyDiscussions => 'You have not posted a discussion.';
+
+  @override
+  String get myResponses => 'My responses';
+
+  @override
+  String get noMyResponses => 'You have not replied to a post.';
+
+  @override
+  String get confirmRemovePostTitle => 'Remove this post?';
+
+  @override
+  String get confirmRemovePostMessage =>
+      'This post and its replies will be deleted.';
+
+  @override
+  String get msgOnlyPosterCanRemove =>
+      'Only the person who posted can remove it.';
+
+  @override
+  String replyCount(int count) {
+    return '$count replies';
+  }
+
+  @override
+  String get msgOnlyPatientCanAsk => 'Only a patient can ask a question.';
+
+  @override
+  String get msgOnlyDoctorCanReply => 'Only a doctor can reply.';
+
+  @override
+  String get msgEnterTitle => 'Enter a title.';
+
+  @override
+  String get msgTitleTooLong => 'Keep the title under 120 characters.';
+
+  @override
+  String get msgEnterQuestion => 'Enter your question.';
+
+  @override
+  String get msgQuestionTooLong => 'Keep the question under 1000 characters.';
+
+  @override
+  String get msgEnterReply => 'Enter a reply.';
+
+  @override
+  String get msgReplyTooLong => 'Keep the reply under 1000 characters.';
+
+  @override
+  String get msgQuestionNotFound => 'That question was not found.';
+
+  @override
+  String get msgDiscussionFailed => 'The discussion request failed.';
+
+  @override
+  String get msgDiscussionsUnread => 'The discussion list could not be read.';
 
   @override
   String get iotHealth => 'IoT health';

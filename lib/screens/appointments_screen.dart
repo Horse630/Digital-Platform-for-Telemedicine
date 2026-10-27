@@ -569,7 +569,11 @@ class _OpenTimesPageState extends State<_OpenTimesPage> {
   }
 }
 
-void _showDoctorProfile(BuildContext context, AppointmentRecord appointment) {
+void _showDoctorProfile(
+  BuildContext context,
+  AppointmentRecord appointment, {
+  VoidCallback? onMessage,
+}) {
   final types = appointment.doctorTypes;
   showDialog<void>(
     context: context,
@@ -611,6 +615,14 @@ void _showDoctorProfile(BuildContext context, AppointmentRecord appointment) {
           ),
         ),
         actions: [
+          if (onMessage != null)
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+                onMessage();
+              },
+              child: Text(text.messageAction),
+            ),
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
             child: Text(text.close),
@@ -621,7 +633,11 @@ void _showDoctorProfile(BuildContext context, AppointmentRecord appointment) {
   );
 }
 
-void _showPatientProfile(BuildContext context, AppointmentRecord appointment) {
+void _showPatientProfile(
+  BuildContext context,
+  AppointmentRecord appointment, {
+  VoidCallback? onMessage,
+}) {
   showDialog<void>(
     context: context,
     builder: (dialogContext) {
@@ -663,6 +679,14 @@ void _showPatientProfile(BuildContext context, AppointmentRecord appointment) {
           ),
         ),
         actions: [
+          if (onMessage != null)
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+                onMessage();
+              },
+              child: Text(text.messageAction),
+            ),
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
             child: Text(text.close),
@@ -1024,56 +1048,27 @@ class _ContactRow extends StatelessWidget {
     required this.mark,
     required this.name,
     required this.onProfile,
-    required this.onMessage,
   });
 
   final Widget mark;
   final String name;
   final VoidCallback onProfile;
-  final VoidCallback? onMessage;
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
-      child: Row(
-        children: [
-          mark,
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(name, style: Theme.of(context).textTheme.titleSmall),
-                Wrap(
-                  spacing: 8,
-                  children: [
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        visualDensity: VisualDensity.compact,
-                        padding: EdgeInsets.zero,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
-                      onPressed: onProfile,
-                      child: Text(l10n.viewDoctorProfile),
-                    ),
-                    if (onMessage != null)
-                      TextButton(
-                        style: TextButton.styleFrom(
-                          visualDensity: VisualDensity.compact,
-                          padding: EdgeInsets.zero,
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        ),
-                        onPressed: onMessage,
-                        child: Text(l10n.messageAction),
-                      ),
-                  ],
-                ),
-              ],
+      child: InkWell(
+        onTap: onProfile,
+        child: Row(
+          children: [
+            mark,
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(name, style: Theme.of(context).textTheme.titleSmall),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -1166,15 +1161,21 @@ class _AppointmentCard extends StatelessWidget {
               _ContactRow(
                 mark: _DoctorMark(appointment: appointment),
                 name: appointment.doctorName,
-                onProfile: () => _showDoctorProfile(context, appointment),
-                onMessage: onMessage,
+                onProfile: () => _showDoctorProfile(
+                  context,
+                  appointment,
+                  onMessage: onMessage,
+                ),
               ),
             if (showPatient)
               _ContactRow(
                 mark: _PatientMark(appointment: appointment),
                 name: appointment.patientName ?? context.l10n.unknown,
-                onProfile: () => _showPatientProfile(context, appointment),
-                onMessage: onMessage,
+                onProfile: () => _showPatientProfile(
+                  context,
+                  appointment,
+                  onMessage: onMessage,
+                ),
               ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,

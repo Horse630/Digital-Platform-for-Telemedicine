@@ -487,8 +487,236 @@ abstract class AppLocalizations {
   /// No description provided for @discussionSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Ask the care team'**
+  /// **'Public questions for doctors'**
   String get discussionSubtitle;
+
+  /// No description provided for @askQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask a question'**
+  String get askQuestion;
+
+  /// No description provided for @questionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get questionTitle;
+
+  /// No description provided for @questionBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your question'**
+  String get questionBody;
+
+  /// No description provided for @postQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Post'**
+  String get postQuestion;
+
+  /// No description provided for @noDiscussions.
+  ///
+  /// In en, this message translates to:
+  /// **'No questions yet.'**
+  String get noDiscussions;
+
+  /// No description provided for @noDiscussionsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Everyone can read a question. Only a doctor can reply, and more than one doctor may reply.'**
+  String get noDiscussionsHint;
+
+  /// No description provided for @discussionOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for a reply'**
+  String get discussionOpen;
+
+  /// No description provided for @discussionAnswered.
+  ///
+  /// In en, this message translates to:
+  /// **'Answered'**
+  String get discussionAnswered;
+
+  /// No description provided for @publicReply.
+  ///
+  /// In en, this message translates to:
+  /// **'Public replies'**
+  String get publicReply;
+
+  /// No description provided for @noRepliesYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No reply yet.'**
+  String get noRepliesYet;
+
+  /// No description provided for @replyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Write advice or a short explanation'**
+  String get replyHint;
+
+  /// No description provided for @replyAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Reply'**
+  String get replyAction;
+
+  /// No description provided for @allComments.
+  ///
+  /// In en, this message translates to:
+  /// **'All comments'**
+  String get allComments;
+
+  /// No description provided for @myComments.
+  ///
+  /// In en, this message translates to:
+  /// **'My comments'**
+  String get myComments;
+
+  /// No description provided for @noStoredReplies.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not stored a reply.'**
+  String get noStoredReplies;
+
+  /// No description provided for @likeAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Like'**
+  String get likeAction;
+
+  /// No description provided for @storeAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Store'**
+  String get storeAction;
+
+  /// No description provided for @storedAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Stored'**
+  String get storedAction;
+
+  /// No description provided for @publicDiscussions.
+  ///
+  /// In en, this message translates to:
+  /// **'Public discussions'**
+  String get publicDiscussions;
+
+  /// No description provided for @myDiscussions.
+  ///
+  /// In en, this message translates to:
+  /// **'My discussions'**
+  String get myDiscussions;
+
+  /// No description provided for @noMyDiscussions.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not posted a discussion.'**
+  String get noMyDiscussions;
+
+  /// No description provided for @myResponses.
+  ///
+  /// In en, this message translates to:
+  /// **'My responses'**
+  String get myResponses;
+
+  /// No description provided for @noMyResponses.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not replied to a post.'**
+  String get noMyResponses;
+
+  /// No description provided for @confirmRemovePostTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove this post?'**
+  String get confirmRemovePostTitle;
+
+  /// No description provided for @confirmRemovePostMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This post and its replies will be deleted.'**
+  String get confirmRemovePostMessage;
+
+  /// No description provided for @msgOnlyPosterCanRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Only the person who posted can remove it.'**
+  String get msgOnlyPosterCanRemove;
+
+  /// No description provided for @replyCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} replies'**
+  String replyCount(int count);
+
+  /// No description provided for @msgOnlyPatientCanAsk.
+  ///
+  /// In en, this message translates to:
+  /// **'Only a patient can ask a question.'**
+  String get msgOnlyPatientCanAsk;
+
+  /// No description provided for @msgOnlyDoctorCanReply.
+  ///
+  /// In en, this message translates to:
+  /// **'Only a doctor can reply.'**
+  String get msgOnlyDoctorCanReply;
+
+  /// No description provided for @msgEnterTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a title.'**
+  String get msgEnterTitle;
+
+  /// No description provided for @msgTitleTooLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep the title under 120 characters.'**
+  String get msgTitleTooLong;
+
+  /// No description provided for @msgEnterQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your question.'**
+  String get msgEnterQuestion;
+
+  /// No description provided for @msgQuestionTooLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep the question under 1000 characters.'**
+  String get msgQuestionTooLong;
+
+  /// No description provided for @msgEnterReply.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a reply.'**
+  String get msgEnterReply;
+
+  /// No description provided for @msgReplyTooLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep the reply under 1000 characters.'**
+  String get msgReplyTooLong;
+
+  /// No description provided for @msgQuestionNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'That question was not found.'**
+  String get msgQuestionNotFound;
+
+  /// No description provided for @msgDiscussionFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The discussion request failed.'**
+  String get msgDiscussionFailed;
+
+  /// No description provided for @msgDiscussionsUnread.
+  ///
+  /// In en, this message translates to:
+  /// **'The discussion list could not be read.'**
+  String get msgDiscussionsUnread;
 
   /// No description provided for @iotHealth.
   ///

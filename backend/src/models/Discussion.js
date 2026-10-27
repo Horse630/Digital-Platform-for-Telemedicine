@@ -10,10 +10,10 @@ const discussionSchema = new mongoose.Schema(
       ref: 'User',
       required: true,
     },
+    // Empty until a doctor replies. A patient can ask before any doctor is chosen.
     doctor: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
     },
     title: { type: String, required: true, trim: true, maxlength: 120 },
     body: { type: String, required: true, trim: true, maxlength: 1000 },

@@ -32,7 +32,8 @@ void main() {
                 request.url.path == '/api/appointments') {
               return http.Response('[]', 200);
             }
-            if (request.method == 'GET' && request.url.path == '/api/messages') {
+            if (request.method == 'GET' && (request.url.path == '/api/messages' ||
+                    request.url.path == '/api/discussions')) {
               return http.Response('[]', 200);
             }
             if (request.method == 'GET' && request.url.path == '/api/profile') {
@@ -189,7 +190,8 @@ void main() {
                 request.url.path == '/api/appointments') {
               return http.Response('[]', 200);
             }
-            if (request.method == 'GET' && request.url.path == '/api/messages') {
+            if (request.method == 'GET' && (request.url.path == '/api/messages' ||
+                    request.url.path == '/api/discussions')) {
               return http.Response('[]', 200);
             }
             if (request.method == 'GET' && request.url.path == '/api/profile') {
@@ -295,7 +297,8 @@ AuthService _auth() {
       if (request.method == 'GET' && request.url.path == '/api/appointments') {
         return http.Response('[]', 200);
       }
-      if (request.method == 'GET' && request.url.path == '/api/messages') {
+      if (request.method == 'GET' && (request.url.path == '/api/messages' ||
+                    request.url.path == '/api/discussions')) {
         return http.Response('[]', 200);
       }
       if (request.method == 'GET' && request.url.path == '/api/profile') {

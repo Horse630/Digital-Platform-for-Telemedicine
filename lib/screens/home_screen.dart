@@ -5,14 +5,17 @@ import '../navigation/app_destination.dart';
 import '../services/appointment_api.dart';
 import '../services/appointment_filter.dart';
 import '../services/auth_service.dart';
+import '../services/discussion_api.dart';
 import '../widgets/content_frame.dart';
+import 'discussions_screen.dart';
 
 /// Home dashboard.
 ///
 /// The tiles follow the core functions and sub-functions in the progress
 /// report. The next-appointment card reads the signed-in person's bookings.
-/// Appointments and Consultation open their tabs. Every other tile only
-/// explains that the module does not save data yet.
+/// Appointments and Consultation open their tabs. Discussion opens the
+/// public question board. Every other tile only explains that the module
+/// does not save data yet.
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
     super.key,
@@ -34,6 +37,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late AppointmentApi _api;
   AppointmentRecord? _next;
+  int _discussionUnread = 0;
   bool _loaded = false;
 
   @override
@@ -79,9 +83,41 @@ class _HomeScreenState extends State<HomeScreen> {
         _loaded = true;
       });
     }
+    try {
+      final topics = await DiscussionApi(
+        authService: widget.authService,
+        token: widget.user.token,
+      ).list();
+      if (!mounted) {
+        return;
+      }
+      final unread = topics.fold<int>(
+        0,
+        (total, topic) => total + topic.unreadCount,
+      );
+      setState(() => _discussionUnread = unread);
+    } on DiscussionException {
+      if (mounted) {
+        setState(() => _discussionUnread = 0);
+      }
+    }
   }
 
-  void _openModule(BuildContext context, _Module module) {
+  Future<void> _openModule(BuildContext context, _Module module) async {
+    if (module.opensDiscussion) {
+      await Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => DiscussionsScreen(
+            authService: widget.authService,
+            user: widget.user,
+          ),
+        ),
+      );
+      if (mounted) {
+        await _load();
+      }
+      return;
+    }
     final destination = module.destination;
     if (destination != null) {
       widget.onOpen(destination);
@@ -133,6 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
         icon: Icons.forum_outlined,
         title: l10n.discussion,
         subtitle: l10n.discussionSubtitle,
+        opensDiscussion: true,
       ),
       _Module(
         icon: Icons.monitor_heart_outlined,
@@ -209,6 +246,7 @@ class _HomeScreenState extends State<HomeScreen> {
             _SectionHeader(l10n.otherServices),
             _ModuleGrid(
               modules: _otherModules(l10n),
+              discussionUnread: _discussionUnread,
               onOpen: (module) => _openModule(context, module),
             ),
           ],
@@ -224,12 +262,14 @@ class _Module {
     required this.title,
     required this.subtitle,
     this.destination,
+    this.opensDiscussion = false,
   });
 
   final IconData icon;
   final String title;
   final String subtitle;
   final AppDestination? destination;
+  final bool opensDiscussion;
 }
 
 class _SectionHeader extends StatelessWidget {
@@ -351,10 +391,15 @@ class _SummaryCard extends StatelessWidget {
 }
 
 class _ModuleGrid extends StatelessWidget {
-  const _ModuleGrid({required this.modules, required this.onOpen});
+  const _ModuleGrid({
+    required this.modules,
+    required this.onOpen,
+    this.discussionUnread = 0,
+  });
 
   final List<_Module> modules;
   final ValueChanged<_Module> onOpen;
+  final int discussionUnread;
 
   @override
   Widget build(BuildContext context) {
@@ -377,6 +422,7 @@ class _ModuleGrid extends StatelessWidget {
               icon: module.icon,
               title: module.title,
               subtitle: module.subtitle,
+              badge: module.opensDiscussion ? discussionUnread : 0,
               onTap: () => onOpen(module),
             );
           },
@@ -392,12 +438,14 @@ class _ServiceTile extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.onTap,
+    this.badge = 0,
   });
 
   final IconData icon;
   final String title;
   final String subtitle;
   final VoidCallback onTap;
+  final int badge;
 
   @override
   Widget build(BuildContext context) {
@@ -419,7 +467,14 @@ class _ServiceTile extends StatelessWidget {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(8),
-                  child: Icon(icon, color: scheme.onPrimaryContainer),
+                  child: badge > 0
+                      ? Badge.count(
+                          count: badge,
+                          backgroundColor: const Color(0xFFE53935),
+                          textColor: Colors.white,
+                          child: Icon(icon, color: scheme.onPrimaryContainer),
+                        )
+                      : Icon(icon, color: scheme.onPrimaryContainer),
                 ),
               ),
               const SizedBox(height: 12),

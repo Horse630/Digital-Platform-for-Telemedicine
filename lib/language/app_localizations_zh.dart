@@ -204,7 +204,123 @@ class AppLocalizationsZh extends AppLocalizations {
   String get discussion => '討論';
 
   @override
-  String get discussionSubtitle => '向醫護團隊提問';
+  String get discussionSubtitle => '向醫生公開提問';
+
+  @override
+  String get askQuestion => '提出問題';
+
+  @override
+  String get questionTitle => '標題';
+
+  @override
+  String get questionBody => '你的問題';
+
+  @override
+  String get postQuestion => '發佈';
+
+  @override
+  String get noDiscussions => '還沒有問題。';
+
+  @override
+  String get noDiscussionsHint => '所有人都可以看問題。只有醫生可以回覆，多於一位醫生也可以回覆。';
+
+  @override
+  String get discussionOpen => '待回覆';
+
+  @override
+  String get discussionAnswered => '已回覆';
+
+  @override
+  String get publicReply => '公開回覆';
+
+  @override
+  String get noRepliesYet => '還沒有回覆。';
+
+  @override
+  String get replyHint => '寫下建議或簡單說明';
+
+  @override
+  String get replyAction => '回覆';
+
+  @override
+  String get allComments => '全部回覆';
+
+  @override
+  String get myComments => '我的回覆';
+
+  @override
+  String get noStoredReplies => '你還沒有收藏回覆。';
+
+  @override
+  String get likeAction => '讚好';
+
+  @override
+  String get storeAction => '收藏';
+
+  @override
+  String get storedAction => '已收藏';
+
+  @override
+  String get publicDiscussions => '公開討論';
+
+  @override
+  String get myDiscussions => '我的討論';
+
+  @override
+  String get noMyDiscussions => '你還沒有發佈討論。';
+
+  @override
+  String get myResponses => '我的回覆';
+
+  @override
+  String get noMyResponses => '你還沒有回覆討論。';
+
+  @override
+  String get confirmRemovePostTitle => '移除這則帖子？';
+
+  @override
+  String get confirmRemovePostMessage => '這則帖子和回覆會被刪除。';
+
+  @override
+  String get msgOnlyPosterCanRemove => '只有發帖的人可以移除。';
+
+  @override
+  String replyCount(int count) {
+    return '$count 則回覆';
+  }
+
+  @override
+  String get msgOnlyPatientCanAsk => '只有病人可以發問。';
+
+  @override
+  String get msgOnlyDoctorCanReply => '只有醫生可以回覆。';
+
+  @override
+  String get msgEnterTitle => '請輸入標題。';
+
+  @override
+  String get msgTitleTooLong => '標題請少於 120 個字。';
+
+  @override
+  String get msgEnterQuestion => '請輸入問題。';
+
+  @override
+  String get msgQuestionTooLong => '問題請少於 1000 個字。';
+
+  @override
+  String get msgEnterReply => '請輸入回覆。';
+
+  @override
+  String get msgReplyTooLong => '回覆請少於 1000 個字。';
+
+  @override
+  String get msgQuestionNotFound => '找不到這個問題。';
+
+  @override
+  String get msgDiscussionFailed => '討論請求失敗。';
+
+  @override
+  String get msgDiscussionsUnread => '無法讀取討論列表。';
 
   @override
   String get iotHealth => '健康裝置';
@@ -801,7 +917,123 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get discussion => '讨论';
 
   @override
-  String get discussionSubtitle => '向医护团队提问';
+  String get discussionSubtitle => '向医生公开提问';
+
+  @override
+  String get askQuestion => '提出问题';
+
+  @override
+  String get questionTitle => '标题';
+
+  @override
+  String get questionBody => '你的问题';
+
+  @override
+  String get postQuestion => '发布';
+
+  @override
+  String get noDiscussions => '还没有问题。';
+
+  @override
+  String get noDiscussionsHint => '所有人都可以看问题。只有医生可以回复，多于一位医生也可以回复。';
+
+  @override
+  String get discussionOpen => '待回复';
+
+  @override
+  String get discussionAnswered => '已回复';
+
+  @override
+  String get publicReply => '公开回复';
+
+  @override
+  String get noRepliesYet => '还没有回复。';
+
+  @override
+  String get replyHint => '写下建议或简单说明';
+
+  @override
+  String get replyAction => '回复';
+
+  @override
+  String get allComments => '全部回复';
+
+  @override
+  String get myComments => '我的回复';
+
+  @override
+  String get noStoredReplies => '你还没有收藏回复。';
+
+  @override
+  String get likeAction => '赞';
+
+  @override
+  String get storeAction => '收藏';
+
+  @override
+  String get storedAction => '已收藏';
+
+  @override
+  String get publicDiscussions => '公开讨论';
+
+  @override
+  String get myDiscussions => '我的讨论';
+
+  @override
+  String get noMyDiscussions => '你还没有发布讨论。';
+
+  @override
+  String get myResponses => '我的回复';
+
+  @override
+  String get noMyResponses => '你还没有回复讨论。';
+
+  @override
+  String get confirmRemovePostTitle => '移除这则帖子？';
+
+  @override
+  String get confirmRemovePostMessage => '这则帖子和回复会被删除。';
+
+  @override
+  String get msgOnlyPosterCanRemove => '只有发帖的人可以移除。';
+
+  @override
+  String replyCount(int count) {
+    return '$count 条回复';
+  }
+
+  @override
+  String get msgOnlyPatientCanAsk => '只有患者可以提问。';
+
+  @override
+  String get msgOnlyDoctorCanReply => '只有医生可以回复。';
+
+  @override
+  String get msgEnterTitle => '请输入标题。';
+
+  @override
+  String get msgTitleTooLong => '标题请少于 120 个字。';
+
+  @override
+  String get msgEnterQuestion => '请输入问题。';
+
+  @override
+  String get msgQuestionTooLong => '问题请少于 1000 个字。';
+
+  @override
+  String get msgEnterReply => '请输入回复。';
+
+  @override
+  String get msgReplyTooLong => '回复请少于 1000 个字。';
+
+  @override
+  String get msgQuestionNotFound => '找不到这个问题。';
+
+  @override
+  String get msgDiscussionFailed => '讨论请求失败。';
+
+  @override
+  String get msgDiscussionsUnread => '无法读取讨论列表。';
 
   @override
   String get iotHealth => '健康设备';
@@ -1398,7 +1630,123 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get discussion => '討論';
 
   @override
-  String get discussionSubtitle => '向醫護團隊提問';
+  String get discussionSubtitle => '向醫生公開提問';
+
+  @override
+  String get askQuestion => '提出問題';
+
+  @override
+  String get questionTitle => '標題';
+
+  @override
+  String get questionBody => '你的問題';
+
+  @override
+  String get postQuestion => '發佈';
+
+  @override
+  String get noDiscussions => '還沒有問題。';
+
+  @override
+  String get noDiscussionsHint => '所有人都可以看問題。只有醫生可以回覆，多於一位醫生也可以回覆。';
+
+  @override
+  String get discussionOpen => '待回覆';
+
+  @override
+  String get discussionAnswered => '已回覆';
+
+  @override
+  String get publicReply => '公開回覆';
+
+  @override
+  String get noRepliesYet => '還沒有回覆。';
+
+  @override
+  String get replyHint => '寫下建議或簡單說明';
+
+  @override
+  String get replyAction => '回覆';
+
+  @override
+  String get allComments => '全部回覆';
+
+  @override
+  String get myComments => '我的回覆';
+
+  @override
+  String get noStoredReplies => '你還沒有收藏回覆。';
+
+  @override
+  String get likeAction => '讚好';
+
+  @override
+  String get storeAction => '收藏';
+
+  @override
+  String get storedAction => '已收藏';
+
+  @override
+  String get publicDiscussions => '公開討論';
+
+  @override
+  String get myDiscussions => '我的討論';
+
+  @override
+  String get noMyDiscussions => '你還沒有發佈討論。';
+
+  @override
+  String get myResponses => '我的回覆';
+
+  @override
+  String get noMyResponses => '你還沒有回覆討論。';
+
+  @override
+  String get confirmRemovePostTitle => '移除這則帖子？';
+
+  @override
+  String get confirmRemovePostMessage => '這則帖子和回覆會被刪除。';
+
+  @override
+  String get msgOnlyPosterCanRemove => '只有發帖的人可以移除。';
+
+  @override
+  String replyCount(int count) {
+    return '$count 則回覆';
+  }
+
+  @override
+  String get msgOnlyPatientCanAsk => '只有病人可以發問。';
+
+  @override
+  String get msgOnlyDoctorCanReply => '只有醫生可以回覆。';
+
+  @override
+  String get msgEnterTitle => '請輸入標題。';
+
+  @override
+  String get msgTitleTooLong => '標題請少於 120 個字。';
+
+  @override
+  String get msgEnterQuestion => '請輸入問題。';
+
+  @override
+  String get msgQuestionTooLong => '問題請少於 1000 個字。';
+
+  @override
+  String get msgEnterReply => '請輸入回覆。';
+
+  @override
+  String get msgReplyTooLong => '回覆請少於 1000 個字。';
+
+  @override
+  String get msgQuestionNotFound => '找不到這個問題。';
+
+  @override
+  String get msgDiscussionFailed => '討論請求失敗。';
+
+  @override
+  String get msgDiscussionsUnread => '無法讀取討論列表。';
 
   @override
   String get iotHealth => '健康裝置';

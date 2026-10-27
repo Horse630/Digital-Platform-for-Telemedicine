@@ -47,11 +47,12 @@ The app icon is `assets/app_icon.png`, a teal medical cross with a video camera.
 
 - **Login** calls `POST /api/login` and opens the shell when MongoDB accepts the account. Three buttons sign in as the seeded admin, doctor, or patient without typing. **Create an account** opens sign-up.
 - **Sign up** asks for an email, username, and password, and a choice of patient or doctor. Both roles use those same fields. The API rejects a username that is already stored.
-- **Home** greets the signed-in person and lists the core functions and sub-functions from the progress report. The next-appointment card shows that person's soonest booked visit, or "Not scheduled" when there is none. Appointments and Consultation open their tabs. The other modules explain that this build does not save new data.
+- **Home** greets the signed-in person and lists the core functions and sub-functions from the progress report. The next-appointment card shows that person's soonest booked visit, or "Not scheduled" when there is none. Appointments and Consultation open their tabs. Discussion opens the public question board. The other modules explain that this build does not save new data.
 - **Appointments** lists a doctor's own time slots and a patient's own bookings. The default view is a calendar. A **List** button switches to the scrolling cards, and **Calendar** switches back. An empty list shows "No appointment" and a button: **Make an appointment** for a doctor, **Book an appointment** for a patient. The booking page searches by doctor name, filters by doctor type, and sorts by time or name. Booking needs a short reason. Cancelling asks for confirmation. A patient cancel opens that slot again. A doctor cancel marks the row cancelled, and a cross on that card can delete it after another confirmation. An admin can read every row in either format and cannot change one.
-- **Doctor profile on a patient's card.** A patient's own bookings and the booking page show the doctor's saved photo, or a doctor icon when there is no photo, plus **View profile**. That profile shows the doctor's name, photo, doctor types, and description. It does not show the username, email, or password. The appointment response already includes `description` and `avatarBase64`, so this button does not call a separate profile route.
-- **Patient profile on a doctor's card.** When a visit has a patient, the card shows that patient's photo, or a person icon, plus **View profile**. That profile shows the name, photo, allergies, and description. It does not show the username, email, or password.
-- **Messages** is the middle tab. It lists people this account has messaged, or who have messaged this account, with the latest line and time. A green count on a row shows how many of that person's messages are still unread. A red count on the Messages icon shows the total. Opening a person shows the conversation and marks those messages read. Under a message you sent, the time sits with one tick when it is sent and two ticks when the other person has opened it. A **Message** button on a patient's doctor card, or on a doctor's patient card, opens that same conversation.
+- **Doctor profile on a patient's card.** A patient's own bookings and the booking page show the doctor's saved photo, or a doctor icon when there is no photo, and the doctor's name. Tapping the photo or the name opens the profile. That profile shows the doctor's name, photo, doctor types, and description, and a **Message** button. It does not show the username, email, or password. The appointment response already includes `description` and `avatarBase64`, so this does not call a separate profile route.
+- **Patient profile on a doctor's card.** When a visit has a patient, the card shows that patient's photo, or a person icon, and the name. Tapping either opens the profile. That profile shows the name, photo, allergies, description, and a **Message** button. It does not show the username, email, or password.
+- **Messages** is the middle tab. It lists people this account has messaged, or who have messaged this account, with the latest line and time. A green count on a row shows how many of that person's messages are still unread. A red count on the Messages icon shows the total. Opening a person shows the conversation and marks those messages read. Under a message you sent, the time sits with one tick when it is sent and two ticks when the other person has opened it. **Message** on that person's profile, opened from an appointment card, starts the same conversation.
+- **Discussion** opens from Home. The list has **Public discussions** and a second filter. Public discussions shows every post. A patient sees **My discussions**, which shows posts they created. A doctor sees **My responses**, which shows posts they have replied to. Everyone who is signed in can read a post. Only a doctor can reply, and more than one doctor can reply to the same post. Each reply has **Like** and **Store**. The person who posted can remove that post. A confirmation shows **Keep** above **Remove**. A red count on the Discussion tile tells the patient that a doctor replied and they have not opened that post yet. The patient icon or name, and a doctor's icon or name, open that profile. **Message** is on the profile when it is someone else. An admin can read and cannot post or remove a post.
 - **Consultation** is an empty state until a video SDK is added.
 - **Profile** shows the database account, including a saved photo and description. It opens Settings and logs out.
 - **Settings** uploads a profile photo, changes the username, description, and password, and switches the language, UI color, and dark mode. A doctor chooses one or more doctor types from a fixed list. A patient types allergy tags. The photo, account fields, doctor types, and allergies are stored in MongoDB. Language, color, and dark mode stay on the device. The app starts in English until a language is chosen.
@@ -80,6 +81,7 @@ lib/
   services/avatar_image.dart
   services/doctor_types.dart
   services/message_api.dart
+  services/discussion_api.dart
   services/profile_api.dart
   theme/app_theme.dart
   theme/theme_settings.dart
@@ -90,6 +92,7 @@ lib/
     home_screen.dart
     appointments_screen.dart
     messages_screen.dart
+    discussions_screen.dart
     chat_thread_screen.dart
     consultation_screen.dart
     profile_screen.dart
@@ -107,6 +110,7 @@ backend/
   src/db.js
   src/routes/appointments.js
   src/routes/messages.js
+  src/routes/discussions.js
   src/routes/profile.js
   src/models/
     User.js
@@ -150,7 +154,7 @@ Atlas credentials belong only in `backend/.env`. Git ignores that file. `backend
 | `discussion_comments` | One doctor reply |
 | `health_readings` | Heart rate `72 bpm` |
 
-Refresh the Atlas collection list after seeding. Login reads `users`. The appointment screen reads and writes `appointments`, including deleting a cancelled row. Settings reads and writes the signed-in user's username, description, photo, password hash, doctor types, and allergies. The Messages tab reads and writes `direct_messages`. Consultations, certificates, payments, deliveries, chatbot messages, discussions, and health readings are not loaded by the app yet.
+Refresh the Atlas collection list after seeding. Login reads `users`. The appointment screen reads and writes `appointments`, including deleting a cancelled row. Settings reads and writes the signed-in user's username, description, photo, password hash, doctor types, and allergies. The Messages tab reads and writes `direct_messages`. Discussion reads and writes `discussions` and `discussion_comments`. Consultations, certificates, payments, deliveries, chatbot messages, and health readings are not loaded by the app yet.
 
 `POST /api/login` also returns a bearer token. Appointment requests send `Authorization: Bearer <token>`. The token secret is `AUTH_TOKEN_SECRET` in `backend/.env`, separate from the Atlas password.
 
@@ -192,4 +196,4 @@ flutter test
 
 ## Later phases
 
-Appointment booking and the settings page are in this build. PayPal Sandbox, read-only sick leave PDFs, video, the delivery map, the chatbot, discussion, and wearable sync are not connected yet. The home screen entries for those modules are still navigation targets.
+Appointment booking, settings, and the public discussion board are in this build. PayPal Sandbox, read-only sick leave PDFs, video, the delivery map, the chatbot, and wearable sync are not connected yet. The home screen entries for those modules are still navigation targets.

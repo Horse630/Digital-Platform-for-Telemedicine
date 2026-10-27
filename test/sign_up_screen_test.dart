@@ -26,7 +26,8 @@ void main() {
           client: MockClient((request) async {
             if (request.method == 'GET') {
               if (request.url.path == '/api/appointments' ||
-                  request.url.path == '/api/messages') {
+                  request.url.path == '/api/messages' ||
+                  request.url.path == '/api/discussions') {
                 return http.Response('[]', 200);
               }
               return http.Response(
