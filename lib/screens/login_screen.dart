@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../language/ui_text.dart';
 import '../services/auth_service.dart';
 import 'main_shell.dart';
 import 'sign_up_screen.dart';
@@ -97,6 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final errorMessage = _errorMessage;
+    final l10n = context.l10n;
 
     return Scaffold(
       body: DecoratedBox(
@@ -141,7 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 const _LoginMark(),
                                 const SizedBox(height: 16),
                                 Text(
-                                  'Digital Platform for Telemedicine',
+                                  l10n.appTitle,
                                   textAlign: TextAlign.center,
                                   style: Theme.of(context)
                                       .textTheme
@@ -150,7 +152,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
-                                  'Remote care, appointments, and follow-up in one place.',
+                                  l10n.appTagline,
                                   textAlign: TextAlign.center,
                                   style: Theme.of(context).textTheme.bodyMedium
                                       ?.copyWith(
@@ -165,9 +167,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                   autocorrect: false,
                                   enableSuggestions: false,
                                   autofillHints: const [AutofillHints.username],
-                                  decoration: const InputDecoration(
-                                    labelText: 'Username',
-                                    prefixIcon: Icon(Icons.person_outline),
+                                  decoration: InputDecoration(
+                                    labelText: l10n.username,
+                                    prefixIcon: const Icon(Icons.person_outline),
                                   ),
                                   onChanged: (_) => _clearError(),
                                   onFieldSubmitted: (_) {
@@ -175,7 +177,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   },
                                   validator: (value) {
                                     if (value == null || value.trim().isEmpty) {
-                                      return 'Enter your username';
+                                      return l10n.enterUsername;
                                     }
                                     return null;
                                   },
@@ -191,12 +193,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                   enableSuggestions: false,
                                   autofillHints: const [AutofillHints.password],
                                   decoration: InputDecoration(
-                                    labelText: 'Password',
+                                    labelText: l10n.password,
                                     prefixIcon: const Icon(Icons.lock_outline),
                                     suffixIcon: IconButton(
                                       tooltip: _obscurePassword
-                                          ? 'Show password'
-                                          : 'Hide password',
+                                          ? l10n.showPassword
+                                          : l10n.hidePassword,
                                       onPressed: () {
                                         setState(() {
                                           _obscurePassword = !_obscurePassword;
@@ -213,7 +215,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   onFieldSubmitted: (_) => _submit(),
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Enter your password';
+                                      return l10n.enterPassword;
                                     }
                                     return null;
                                   },
@@ -234,7 +236,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           const SizedBox(width: 8),
                                           Expanded(
                                             child: Text(
-                                              errorMessage,
+                                              localizeMessage(l10n, errorMessage),
                                               key: const Key('loginError'),
                                               style: TextStyle(
                                                 color: scheme.onErrorContainer,
@@ -258,13 +260,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                             strokeWidth: 2,
                                           ),
                                         )
-                                      : const Text('Sign in'),
+                                      : Text(l10n.signIn),
                                 ),
                                 const SizedBox(height: 8),
                                 TextButton(
                                   key: const Key('createAccountButton'),
                                   onPressed: _submitting ? null : _openSignUp,
-                                  child: const Text('Create an account'),
+                                  child: Text(l10n.createAccount),
                                 ),
                               ],
                             ),

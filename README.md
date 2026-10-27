@@ -51,7 +51,7 @@ The app icon is `assets/app_icon.png`, a teal medical cross with a video camera.
 - **Appointments** lists a doctor's own time slots and a patient's own bookings. The default view is a calendar. A **List** button switches to the scrolling cards, and **Calendar** switches back. An empty list shows "No appointment" and a button: **Make an appointment** for a doctor, **Book an appointment** for a patient. The booking page searches by doctor name, filters by doctor type, and sorts by time or name. Booking needs a short reason. Cancelling a booking opens that slot again. An admin can read every row in either format.
 - **Consultation** is an empty state until a video SDK is added.
 - **Profile** shows the database account, including a saved photo and description. It opens Settings and logs out.
-- **Settings** uploads a profile photo, changes the username, description, and password, and switches the UI color and dark mode. A doctor chooses one or more doctor types from a fixed list. A patient types allergy tags. The photo, account fields, doctor types, and allergies are stored in MongoDB. Color and dark mode stay on the device.
+- **Settings** uploads a profile photo, changes the username, description, and password, and switches the language, UI color, and dark mode. A doctor chooses one or more doctor types from a fixed list. A patient types allergy tags. The photo, account fields, doctor types, and allergies are stored in MongoDB. Language, color, and dark mode stay on the device. The app starts in English until a language is chosen.
 
 On a phone the tabs sit in a bottom bar. When the window is at least 840 pixels wide, the same tabs move to a side rail.
 

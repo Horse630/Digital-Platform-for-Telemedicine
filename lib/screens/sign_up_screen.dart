@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../language/ui_text.dart';
 import '../services/auth_service.dart';
 import 'main_shell.dart';
 
@@ -85,9 +86,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Create an account')),
+      appBar: AppBar(title: Text(l10n.createAccount)),
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
@@ -97,9 +99,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
               children: [
                 SegmentedButton<String>(
                   key: const Key('signUpRole'),
-                  segments: const [
-                    ButtonSegment(value: 'patient', label: Text('Patient')),
-                    ButtonSegment(value: 'doctor', label: Text('Doctor')),
+                  segments: [
+                    ButtonSegment(value: 'patient', label: Text(l10n.patient)),
+                    ButtonSegment(value: 'doctor', label: Text(l10n.doctor)),
                   ],
                   selected: {_role},
                   onSelectionChanged: _submitting
@@ -117,13 +119,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         controller: _email,
                         keyboardType: TextInputType.emailAddress,
                         autocorrect: false,
-                        decoration: const InputDecoration(
-                          labelText: 'Email',
-                          prefixIcon: Icon(Icons.mail_outline),
+                        decoration: InputDecoration(
+                          labelText: l10n.email,
+                          prefixIcon: const Icon(Icons.mail_outline),
                         ),
                         validator: (value) {
                           if (!_emailPattern.hasMatch((value ?? '').trim())) {
-                            return 'Enter a valid email.';
+                            return l10n.enterValidEmail;
                           }
                           return null;
                         },
@@ -133,13 +135,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         key: const Key('signUpUsernameField'),
                         controller: _username,
                         autocorrect: false,
-                        decoration: const InputDecoration(
-                          labelText: 'Username',
-                          prefixIcon: Icon(Icons.person_outline),
+                        decoration: InputDecoration(
+                          labelText: l10n.username,
+                          prefixIcon: const Icon(Icons.person_outline),
                         ),
                         validator: (value) {
                           if (!_usernamePattern.hasMatch((value ?? '').trim())) {
-                            return 'Use 3 to 40 letters, numbers, dots, underscores, or hyphens.';
+                            return l10n.usernameRule;
                           }
                           return null;
                         },
@@ -151,7 +153,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         obscureText: _obscurePassword,
                         autocorrect: false,
                         decoration: InputDecoration(
-                          labelText: 'Password',
+                          labelText: l10n.password,
                           prefixIcon: const Icon(Icons.lock_outline),
                           suffixIcon: IconButton(
                             onPressed: () {
@@ -166,7 +168,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                         validator: (value) {
                           if (value == null || value.length < 8) {
-                            return 'Use at least 8 characters.';
+                            return l10n.atLeast8;
                           }
                           return null;
                         },
@@ -177,13 +179,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         controller: _confirmPassword,
                         obscureText: _obscurePassword,
                         autocorrect: false,
-                        decoration: const InputDecoration(
-                          labelText: 'Confirm password',
-                          prefixIcon: Icon(Icons.lock_outline),
+                        decoration: InputDecoration(
+                          labelText: l10n.confirmPassword,
+                          prefixIcon: const Icon(Icons.lock_outline),
                         ),
                         validator: (value) {
                           if (value != _password.text) {
-                            return 'Enter the same password twice.';
+                            return l10n.samePasswordTwice;
                           }
                           return null;
                         },
@@ -191,7 +193,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       if (_errorMessage != null) ...[
                         const SizedBox(height: 12),
                         Text(
-                          _errorMessage!,
+                          localizeMessage(l10n, _errorMessage!),
                           key: const Key('signUpError'),
                           style: TextStyle(color: scheme.error),
                         ),
@@ -200,7 +202,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       FilledButton(
                         key: const Key('signUpButton'),
                         onPressed: _submit,
-                        child: Text(_submitting ? 'Creating...' : 'Create account'),
+                        child: Text(_submitting ? l10n.creating : l10n.createAccountAction),
                       ),
                     ],
                   ),

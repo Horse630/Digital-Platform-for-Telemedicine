@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../language/ui_text.dart';
 import '../navigation/app_destination.dart';
 import '../services/appointment_api.dart';
 import '../services/appointment_filter.dart';
@@ -89,57 +90,62 @@ class _HomeScreenState extends State<HomeScreen> {
     _showPendingModule(context, module.title);
   }
 
-  static const _coreModules = <_Module>[
-    _Module(
-      icon: Icons.event_available_outlined,
-      title: 'Appointments',
-      subtitle: 'Book a remote visit',
-      destination: AppDestination.appointments,
-    ),
-    _Module(
-      icon: Icons.video_camera_front_outlined,
-      title: 'Consultation',
-      subtitle: 'Talk with a doctor',
-      destination: AppDestination.consultation,
-    ),
-    _Module(
-      icon: Icons.description_outlined,
-      title: 'Sick leave',
-      subtitle: 'Read-only certificate',
-    ),
-    _Module(
-      icon: Icons.payments_outlined,
-      title: 'Payment',
-      subtitle: 'Fees for care and delivery',
-    ),
-    _Module(
-      icon: Icons.local_shipping_outlined,
-      title: 'Medication delivery',
-      subtitle: 'Track a prescription',
-    ),
-  ];
+  static List<_Module> _coreModules(AppLocalizations l10n) {
+    return [
+      _Module(
+        icon: Icons.event_available_outlined,
+        title: l10n.navAppointments,
+        subtitle: l10n.appointmentsSubtitle,
+        destination: AppDestination.appointments,
+      ),
+      _Module(
+        icon: Icons.video_camera_front_outlined,
+        title: l10n.consultationTitle,
+        subtitle: l10n.consultationSubtitle,
+        destination: AppDestination.consultation,
+      ),
+      _Module(
+        icon: Icons.description_outlined,
+        title: l10n.sickLeave,
+        subtitle: l10n.sickLeaveSubtitle,
+      ),
+      _Module(
+        icon: Icons.payments_outlined,
+        title: l10n.payment,
+        subtitle: l10n.paymentSubtitle,
+      ),
+      _Module(
+        icon: Icons.local_shipping_outlined,
+        title: l10n.medicationDelivery,
+        subtitle: l10n.medicationDeliverySubtitle,
+      ),
+    ];
+  }
 
-  static const _otherModules = <_Module>[
-    _Module(
-      icon: Icons.smart_toy_outlined,
-      title: 'AI chatbot',
-      subtitle: 'Guidance and questions',
-    ),
-    _Module(
-      icon: Icons.forum_outlined,
-      title: 'Discussion',
-      subtitle: 'Ask the care team',
-    ),
-    _Module(
-      icon: Icons.monitor_heart_outlined,
-      title: 'IoT health',
-      subtitle: 'Wearable readings',
-    ),
-  ];
+  static List<_Module> _otherModules(AppLocalizations l10n) {
+    return [
+      _Module(
+        icon: Icons.smart_toy_outlined,
+        title: l10n.aiChatbot,
+        subtitle: l10n.aiChatbotSubtitle,
+      ),
+      _Module(
+        icon: Icons.forum_outlined,
+        title: l10n.discussion,
+        subtitle: l10n.discussionSubtitle,
+      ),
+      _Module(
+        icon: Icons.monitor_heart_outlined,
+        title: l10n.iotHealth,
+        subtitle: l10n.iotHealthSubtitle,
+      ),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
 
     return ContentFrame(
       child: SingleChildScrollView(
@@ -148,17 +154,17 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              'Welcome back, ${widget.user.fullName}',
+              l10n.welcomeBack(widget.user.fullName),
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             const SizedBox(height: 4),
             Text(
-              widget.user.dashboardLabel,
+              localizedDashboard(l10n, widget.user.role),
               style: Theme.of(context).textTheme.bodyMedium
                   ?.copyWith(color: scheme.onSurfaceVariant),
             ),
             const SizedBox(height: 24),
-            const _SectionHeader('Overview'),
+            _SectionHeader(l10n.overview),
             LayoutBuilder(
               builder: (context, constraints) {
                 final nextAppointment = _NextAppointmentCard(
@@ -168,10 +174,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
                 final delivery = _SummaryCard(
                   icon: Icons.local_shipping_outlined,
-                  label: 'Medication delivery',
-                  value: 'No active order',
+                  label: l10n.medicationDelivery,
+                  value: l10n.noActiveOrder,
                   onTap: () =>
-                      _showPendingModule(context, 'Medication delivery'),
+                      _showPendingModule(context, l10n.medicationDelivery),
                 );
 
                 if (constraints.maxWidth < 560) {
@@ -194,15 +200,15 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
             const SizedBox(height: 24),
-            const _SectionHeader('Core services'),
+            _SectionHeader(l10n.coreServices),
             _ModuleGrid(
-              modules: _coreModules,
+              modules: _coreModules(l10n),
               onOpen: (module) => _openModule(context, module),
             ),
             const SizedBox(height: 24),
-            const _SectionHeader('Other services'),
+            _SectionHeader(l10n.otherServices),
             _ModuleGrid(
-              modules: _otherModules,
+              modules: _otherModules(l10n),
               onOpen: (module) => _openModule(context, module),
             ),
           ],
@@ -254,13 +260,14 @@ class _NextAppointmentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appointment = this.appointment;
+    final l10n = context.l10n;
     final value = appointment == null
-        ? 'Not scheduled'
+        ? l10n.notScheduled
         : _when(context, appointment.scheduledAt.toLocal());
-    final detail = appointment == null ? null : _who(appointment, role);
+    final detail = appointment == null ? null : _who(l10n, appointment, role);
     return _SummaryCard(
       icon: Icons.event_outlined,
-      label: 'Next appointment',
+      label: l10n.nextAppointment,
       value: value,
       detail: detail,
       onTap: onTap,
@@ -273,14 +280,14 @@ class _NextAppointmentCard extends StatelessWidget {
     return '$date, $time';
   }
 
-  String _who(AppointmentRecord appointment, String role) {
+  String _who(AppLocalizations l10n, AppointmentRecord appointment, String role) {
     if (role == 'doctor') {
-      return 'Patient: ${appointment.patientName ?? 'Unknown'}';
+      return l10n.patientLine(appointment.patientName ?? l10n.unknown);
     }
     if (appointment.doctorSpecialty.isEmpty) {
       return appointment.doctorName;
     }
-    return '${appointment.doctorName} · ${appointment.doctorSpecialty}';
+    return '${appointment.doctorName} · ${localizedSpecialtyLine(l10n, appointment.doctorSpecialty)}';
   }
 }
 
@@ -444,13 +451,11 @@ void _showPendingModule(BuildContext context, String title) {
     builder: (dialogContext) {
       return AlertDialog(
         title: Text(title),
-        content: const Text(
-          'This service is not available yet.',
-        ),
+        content: Text(AppLocalizations.of(dialogContext).serviceUnavailable),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('Close'),
+            child: Text(AppLocalizations.of(dialogContext).close),
           ),
         ],
       );

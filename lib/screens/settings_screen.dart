@@ -1,6 +1,8 @@
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 
+import '../language/language_settings.dart';
+import '../language/ui_text.dart';
 import '../services/auth_service.dart';
 import '../services/avatar_image.dart';
 import '../services/doctor_types.dart';
@@ -10,10 +12,10 @@ import '../theme/theme_settings.dart';
 import '../widgets/account_avatar.dart';
 import '../widgets/content_frame.dart';
 
-/// Profile photo, account fields, password, and the device theme.
+/// Profile photo, account fields, password, language, and the device theme.
 ///
 /// Photo, username, description, and password are saved through the Node API.
-/// Color and dark mode stay on this device.
+/// Color, dark mode, and language stay on this device.
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({
     super.key,
@@ -158,7 +160,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _allergies = List<String>.from(details.allergies);
       widget.onUserChanged(_user);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Profile saved.')),
+        SnackBar(content: Text(context.l10n.profileSaved)),
       );
     } on ProfileException catch (error) {
       if (!mounted) {
@@ -195,7 +197,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _currentPassword.clear();
       _newPassword.clear();
       _confirmPassword.clear();
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(localizeMessage(context.l10n, message))),
+      );
     } on ProfileException catch (error) {
       if (!mounted) {
         return;
@@ -211,9 +215,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final settings = ThemeScope.of(context);
+    final language = LanguageScope.of(context);
+    final l10n = context.l10n;
+    final languageCode = LanguageSettings.codeFor(language.locale);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(title: Text(l10n.settings)),
       body: ContentFrame(
         maxWidth: 560,
         child: SingleChildScrollView(
@@ -221,7 +228,53 @@ class _SettingsScreenState extends State<SettingsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-            _sectionTitle('Appearance'),
+            _sectionTitle(l10n.language),
+            const SizedBox(height: 8),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Wrap(
+                      key: const Key('languagePicker'),
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        ChoiceChip(
+                          label: const Text('English'),
+                          selected: languageCode == 'en',
+                          onSelected: (_) => language.setLocale(
+                            LanguageSettings.localeFromCode('en'),
+                          ),
+                        ),
+                        ChoiceChip(
+                          label: const Text('繁體中文'),
+                          selected: languageCode == 'zh_Hant',
+                          onSelected: (_) => language.setLocale(
+                            LanguageSettings.localeFromCode('zh_Hant'),
+                          ),
+                        ),
+                        ChoiceChip(
+                          label: const Text('简体中文'),
+                          selected: languageCode == 'zh_Hans',
+                          onSelected: (_) => language.setLocale(
+                            LanguageSettings.localeFromCode('zh_Hans'),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      l10n.languageStaysOnDevice,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+            _sectionTitle(l10n.appearance),
             const SizedBox(height: 8),
             Card(
               child: Column(
@@ -229,8 +282,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   SwitchListTile(
                     key: const Key('darkModeSwitch'),
                     secondary: const Icon(Icons.dark_mode_outlined),
-                    title: const Text('Dark mode'),
-                    subtitle: const Text('Switch the app between light and dark'),
+                    title: Text(l10n.darkMode),
+                    subtitle: Text(l10n.darkModeSubtitle),
                     value: settings.isDark,
                     onChanged: (dark) {
                       settings.setDark(dark);
@@ -243,12 +296,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'App color',
+                          l10n.appColor,
                           style: Theme.of(context).textTheme.titleSmall,
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'Color and dark mode stay on this device.',
+                          l10n.colorStaysOnDevice,
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                         const SizedBox(height: 12),
@@ -273,7 +326,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
             const SizedBox(height: 24),
-            _sectionTitle('Account'),
+            _sectionTitle(l10n.account),
             const SizedBox(height: 8),
             if (_loading)
               const Padding(
@@ -282,13 +335,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
               )
             else if (!_ready)
               _MessageBlock(
-                message: _profileError ?? 'The profile could not be read.',
-                action: TextButton(onPressed: _load, child: const Text('Retry')),
+                message: localizeMessage(
+                  l10n,
+                  _profileError ?? 'The profile could not be read.',
+                ),
+                action: TextButton(onPressed: _load, child: Text(l10n.retry)),
               )
             else
               _accountCard(),
             const SizedBox(height: 24),
-            _sectionTitle('Password'),
+            _sectionTitle(l10n.passwordSection),
             const SizedBox(height: 8),
             _passwordCard(),
             ],
@@ -299,6 +355,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _accountCard() {
+    final l10n = context.l10n;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -318,7 +375,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     key: const Key('uploadPhotoButton'),
                     onPressed: _saving ? null : _pickPhoto,
                     icon: const Icon(Icons.image_outlined),
-                    label: const Text('Upload photo'),
+                    label: Text(l10n.uploadPhoto),
                   ),
                   if (_avatarBase64.isNotEmpty)
                     TextButton(
@@ -329,7 +386,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               _avatarBase64 = '';
                               _avatarMime = '';
                             }),
-                      child: const Text('Remove photo'),
+                      child: Text(l10n.removePhoto),
                     ),
                 ],
               ),
@@ -337,12 +394,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
               TextFormField(
                 key: const Key('settingsUsernameField'),
                 controller: _username,
-                decoration: const InputDecoration(labelText: 'Username'),
+                decoration: InputDecoration(labelText: l10n.username),
                 textInputAction: TextInputAction.next,
                 maxLength: 40,
                 validator: (value) {
                   if (!_usernamePattern.hasMatch((value ?? '').trim())) {
-                    return 'Use 3 to 40 letters, numbers, dots, underscores, or hyphens.';
+                    return l10n.usernameRule;
                   }
                   return null;
                 },
@@ -351,8 +408,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               TextFormField(
                 key: const Key('settingsDescriptionField'),
                 controller: _description,
-                decoration: const InputDecoration(
-                  labelText: 'Description',
+                decoration: InputDecoration(
+                  labelText: l10n.description,
                   alignLabelWithHint: true,
                 ),
                 minLines: 3,
@@ -364,7 +421,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               if (_profileError != null) ...[
                 const SizedBox(height: 8),
                 Text(
-                  _profileError!,
+                  localizeMessage(l10n, _profileError!),
                   style: TextStyle(color: Theme.of(context).colorScheme.error),
                 ),
               ],
@@ -372,7 +429,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               FilledButton(
                 key: const Key('saveProfileButton'),
                 onPressed: _saving ? null : _saveProfile,
-                child: Text(_saving ? 'Saving...' : 'Save profile'),
+                child: Text(_saving ? l10n.saving : l10n.saveProfile),
               ),
             ],
           ),
@@ -382,12 +439,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _doctorTypes() {
+    final l10n = context.l10n;
     return Padding(
       padding: const EdgeInsets.only(top: 8, bottom: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Doctor type', style: Theme.of(context).textTheme.titleSmall),
+          Text(l10n.doctorTypeLabel, style: Theme.of(context).textTheme.titleSmall),
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,
@@ -396,7 +454,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               for (final type in doctorTypes)
                 FilterChip(
                   key: Key('doctorType_$type'),
-                  label: Text(type),
+                  label: Text(localizedDoctorType(l10n, type)),
                   selected: _specialties.contains(type),
                   onSelected: _saving
                       ? null
@@ -445,12 +503,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _allergyEditor() {
+    final l10n = context.l10n;
     return Padding(
       padding: const EdgeInsets.only(top: 8, bottom: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Allergies', style: Theme.of(context).textTheme.titleSmall),
+          Text(l10n.allergies, style: Theme.of(context).textTheme.titleSmall),
           const SizedBox(height: 8),
           Row(
             children: [
@@ -458,14 +517,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 child: TextField(
                   key: const Key('allergyField'),
                   controller: _allergyInput,
-                  decoration: const InputDecoration(hintText: 'Add an allergy'),
+                  decoration: InputDecoration(hintText: l10n.addAllergyHint),
                   textInputAction: TextInputAction.done,
                   onSubmitted: (_) => _addAllergy(),
                 ),
               ),
               IconButton(
                 key: const Key('addAllergyButton'),
-                tooltip: 'Add allergy',
+                tooltip: l10n.addAllergy,
                 onPressed: _saving ? null : _addAllergy,
                 icon: const Icon(Icons.add),
               ),
@@ -500,6 +559,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _passwordCard() {
+    final l10n = context.l10n;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -512,10 +572,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 key: const Key('currentPasswordField'),
                 controller: _currentPassword,
                 obscureText: true,
-                decoration: const InputDecoration(labelText: 'Current password'),
+                decoration: InputDecoration(labelText: l10n.currentPassword),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Enter your current password.';
+                    return l10n.enterCurrentPassword;
                   }
                   return null;
                 },
@@ -525,13 +585,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 key: const Key('newPasswordField'),
                 controller: _newPassword,
                 obscureText: true,
-                decoration: const InputDecoration(labelText: 'New password'),
+                decoration: InputDecoration(labelText: l10n.newPassword),
                 validator: (value) {
                   if (value == null || value.length < 8) {
-                    return 'Use at least 8 characters.';
+                    return l10n.atLeast8;
                   }
                   if (value == _currentPassword.text) {
-                    return 'Choose a different password.';
+                    return l10n.differentPassword;
                   }
                   return null;
                 },
@@ -541,10 +601,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 key: const Key('confirmPasswordField'),
                 controller: _confirmPassword,
                 obscureText: true,
-                decoration: const InputDecoration(labelText: 'Confirm new password'),
+                decoration: InputDecoration(labelText: l10n.confirmNewPassword),
                 validator: (value) {
                   if (value != _newPassword.text) {
-                    return 'Enter the same password twice.';
+                    return l10n.samePasswordTwice;
                   }
                   return null;
                 },
@@ -552,7 +612,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               if (_passwordError != null) ...[
                 const SizedBox(height: 8),
                 Text(
-                  _passwordError!,
+                  localizeMessage(l10n, _passwordError!),
                   style: TextStyle(color: Theme.of(context).colorScheme.error),
                 ),
               ],
@@ -560,7 +620,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               FilledButton(
                 key: const Key('changePasswordButton'),
                 onPressed: _changePassword,
-                child: Text(_changingPassword ? 'Updating...' : 'Change password'),
+                child: Text(_changingPassword ? l10n.updating : l10n.changePassword),
               ),
             ],
           ),
@@ -589,7 +649,7 @@ class _ColorChoice extends StatelessWidget {
   Widget build(BuildContext context) {
     return Semantics(
       button: true,
-      label: choice.name,
+      label: localizedColorName(context.l10n, choice.name),
       selected: selected,
       child: InkWell(
         key: Key('themeColor${choice.name}'),

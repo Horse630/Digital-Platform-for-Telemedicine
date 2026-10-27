@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../language/ui_text.dart';
 import '../navigation/app_destination.dart';
 import '../services/auth_service.dart';
 import 'appointments_screen.dart';
@@ -81,6 +82,7 @@ class _MainShellState extends State<MainShell> {
   Widget build(BuildContext context) {
     final wide = MediaQuery.sizeOf(context).width >= MainShell.railBreakpoint;
     final current = AppDestination.values[_index];
+    final l10n = context.l10n;
     // Off-screen tabs stay built, so a later list can keep its scroll position.
     final pages = IndexedStack(
       index: _index,
@@ -91,7 +93,7 @@ class _MainShellState extends State<MainShell> {
     );
 
     return Scaffold(
-      appBar: AppBar(title: Text(current.label)),
+      appBar: AppBar(title: Text(current.localizedLabel(l10n))),
       body: wide
           ? Row(
               children: [
@@ -127,7 +129,7 @@ class _BottomBar extends StatelessWidget {
           NavigationDestination(
             icon: Icon(destination.icon),
             selectedIcon: Icon(destination.selectedIcon),
-            label: destination.label,
+            label: destination.localizedLabel(context.l10n),
           ),
       ],
     );
@@ -154,7 +156,7 @@ class _SideRail extends StatelessWidget {
           NavigationRailDestination(
             icon: Icon(destination.icon),
             selectedIcon: Icon(destination.selectedIcon),
-            label: Text(destination.label),
+            label: Text(destination.localizedLabel(context.l10n)),
           ),
       ],
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../language/ui_text.dart';
 import '../services/appointment_api.dart';
 import '../services/appointment_filter.dart';
 import '../services/auth_service.dart';
@@ -84,8 +85,9 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
       if (!mounted) {
         return;
       }
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(error.message)));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(localizeMessage(context.l10n, error.message))),
+      );
     }
   }
 
@@ -97,8 +99,8 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
     if (_error != null) {
       return _Message(
         icon: Icons.cloud_off_outlined,
-        title: 'Appointments unavailable',
-        message: _error!,
+        title: context.l10n.appointmentsUnavailable,
+        message: localizeMessage(context.l10n, _error!),
       );
     }
 
@@ -151,7 +153,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
     );
     if (!scheduledAt.isAfter(DateTime.now())) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Choose a time in the future.')),
+        SnackBar(content: Text(context.l10n.chooseFutureTime)),
       );
       return;
     }
@@ -193,8 +195,9 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
       if (!mounted) {
         return false;
       }
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(error.message)));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(localizeMessage(context.l10n, error.message))),
+      );
       return false;
     }
   }
@@ -217,13 +220,14 @@ class _DoctorSchedule extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     if (appointments.isEmpty) {
       return _Message(
         icon: Icons.event_busy_outlined,
-        title: 'No appointment',
-        message: 'You have no appointment yet.',
+        title: l10n.noAppointment,
+        message: l10n.noAppointmentYet,
         actionKey: const Key('addTimeSlot'),
-        actionLabel: 'Make an appointment',
+        actionLabel: l10n.makeAppointment,
         onAction: onAdd,
       );
     }
@@ -234,7 +238,7 @@ class _DoctorSchedule extends StatelessWidget {
         key: const Key('addTimeSlot'),
         onPressed: onAdd,
         icon: const Icon(Icons.add),
-        label: const Text('Make an appointment'),
+        label: Text(l10n.makeAppointment),
       ),
       cardBuilder: (appointment) {
         final open = appointment.status == 'available';
@@ -242,9 +246,9 @@ class _DoctorSchedule extends StatelessWidget {
         return _AppointmentCard(
           appointment: appointment,
           detail: open
-              ? 'Open for patients'
-              : 'Patient: ${appointment.patientName ?? 'Unknown'}',
-          actionLabel: open || booked ? 'Cancel slot' : null,
+              ? l10n.openForPatients
+              : l10n.patientLine(appointment.patientName ?? l10n.unknown),
+          actionLabel: open || booked ? l10n.cancelSlot : null,
           onAction: open || booked ? () => onCancel(appointment) : null,
         );
       },
@@ -265,13 +269,14 @@ class _MyAppointments extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     if (appointments.isEmpty) {
       return _Message(
         icon: Icons.event_busy_outlined,
-        title: 'No appointment',
-        message: 'You have no appointment yet.',
+        title: l10n.noAppointment,
+        message: l10n.noAppointmentYet,
         actionKey: const Key('openBookingButton'),
-        actionLabel: 'Book an appointment',
+        actionLabel: l10n.bookAppointment,
         onAction: onOpenBooking,
       );
     }
@@ -281,15 +286,15 @@ class _MyAppointments extends StatelessWidget {
       action: FilledButton(
         key: const Key('openBookingButton'),
         onPressed: onOpenBooking,
-        child: const Text('Book an appointment'),
+        child: Text(l10n.bookAppointment),
       ),
       cardBuilder: (appointment) {
         return _AppointmentCard(
           appointment: appointment,
           detail: appointment.reason.isEmpty
-              ? _doctorDetail(appointment)
+              ? _doctorDetail(l10n, appointment)
               : appointment.reason,
-          actionLabel: appointment.status == 'scheduled' ? 'Cancel booking' : null,
+          actionLabel: appointment.status == 'scheduled' ? l10n.cancelBooking : null,
           onAction: appointment.status == 'scheduled'
               ? () => onCancel(appointment)
               : null,
@@ -322,6 +327,7 @@ class _OpenTimesPageState extends State<_OpenTimesPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final query = AppointmentQuery(
       doctorName: _doctorName.text,
       doctorType: _doctorType.isEmpty ? null : _doctorType,
@@ -330,15 +336,15 @@ class _OpenTimesPageState extends State<_OpenTimesPage> {
     final open = filterAppointments(widget.appointments, query);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Book an appointment')),
+      appBar: AppBar(title: Text(l10n.bookAppointment)),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           TextField(
             key: const Key('doctorNameSearch'),
             controller: _doctorName,
-            decoration: const InputDecoration(
-              hintText: 'Doctor name',
+            decoration: InputDecoration(
+              hintText: l10n.doctorName,
               prefixIcon: Icon(Icons.search),
               border: OutlineInputBorder(),
               isDense: true,
@@ -348,12 +354,15 @@ class _OpenTimesPageState extends State<_OpenTimesPage> {
           const SizedBox(height: 12),
           _FilterMenu<String>(
             fieldKey: const Key('doctorTypeFilter'),
-            label: 'Doctor type',
+            label: l10n.doctorTypeLabel,
             value: _doctorType,
             items: [
-              const DropdownMenuItem(value: '', child: Text('All types')),
+              DropdownMenuItem(value: '', child: Text(l10n.allTypes)),
               for (final type in doctorTypes)
-                DropdownMenuItem(value: type, child: Text(type)),
+                DropdownMenuItem(
+                  value: type,
+                  child: Text(localizedDoctorType(l10n, type)),
+                ),
             ],
             onChanged: (value) {
               if (value != null) {
@@ -364,24 +373,24 @@ class _OpenTimesPageState extends State<_OpenTimesPage> {
           const SizedBox(height: 12),
           _FilterMenu<AppointmentSort>(
             fieldKey: const Key('appointmentSort'),
-            label: 'Sort',
+            label: l10n.sort,
             value: _sort,
-            items: const [
+            items: [
               DropdownMenuItem(
                 value: AppointmentSort.soonest,
-                child: Text('Soonest'),
+                child: Text(l10n.soonest),
               ),
               DropdownMenuItem(
                 value: AppointmentSort.latest,
-                child: Text('Latest'),
+                child: Text(l10n.latest),
               ),
               DropdownMenuItem(
                 value: AppointmentSort.nameAscending,
-                child: Text('Name A–Z'),
+                child: Text(l10n.nameAz),
               ),
               DropdownMenuItem(
                 value: AppointmentSort.nameDescending,
-                child: Text('Name Z–A'),
+                child: Text(l10n.nameZa),
               ),
             ],
             onChanged: (value) {
@@ -391,19 +400,19 @@ class _OpenTimesPageState extends State<_OpenTimesPage> {
             },
           ),
           const SizedBox(height: 16),
-          Text('Open times', style: Theme.of(context).textTheme.titleMedium),
+          Text(l10n.openTimes, style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 8),
           if (open.isEmpty)
             _InlineNote(
               query.isFiltering
-                  ? 'No open times match this search.'
-                  : 'No open time slots. A doctor has not published a time yet.',
+                  ? l10n.noOpenTimesMatch
+                  : l10n.noOpenTimes,
             ),
           for (final appointment in open) ...[
             _AppointmentCard(
               appointment: appointment,
-              detail: _doctorDetail(appointment),
-              actionLabel: 'Book',
+              detail: _doctorDetail(l10n, appointment),
+              actionLabel: l10n.book,
               onAction: () => widget.onBook(appointment),
             ),
             const SizedBox(height: 12),
@@ -414,11 +423,11 @@ class _OpenTimesPageState extends State<_OpenTimesPage> {
   }
 }
 
-String _doctorDetail(AppointmentRecord appointment) {
+String _doctorDetail(AppLocalizations l10n, AppointmentRecord appointment) {
   if (appointment.doctorSpecialty.isEmpty) {
     return appointment.doctorName;
   }
-  return '${appointment.doctorName} · ${appointment.doctorSpecialty}';
+  return '${appointment.doctorName} · ${localizedSpecialtyLine(l10n, appointment.doctorSpecialty)}';
 }
 
 class _FilterMenu<T> extends StatelessWidget {
@@ -464,17 +473,18 @@ class _AdminSchedule extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     if (appointments.isEmpty) {
-      return const _Message(
+      return _Message(
         icon: Icons.event_busy_outlined,
-        title: 'No appointments yet',
-        message: 'Doctors have not published a time slot.',
+        title: l10n.noAppointmentsYet,
+        message: l10n.doctorsHaveNotPublished,
       );
     }
     return _AppointmentBrowser(
       appointments: appointments,
       cardBuilder: (appointment) {
-        final person = appointment.patientName ?? 'No patient yet';
+        final person = appointment.patientName ?? l10n.noPatientYet;
         return _AppointmentCard(
           appointment: appointment,
           detail: '${appointment.doctorName} · $person',
@@ -519,16 +529,16 @@ class _AppointmentBrowserState extends State<_AppointmentBrowser> {
               ],
               SegmentedButton<_ScheduleView>(
                 showSelectedIcon: false,
-                segments: const [
+                segments: [
                   ButtonSegment(
                     value: _ScheduleView.calendar,
-                    label: Text('Calendar'),
-                    icon: Icon(Icons.calendar_month_outlined),
+                    label: Text(context.l10n.calendar),
+                    icon: const Icon(Icons.calendar_month_outlined),
                   ),
                   ButtonSegment(
                     value: _ScheduleView.list,
-                    label: Text('List'),
-                    icon: Icon(Icons.view_list_outlined),
+                    label: Text(context.l10n.list),
+                    icon: const Icon(Icons.view_list_outlined),
                   ),
                 ],
                 selected: {_view},
@@ -595,6 +605,9 @@ class _CalendarScheduleState extends State<_CalendarSchedule> {
     ]..sort((a, b) => a.scheduledAt.compareTo(b.scheduledAt));
     final scheme = Theme.of(context).colorScheme;
     final localizations = MaterialLocalizations.of(context);
+    final l10n = context.l10n;
+    final weekdays = localizations.narrowWeekdays;
+    final mondayFirst = [...weekdays.sublist(1), weekdays.first];
 
     return ListView(
       padding: const EdgeInsets.all(16),
@@ -602,7 +615,7 @@ class _CalendarScheduleState extends State<_CalendarSchedule> {
         Row(
           children: [
             IconButton(
-              tooltip: 'Previous month',
+              tooltip: l10n.previousMonth,
               onPressed: () {
                 setState(() {
                   _month = DateTime(_month.year, _month.month - 1);
@@ -618,7 +631,7 @@ class _CalendarScheduleState extends State<_CalendarSchedule> {
               ),
             ),
             IconButton(
-              tooltip: 'Next month',
+              tooltip: l10n.nextMonth,
               onPressed: () {
                 setState(() {
                   _month = DateTime(_month.year, _month.month + 1);
@@ -631,7 +644,7 @@ class _CalendarScheduleState extends State<_CalendarSchedule> {
         const SizedBox(height: 8),
         Row(
           children: [
-            for (final label in const ['M', 'T', 'W', 'T', 'F', 'S', 'S'])
+            for (final label in mondayFirst)
               Expanded(
                 child: Text(
                   label,
@@ -656,7 +669,7 @@ class _CalendarScheduleState extends State<_CalendarSchedule> {
         const SizedBox(height: 8),
         if (onDay.isEmpty)
           Text(
-            'No appointment on this day.',
+            l10n.noAppointmentOnDay,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: scheme.onSurfaceVariant,
             ),
@@ -796,7 +809,7 @@ class _AppointmentCard extends StatelessWidget {
             Text(detail),
             const SizedBox(height: 4),
             Text(
-              appointment.status,
+              localizedStatus(context.l10n, appointment.status),
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
@@ -837,21 +850,22 @@ class _ReasonDialogState extends State<_ReasonDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return AlertDialog(
-      title: const Text('Book this time'),
+      title: Text(l10n.bookThisTime),
       content: TextField(
         controller: _controller,
         autofocus: true,
         maxLength: 200,
         decoration: InputDecoration(
-          labelText: 'Reason for the visit',
-          errorText: _error,
+          labelText: l10n.reasonForVisit,
+          errorText: _error == null ? null : localizeMessage(l10n, _error!),
         ),
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Close'),
+          child: Text(l10n.close),
         ),
         FilledButton(
           onPressed: () {
@@ -862,7 +876,7 @@ class _ReasonDialogState extends State<_ReasonDialog> {
             }
             Navigator.pop(context, reason);
           },
-          child: const Text('Book'),
+          child: Text(l10n.book),
         ),
       ],
     );

@@ -1,0 +1,1545 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
+
+import 'app_localizations.dart';
+
+// ignore_for_file: type=lint
+
+/// The translations for Chinese (`zh`).
+class AppLocalizationsZh extends AppLocalizations {
+  AppLocalizationsZh([String locale = 'zh']) : super(locale);
+
+  @override
+  String get appTitle => '遠距醫療數位平台';
+
+  @override
+  String get appTagline => '把遠距照護、預約和後續跟進放在同一個地方。';
+
+  @override
+  String get username => '使用者名稱';
+
+  @override
+  String get password => '密碼';
+
+  @override
+  String get email => '電郵';
+
+  @override
+  String get confirmPassword => '確認密碼';
+
+  @override
+  String get enterUsername => '請輸入使用者名稱';
+
+  @override
+  String get enterPassword => '請輸入密碼';
+
+  @override
+  String get enterUsernameAndPassword => '請輸入使用者名稱和密碼。';
+
+  @override
+  String get enterValidEmail => '請輸入有效的電郵。';
+
+  @override
+  String get usernameRule => '請使用 3 至 40 個英文字母、數字、點、底線或連字號。';
+
+  @override
+  String get atLeast8 => '請至少使用 8 個字元。';
+
+  @override
+  String get samePasswordTwice => '請輸入兩次相同的密碼。';
+
+  @override
+  String get signIn => '登入';
+
+  @override
+  String get createAccount => '建立帳號';
+
+  @override
+  String get createAccountAction => '建立帳號';
+
+  @override
+  String get creating => '建立中...';
+
+  @override
+  String get showPassword => '顯示密碼';
+
+  @override
+  String get hidePassword => '隱藏密碼';
+
+  @override
+  String get patient => '病人';
+
+  @override
+  String get doctor => '醫生';
+
+  @override
+  String get admin => '管理員';
+
+  @override
+  String welcomeBack(String name) {
+    return '歡迎回來，$name';
+  }
+
+  @override
+  String get doctorDashboard => '醫生主頁';
+
+  @override
+  String get patientDashboard => '病人主頁';
+
+  @override
+  String get adminDashboard => '管理員主頁';
+
+  @override
+  String get navHome => '主頁';
+
+  @override
+  String get navAppointments => '預約';
+
+  @override
+  String get navConsultation => '諮詢';
+
+  @override
+  String get navProfile => '個人資料';
+
+  @override
+  String get overview => '概覽';
+
+  @override
+  String get coreServices => '主要服務';
+
+  @override
+  String get otherServices => '其他服務';
+
+  @override
+  String get nextAppointment => '下一個預約';
+
+  @override
+  String get notScheduled => '尚未安排';
+
+  @override
+  String get noActiveOrder => '沒有進行中的訂單';
+
+  @override
+  String get appointmentsSubtitle => '預約一次遠距診症';
+
+  @override
+  String get consultationTitle => '諮詢';
+
+  @override
+  String get consultationSubtitle => '與醫生對話';
+
+  @override
+  String get sickLeave => '病假紙';
+
+  @override
+  String get sickLeaveSubtitle => '只供閱讀的證明';
+
+  @override
+  String get payment => '付款';
+
+  @override
+  String get paymentSubtitle => '診症和送藥費用';
+
+  @override
+  String get medicationDelivery => '藥物配送';
+
+  @override
+  String get medicationDeliverySubtitle => '追蹤處方藥物';
+
+  @override
+  String get aiChatbot => '人工智能助手';
+
+  @override
+  String get aiChatbotSubtitle => '指引和提問';
+
+  @override
+  String get discussion => '討論';
+
+  @override
+  String get discussionSubtitle => '向醫護團隊提問';
+
+  @override
+  String get iotHealth => '健康裝置';
+
+  @override
+  String get iotHealthSubtitle => '穿戴裝置讀數';
+
+  @override
+  String get serviceUnavailable => '這項服務尚未開放。';
+
+  @override
+  String get close => '關閉';
+
+  @override
+  String patientLine(String name) {
+    return '病人：$name';
+  }
+
+  @override
+  String get unknown => '未知';
+
+  @override
+  String get noPatientYet => '尚未有病人';
+
+  @override
+  String get openForPatients => '開放給病人';
+
+  @override
+  String get noAppointment => '沒有預約';
+
+  @override
+  String get noAppointmentYet => '你還沒有預約。';
+
+  @override
+  String get noAppointmentOnDay => '這一天沒有預約。';
+
+  @override
+  String get noAppointmentsYet => '尚未有預約';
+
+  @override
+  String get doctorsHaveNotPublished => '醫生尚未公布時段。';
+
+  @override
+  String get appointmentsUnavailable => '暫時無法載入預約';
+
+  @override
+  String get makeAppointment => '建立預約時段';
+
+  @override
+  String get bookAppointment => '預約看診';
+
+  @override
+  String get bookThisTime => '預約這個時段';
+
+  @override
+  String get reasonForVisit => '看診原因';
+
+  @override
+  String get enterShortReason => '請輸入簡短的看診原因。';
+
+  @override
+  String get book => '預約';
+
+  @override
+  String get openTimes => '可預約時段';
+
+  @override
+  String get doctorName => '醫生姓名';
+
+  @override
+  String get allTypes => '全部科別';
+
+  @override
+  String get doctorTypeLabel => '醫生科別';
+
+  @override
+  String get sort => '排序';
+
+  @override
+  String get soonest => '最近的時間';
+
+  @override
+  String get latest => '最遠的時間';
+
+  @override
+  String get nameAz => '姓名 A–Z';
+
+  @override
+  String get nameZa => '姓名 Z–A';
+
+  @override
+  String get noOpenTimes => '暫時沒有可預約時段。醫生尚未公布時間。';
+
+  @override
+  String get noOpenTimesMatch => '沒有符合這個搜尋的時段。';
+
+  @override
+  String get calendar => '日曆';
+
+  @override
+  String get list => '列表';
+
+  @override
+  String get previousMonth => '上個月';
+
+  @override
+  String get nextMonth => '下個月';
+
+  @override
+  String get cancelSlot => '取消時段';
+
+  @override
+  String get cancelBooking => '取消預約';
+
+  @override
+  String get chooseFutureTime => '請選擇一個未來的時間。';
+
+  @override
+  String get statusAvailable => '可預約';
+
+  @override
+  String get statusScheduled => '已預約';
+
+  @override
+  String get statusCancelled => '已取消';
+
+  @override
+  String get settings => '設定';
+
+  @override
+  String get language => '語言';
+
+  @override
+  String get languageStaysOnDevice => '語言設定只保存在這台裝置。';
+
+  @override
+  String get appearance => '外觀';
+
+  @override
+  String get darkMode => '深色模式';
+
+  @override
+  String get darkModeSubtitle => '在淺色和深色之間切換';
+
+  @override
+  String get appColor => '應用程式顏色';
+
+  @override
+  String get colorStaysOnDevice => '顏色和深色模式只保存在這台裝置。';
+
+  @override
+  String get account => '帳號';
+
+  @override
+  String get passwordSection => '密碼';
+
+  @override
+  String get uploadPhoto => '上傳相片';
+
+  @override
+  String get removePhoto => '移除相片';
+
+  @override
+  String get description => '簡介';
+
+  @override
+  String get saveProfile => '儲存個人資料';
+
+  @override
+  String get saving => '儲存中...';
+
+  @override
+  String get profileSaved => '個人資料已儲存。';
+
+  @override
+  String get allergies => '過敏';
+
+  @override
+  String get addAllergyHint => '輸入一項過敏';
+
+  @override
+  String get addAllergy => '加入過敏';
+
+  @override
+  String get currentPassword => '目前密碼';
+
+  @override
+  String get newPassword => '新密碼';
+
+  @override
+  String get confirmNewPassword => '確認新密碼';
+
+  @override
+  String get changePassword => '變更密碼';
+
+  @override
+  String get updating => '更新中...';
+
+  @override
+  String get enterCurrentPassword => '請輸入目前密碼。';
+
+  @override
+  String get differentPassword => '請選擇另一個密碼。';
+
+  @override
+  String get retry => '再試一次';
+
+  @override
+  String get logOut => '登出';
+
+  @override
+  String get videoNotAvailable => '視像診症尚未開放';
+
+  @override
+  String get videoNotAvailableMessage => '你現在可以先預約時間。視像通話準備好後會在這裡開啟。';
+
+  @override
+  String get teal => '青綠色';
+
+  @override
+  String get blue => '藍色';
+
+  @override
+  String get green => '綠色';
+
+  @override
+  String get purple => '紫色';
+
+  @override
+  String get orange => '橙色';
+
+  @override
+  String get typeGeneralPractice => '全科';
+
+  @override
+  String get typeFamilyMedicine => '家庭醫學';
+
+  @override
+  String get typeInternalMedicine => '內科';
+
+  @override
+  String get typePaediatrics => '兒科';
+
+  @override
+  String get typeObstetrics => '婦產科';
+
+  @override
+  String get typeSurgery => '外科';
+
+  @override
+  String get typeOrthopaedics => '骨科';
+
+  @override
+  String get typeDermatology => '皮膚科';
+
+  @override
+  String get typePsychiatry => '精神科';
+
+  @override
+  String get typeOphthalmology => '眼科';
+
+  @override
+  String get typeOtorhinolaryngology => '耳鼻喉科';
+
+  @override
+  String get typeCardiology => '心臟科';
+
+  @override
+  String get msgUsernameOrPassword => '使用者名稱或密碼不正確。';
+
+  @override
+  String get msgCannotReach => '無法連接服務。請檢查網絡後再試。';
+
+  @override
+  String get msgUsernameUsed => '這個使用者名稱已被使用。';
+
+  @override
+  String get msgEmailUsed => '這個電郵已被使用。';
+
+  @override
+  String get msgSignInFailed => '登入失敗。請再試一次。';
+
+  @override
+  String get msgChooseRole => '請選擇病人或醫生。';
+
+  @override
+  String get msgCouldNotCreate => '無法建立帳號。';
+
+  @override
+  String get msgRequestFailed => '要求失敗。請再試一次。';
+
+  @override
+  String get msgSignInAgain => '請重新登入。';
+
+  @override
+  String get msgProfileUnread => '無法讀取個人資料。';
+
+  @override
+  String get msgAccountUnavailable => '帳號服務暫時無法使用。請稍後再試。';
+
+  @override
+  String get msgProfileFailed => '個人資料要求失敗。';
+
+  @override
+  String get msgPasswordUpdated => '密碼已更新。';
+
+  @override
+  String get msgCurrentPasswordWrong => '目前密碼不正確。';
+
+  @override
+  String get msgEnterBothPasswords => '請輸入目前密碼和新密碼。';
+
+  @override
+  String get msgDescriptionLimit => '簡介請保持在 280 字以內。';
+
+  @override
+  String get msgCouldNotSaveProfile => '無法儲存個人資料。';
+
+  @override
+  String get msgBadPhoto => '請選擇小於 512 KB 的 JPEG、PNG 或 WebP 圖片。';
+
+  @override
+  String get msgChooseDoctorTypes => '請從清單中選擇醫生科別。';
+
+  @override
+  String get msgAllergiesList => '請以清單輸入過敏。';
+
+  @override
+  String get msgAllergyCount => '過敏項目請保持在 20 項以內。';
+
+  @override
+  String get msgAllergyName => '請輸入簡短的過敏名稱。';
+
+  @override
+  String get msgAllergyLength => '每項過敏請保持在 40 字以內。';
+
+  @override
+  String get msgAppointmentUnread => '無法讀取預約清單。';
+
+  @override
+  String get msgAppointmentFailed => '預約要求失敗。';
+
+  @override
+  String get msgSlotTaken => '你在這個時間已經有時段。';
+
+  @override
+  String get msgOnlyDoctor => '只有醫生可以新增時段。';
+
+  @override
+  String get msgOnlyPatient => '只有病人可以預約時段。';
+
+  @override
+  String get msgSlotGone => '這個時段已不能預約。';
+
+  @override
+  String get msgAppointmentMissing => '找不到這項預約。';
+
+  @override
+  String get msgCannotChange => '你不能更改這項預約。';
+}
+
+/// The translations for Chinese, using the Han script (`zh_Hans`).
+class AppLocalizationsZhHans extends AppLocalizationsZh {
+  AppLocalizationsZhHans() : super('zh_Hans');
+
+  @override
+  String get appTitle => '远程医疗数字平台';
+
+  @override
+  String get appTagline => '把远程照护、预约和后续跟进放在同一个地方。';
+
+  @override
+  String get username => '用户名';
+
+  @override
+  String get password => '密码';
+
+  @override
+  String get email => '邮箱';
+
+  @override
+  String get confirmPassword => '确认密码';
+
+  @override
+  String get enterUsername => '请输入用户名';
+
+  @override
+  String get enterPassword => '请输入密码';
+
+  @override
+  String get enterUsernameAndPassword => '请输入用户名和密码。';
+
+  @override
+  String get enterValidEmail => '请输入有效的邮箱。';
+
+  @override
+  String get usernameRule => '请使用 3 至 40 个英文字母、数字、点、下划线或连字符。';
+
+  @override
+  String get atLeast8 => '请至少使用 8 个字符。';
+
+  @override
+  String get samePasswordTwice => '请输入两次相同的密码。';
+
+  @override
+  String get signIn => '登录';
+
+  @override
+  String get createAccount => '创建账号';
+
+  @override
+  String get createAccountAction => '创建账号';
+
+  @override
+  String get creating => '创建中...';
+
+  @override
+  String get showPassword => '显示密码';
+
+  @override
+  String get hidePassword => '隐藏密码';
+
+  @override
+  String get patient => '患者';
+
+  @override
+  String get doctor => '医生';
+
+  @override
+  String get admin => '管理员';
+
+  @override
+  String welcomeBack(String name) {
+    return '欢迎回来，$name';
+  }
+
+  @override
+  String get doctorDashboard => '医生主页';
+
+  @override
+  String get patientDashboard => '患者主页';
+
+  @override
+  String get adminDashboard => '管理员主页';
+
+  @override
+  String get navHome => '首页';
+
+  @override
+  String get navAppointments => '预约';
+
+  @override
+  String get navConsultation => '咨询';
+
+  @override
+  String get navProfile => '个人资料';
+
+  @override
+  String get overview => '概览';
+
+  @override
+  String get coreServices => '主要服务';
+
+  @override
+  String get otherServices => '其他服务';
+
+  @override
+  String get nextAppointment => '下一次预约';
+
+  @override
+  String get notScheduled => '尚未安排';
+
+  @override
+  String get noActiveOrder => '没有进行中的订单';
+
+  @override
+  String get appointmentsSubtitle => '预约一次远程问诊';
+
+  @override
+  String get consultationTitle => '咨询';
+
+  @override
+  String get consultationSubtitle => '与医生对话';
+
+  @override
+  String get sickLeave => '病假单';
+
+  @override
+  String get sickLeaveSubtitle => '只供阅读的证明';
+
+  @override
+  String get payment => '付款';
+
+  @override
+  String get paymentSubtitle => '问诊和送药费用';
+
+  @override
+  String get medicationDelivery => '药物配送';
+
+  @override
+  String get medicationDeliverySubtitle => '追踪处方药物';
+
+  @override
+  String get aiChatbot => '人工智能助手';
+
+  @override
+  String get aiChatbotSubtitle => '指引和提问';
+
+  @override
+  String get discussion => '讨论';
+
+  @override
+  String get discussionSubtitle => '向医护团队提问';
+
+  @override
+  String get iotHealth => '健康设备';
+
+  @override
+  String get iotHealthSubtitle => '穿戴设备读数';
+
+  @override
+  String get serviceUnavailable => '这项服务尚未开放。';
+
+  @override
+  String get close => '关闭';
+
+  @override
+  String patientLine(String name) {
+    return '患者：$name';
+  }
+
+  @override
+  String get unknown => '未知';
+
+  @override
+  String get noPatientYet => '还没有患者';
+
+  @override
+  String get openForPatients => '开放给患者';
+
+  @override
+  String get noAppointment => '没有预约';
+
+  @override
+  String get noAppointmentYet => '你还没有预约。';
+
+  @override
+  String get noAppointmentOnDay => '这一天没有预约。';
+
+  @override
+  String get noAppointmentsYet => '还没有预约';
+
+  @override
+  String get doctorsHaveNotPublished => '医生尚未公布时段。';
+
+  @override
+  String get appointmentsUnavailable => '暂时无法加载预约';
+
+  @override
+  String get makeAppointment => '创建预约时段';
+
+  @override
+  String get bookAppointment => '预约就诊';
+
+  @override
+  String get bookThisTime => '预约这个时段';
+
+  @override
+  String get reasonForVisit => '就诊原因';
+
+  @override
+  String get enterShortReason => '请输入简短的就诊原因。';
+
+  @override
+  String get book => '预约';
+
+  @override
+  String get openTimes => '可预约时段';
+
+  @override
+  String get doctorName => '医生姓名';
+
+  @override
+  String get allTypes => '全部科室';
+
+  @override
+  String get doctorTypeLabel => '医生科室';
+
+  @override
+  String get sort => '排序';
+
+  @override
+  String get soonest => '最近的时间';
+
+  @override
+  String get latest => '最远的时间';
+
+  @override
+  String get nameAz => '姓名 A–Z';
+
+  @override
+  String get nameZa => '姓名 Z–A';
+
+  @override
+  String get noOpenTimes => '暂时没有可预约时段。医生尚未公布时间。';
+
+  @override
+  String get noOpenTimesMatch => '没有符合这个搜索的时段。';
+
+  @override
+  String get calendar => '日历';
+
+  @override
+  String get list => '列表';
+
+  @override
+  String get previousMonth => '上个月';
+
+  @override
+  String get nextMonth => '下个月';
+
+  @override
+  String get cancelSlot => '取消时段';
+
+  @override
+  String get cancelBooking => '取消预约';
+
+  @override
+  String get chooseFutureTime => '请选择一个未来的时间。';
+
+  @override
+  String get statusAvailable => '可预约';
+
+  @override
+  String get statusScheduled => '已预约';
+
+  @override
+  String get statusCancelled => '已取消';
+
+  @override
+  String get settings => '设置';
+
+  @override
+  String get language => '语言';
+
+  @override
+  String get languageStaysOnDevice => '语言设置只保存在这台设备。';
+
+  @override
+  String get appearance => '外观';
+
+  @override
+  String get darkMode => '深色模式';
+
+  @override
+  String get darkModeSubtitle => '在浅色和深色之间切换';
+
+  @override
+  String get appColor => '应用颜色';
+
+  @override
+  String get colorStaysOnDevice => '颜色和深色模式只保存在这台设备。';
+
+  @override
+  String get account => '账号';
+
+  @override
+  String get passwordSection => '密码';
+
+  @override
+  String get uploadPhoto => '上传照片';
+
+  @override
+  String get removePhoto => '移除照片';
+
+  @override
+  String get description => '简介';
+
+  @override
+  String get saveProfile => '保存个人资料';
+
+  @override
+  String get saving => '保存中...';
+
+  @override
+  String get profileSaved => '个人资料已保存。';
+
+  @override
+  String get allergies => '过敏';
+
+  @override
+  String get addAllergyHint => '输入一项过敏';
+
+  @override
+  String get addAllergy => '加入过敏';
+
+  @override
+  String get currentPassword => '当前密码';
+
+  @override
+  String get newPassword => '新密码';
+
+  @override
+  String get confirmNewPassword => '确认新密码';
+
+  @override
+  String get changePassword => '更改密码';
+
+  @override
+  String get updating => '更新中...';
+
+  @override
+  String get enterCurrentPassword => '请输入当前密码。';
+
+  @override
+  String get differentPassword => '请选择另一个密码。';
+
+  @override
+  String get retry => '再试一次';
+
+  @override
+  String get logOut => '退出';
+
+  @override
+  String get videoNotAvailable => '视频问诊尚未开放';
+
+  @override
+  String get videoNotAvailableMessage => '你现在可以先预约时间。视频通话准备好后会在这里打开。';
+
+  @override
+  String get teal => '青绿色';
+
+  @override
+  String get blue => '蓝色';
+
+  @override
+  String get green => '绿色';
+
+  @override
+  String get purple => '紫色';
+
+  @override
+  String get orange => '橙色';
+
+  @override
+  String get typeGeneralPractice => '全科';
+
+  @override
+  String get typeFamilyMedicine => '家庭医学';
+
+  @override
+  String get typeInternalMedicine => '内科';
+
+  @override
+  String get typePaediatrics => '儿科';
+
+  @override
+  String get typeObstetrics => '妇产科';
+
+  @override
+  String get typeSurgery => '外科';
+
+  @override
+  String get typeOrthopaedics => '骨科';
+
+  @override
+  String get typeDermatology => '皮肤科';
+
+  @override
+  String get typePsychiatry => '精神科';
+
+  @override
+  String get typeOphthalmology => '眼科';
+
+  @override
+  String get typeOtorhinolaryngology => '耳鼻喉科';
+
+  @override
+  String get typeCardiology => '心脏科';
+
+  @override
+  String get msgUsernameOrPassword => '用户名或密码不正确。';
+
+  @override
+  String get msgCannotReach => '无法连接服务。请检查网络后再试。';
+
+  @override
+  String get msgUsernameUsed => '这个用户名已被使用。';
+
+  @override
+  String get msgEmailUsed => '这个邮箱已被使用。';
+
+  @override
+  String get msgSignInFailed => '登录失败。请再试一次。';
+
+  @override
+  String get msgChooseRole => '请选择患者或医生。';
+
+  @override
+  String get msgCouldNotCreate => '无法创建账号。';
+
+  @override
+  String get msgRequestFailed => '请求失败。请再试一次。';
+
+  @override
+  String get msgSignInAgain => '请重新登录。';
+
+  @override
+  String get msgProfileUnread => '无法读取个人资料。';
+
+  @override
+  String get msgAccountUnavailable => '账号服务暂时无法使用。请稍后再试。';
+
+  @override
+  String get msgProfileFailed => '个人资料请求失败。';
+
+  @override
+  String get msgPasswordUpdated => '密码已更新。';
+
+  @override
+  String get msgCurrentPasswordWrong => '当前密码不正确。';
+
+  @override
+  String get msgEnterBothPasswords => '请输入当前密码和新密码。';
+
+  @override
+  String get msgDescriptionLimit => '简介请保持在 280 字以内。';
+
+  @override
+  String get msgCouldNotSaveProfile => '无法保存个人资料。';
+
+  @override
+  String get msgBadPhoto => '请选择小于 512 KB 的 JPEG、PNG 或 WebP 图片。';
+
+  @override
+  String get msgChooseDoctorTypes => '请从列表中选择医生科室。';
+
+  @override
+  String get msgAllergiesList => '请以列表输入过敏。';
+
+  @override
+  String get msgAllergyCount => '过敏项目请保持在 20 项以内。';
+
+  @override
+  String get msgAllergyName => '请输入简短的过敏名称。';
+
+  @override
+  String get msgAllergyLength => '每项过敏请保持在 40 字以内。';
+
+  @override
+  String get msgAppointmentUnread => '无法读取预约列表。';
+
+  @override
+  String get msgAppointmentFailed => '预约请求失败。';
+
+  @override
+  String get msgSlotTaken => '你在这个时间已经有时段。';
+
+  @override
+  String get msgOnlyDoctor => '只有医生可以新增时段。';
+
+  @override
+  String get msgOnlyPatient => '只有患者可以预约时段。';
+
+  @override
+  String get msgSlotGone => '这个时段已不能预约。';
+
+  @override
+  String get msgAppointmentMissing => '找不到这项预约。';
+
+  @override
+  String get msgCannotChange => '你不能更改这项预约。';
+}
+
+/// The translations for Chinese, using the Han script (`zh_Hant`).
+class AppLocalizationsZhHant extends AppLocalizationsZh {
+  AppLocalizationsZhHant() : super('zh_Hant');
+
+  @override
+  String get appTitle => '遠距醫療數位平台';
+
+  @override
+  String get appTagline => '把遠距照護、預約和後續跟進放在同一個地方。';
+
+  @override
+  String get username => '使用者名稱';
+
+  @override
+  String get password => '密碼';
+
+  @override
+  String get email => '電郵';
+
+  @override
+  String get confirmPassword => '確認密碼';
+
+  @override
+  String get enterUsername => '請輸入使用者名稱';
+
+  @override
+  String get enterPassword => '請輸入密碼';
+
+  @override
+  String get enterUsernameAndPassword => '請輸入使用者名稱和密碼。';
+
+  @override
+  String get enterValidEmail => '請輸入有效的電郵。';
+
+  @override
+  String get usernameRule => '請使用 3 至 40 個英文字母、數字、點、底線或連字號。';
+
+  @override
+  String get atLeast8 => '請至少使用 8 個字元。';
+
+  @override
+  String get samePasswordTwice => '請輸入兩次相同的密碼。';
+
+  @override
+  String get signIn => '登入';
+
+  @override
+  String get createAccount => '建立帳號';
+
+  @override
+  String get createAccountAction => '建立帳號';
+
+  @override
+  String get creating => '建立中...';
+
+  @override
+  String get showPassword => '顯示密碼';
+
+  @override
+  String get hidePassword => '隱藏密碼';
+
+  @override
+  String get patient => '病人';
+
+  @override
+  String get doctor => '醫生';
+
+  @override
+  String get admin => '管理員';
+
+  @override
+  String welcomeBack(String name) {
+    return '歡迎回來，$name';
+  }
+
+  @override
+  String get doctorDashboard => '醫生主頁';
+
+  @override
+  String get patientDashboard => '病人主頁';
+
+  @override
+  String get adminDashboard => '管理員主頁';
+
+  @override
+  String get navHome => '主頁';
+
+  @override
+  String get navAppointments => '預約';
+
+  @override
+  String get navConsultation => '諮詢';
+
+  @override
+  String get navProfile => '個人資料';
+
+  @override
+  String get overview => '概覽';
+
+  @override
+  String get coreServices => '主要服務';
+
+  @override
+  String get otherServices => '其他服務';
+
+  @override
+  String get nextAppointment => '下一個預約';
+
+  @override
+  String get notScheduled => '尚未安排';
+
+  @override
+  String get noActiveOrder => '沒有進行中的訂單';
+
+  @override
+  String get appointmentsSubtitle => '預約一次遠距診症';
+
+  @override
+  String get consultationTitle => '諮詢';
+
+  @override
+  String get consultationSubtitle => '與醫生對話';
+
+  @override
+  String get sickLeave => '病假紙';
+
+  @override
+  String get sickLeaveSubtitle => '只供閱讀的證明';
+
+  @override
+  String get payment => '付款';
+
+  @override
+  String get paymentSubtitle => '診症和送藥費用';
+
+  @override
+  String get medicationDelivery => '藥物配送';
+
+  @override
+  String get medicationDeliverySubtitle => '追蹤處方藥物';
+
+  @override
+  String get aiChatbot => '人工智能助手';
+
+  @override
+  String get aiChatbotSubtitle => '指引和提問';
+
+  @override
+  String get discussion => '討論';
+
+  @override
+  String get discussionSubtitle => '向醫護團隊提問';
+
+  @override
+  String get iotHealth => '健康裝置';
+
+  @override
+  String get iotHealthSubtitle => '穿戴裝置讀數';
+
+  @override
+  String get serviceUnavailable => '這項服務尚未開放。';
+
+  @override
+  String get close => '關閉';
+
+  @override
+  String patientLine(String name) {
+    return '病人：$name';
+  }
+
+  @override
+  String get unknown => '未知';
+
+  @override
+  String get noPatientYet => '尚未有病人';
+
+  @override
+  String get openForPatients => '開放給病人';
+
+  @override
+  String get noAppointment => '沒有預約';
+
+  @override
+  String get noAppointmentYet => '你還沒有預約。';
+
+  @override
+  String get noAppointmentOnDay => '這一天沒有預約。';
+
+  @override
+  String get noAppointmentsYet => '尚未有預約';
+
+  @override
+  String get doctorsHaveNotPublished => '醫生尚未公布時段。';
+
+  @override
+  String get appointmentsUnavailable => '暫時無法載入預約';
+
+  @override
+  String get makeAppointment => '建立預約時段';
+
+  @override
+  String get bookAppointment => '預約看診';
+
+  @override
+  String get bookThisTime => '預約這個時段';
+
+  @override
+  String get reasonForVisit => '看診原因';
+
+  @override
+  String get enterShortReason => '請輸入簡短的看診原因。';
+
+  @override
+  String get book => '預約';
+
+  @override
+  String get openTimes => '可預約時段';
+
+  @override
+  String get doctorName => '醫生姓名';
+
+  @override
+  String get allTypes => '全部科別';
+
+  @override
+  String get doctorTypeLabel => '醫生科別';
+
+  @override
+  String get sort => '排序';
+
+  @override
+  String get soonest => '最近的時間';
+
+  @override
+  String get latest => '最遠的時間';
+
+  @override
+  String get nameAz => '姓名 A–Z';
+
+  @override
+  String get nameZa => '姓名 Z–A';
+
+  @override
+  String get noOpenTimes => '暫時沒有可預約時段。醫生尚未公布時間。';
+
+  @override
+  String get noOpenTimesMatch => '沒有符合這個搜尋的時段。';
+
+  @override
+  String get calendar => '日曆';
+
+  @override
+  String get list => '列表';
+
+  @override
+  String get previousMonth => '上個月';
+
+  @override
+  String get nextMonth => '下個月';
+
+  @override
+  String get cancelSlot => '取消時段';
+
+  @override
+  String get cancelBooking => '取消預約';
+
+  @override
+  String get chooseFutureTime => '請選擇一個未來的時間。';
+
+  @override
+  String get statusAvailable => '可預約';
+
+  @override
+  String get statusScheduled => '已預約';
+
+  @override
+  String get statusCancelled => '已取消';
+
+  @override
+  String get settings => '設定';
+
+  @override
+  String get language => '語言';
+
+  @override
+  String get languageStaysOnDevice => '語言設定只保存在這台裝置。';
+
+  @override
+  String get appearance => '外觀';
+
+  @override
+  String get darkMode => '深色模式';
+
+  @override
+  String get darkModeSubtitle => '在淺色和深色之間切換';
+
+  @override
+  String get appColor => '應用程式顏色';
+
+  @override
+  String get colorStaysOnDevice => '顏色和深色模式只保存在這台裝置。';
+
+  @override
+  String get account => '帳號';
+
+  @override
+  String get passwordSection => '密碼';
+
+  @override
+  String get uploadPhoto => '上傳相片';
+
+  @override
+  String get removePhoto => '移除相片';
+
+  @override
+  String get description => '簡介';
+
+  @override
+  String get saveProfile => '儲存個人資料';
+
+  @override
+  String get saving => '儲存中...';
+
+  @override
+  String get profileSaved => '個人資料已儲存。';
+
+  @override
+  String get allergies => '過敏';
+
+  @override
+  String get addAllergyHint => '輸入一項過敏';
+
+  @override
+  String get addAllergy => '加入過敏';
+
+  @override
+  String get currentPassword => '目前密碼';
+
+  @override
+  String get newPassword => '新密碼';
+
+  @override
+  String get confirmNewPassword => '確認新密碼';
+
+  @override
+  String get changePassword => '變更密碼';
+
+  @override
+  String get updating => '更新中...';
+
+  @override
+  String get enterCurrentPassword => '請輸入目前密碼。';
+
+  @override
+  String get differentPassword => '請選擇另一個密碼。';
+
+  @override
+  String get retry => '再試一次';
+
+  @override
+  String get logOut => '登出';
+
+  @override
+  String get videoNotAvailable => '視像診症尚未開放';
+
+  @override
+  String get videoNotAvailableMessage => '你現在可以先預約時間。視像通話準備好後會在這裡開啟。';
+
+  @override
+  String get teal => '青綠色';
+
+  @override
+  String get blue => '藍色';
+
+  @override
+  String get green => '綠色';
+
+  @override
+  String get purple => '紫色';
+
+  @override
+  String get orange => '橙色';
+
+  @override
+  String get typeGeneralPractice => '全科';
+
+  @override
+  String get typeFamilyMedicine => '家庭醫學';
+
+  @override
+  String get typeInternalMedicine => '內科';
+
+  @override
+  String get typePaediatrics => '兒科';
+
+  @override
+  String get typeObstetrics => '婦產科';
+
+  @override
+  String get typeSurgery => '外科';
+
+  @override
+  String get typeOrthopaedics => '骨科';
+
+  @override
+  String get typeDermatology => '皮膚科';
+
+  @override
+  String get typePsychiatry => '精神科';
+
+  @override
+  String get typeOphthalmology => '眼科';
+
+  @override
+  String get typeOtorhinolaryngology => '耳鼻喉科';
+
+  @override
+  String get typeCardiology => '心臟科';
+
+  @override
+  String get msgUsernameOrPassword => '使用者名稱或密碼不正確。';
+
+  @override
+  String get msgCannotReach => '無法連接服務。請檢查網絡後再試。';
+
+  @override
+  String get msgUsernameUsed => '這個使用者名稱已被使用。';
+
+  @override
+  String get msgEmailUsed => '這個電郵已被使用。';
+
+  @override
+  String get msgSignInFailed => '登入失敗。請再試一次。';
+
+  @override
+  String get msgChooseRole => '請選擇病人或醫生。';
+
+  @override
+  String get msgCouldNotCreate => '無法建立帳號。';
+
+  @override
+  String get msgRequestFailed => '要求失敗。請再試一次。';
+
+  @override
+  String get msgSignInAgain => '請重新登入。';
+
+  @override
+  String get msgProfileUnread => '無法讀取個人資料。';
+
+  @override
+  String get msgAccountUnavailable => '帳號服務暫時無法使用。請稍後再試。';
+
+  @override
+  String get msgProfileFailed => '個人資料要求失敗。';
+
+  @override
+  String get msgPasswordUpdated => '密碼已更新。';
+
+  @override
+  String get msgCurrentPasswordWrong => '目前密碼不正確。';
+
+  @override
+  String get msgEnterBothPasswords => '請輸入目前密碼和新密碼。';
+
+  @override
+  String get msgDescriptionLimit => '簡介請保持在 280 字以內。';
+
+  @override
+  String get msgCouldNotSaveProfile => '無法儲存個人資料。';
+
+  @override
+  String get msgBadPhoto => '請選擇小於 512 KB 的 JPEG、PNG 或 WebP 圖片。';
+
+  @override
+  String get msgChooseDoctorTypes => '請從清單中選擇醫生科別。';
+
+  @override
+  String get msgAllergiesList => '請以清單輸入過敏。';
+
+  @override
+  String get msgAllergyCount => '過敏項目請保持在 20 項以內。';
+
+  @override
+  String get msgAllergyName => '請輸入簡短的過敏名稱。';
+
+  @override
+  String get msgAllergyLength => '每項過敏請保持在 40 字以內。';
+
+  @override
+  String get msgAppointmentUnread => '無法讀取預約清單。';
+
+  @override
+  String get msgAppointmentFailed => '預約要求失敗。';
+
+  @override
+  String get msgSlotTaken => '你在這個時間已經有時段。';
+
+  @override
+  String get msgOnlyDoctor => '只有醫生可以新增時段。';
+
+  @override
+  String get msgOnlyPatient => '只有病人可以預約時段。';
+
+  @override
+  String get msgSlotGone => '這個時段已不能預約。';
+
+  @override
+  String get msgAppointmentMissing => '找不到這項預約。';
+
+  @override
+  String get msgCannotChange => '你不能更改這項預約。';
+}

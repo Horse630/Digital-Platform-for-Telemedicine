@@ -1,19 +1,29 @@
 import 'package:flutter/material.dart';
 
+import '../language/app_localizations.dart';
+
 /// Tabs in the signed-in shell, listed in navigation order.
 enum AppDestination {
-  home('Home', Icons.home_outlined, Icons.home),
-  appointments(
-    'Appointments',
-    Icons.calendar_month_outlined,
-    Icons.calendar_month,
-  ),
-  consultation('Consultation', Icons.video_chat_outlined, Icons.video_chat),
-  profile('Profile', Icons.person_outline, Icons.person);
+  home(Icons.home_outlined, Icons.home),
+  appointments(Icons.calendar_month_outlined, Icons.calendar_month),
+  consultation(Icons.video_chat_outlined, Icons.video_chat),
+  profile(Icons.person_outline, Icons.person);
 
-  const AppDestination(this.label, this.icon, this.selectedIcon);
+  const AppDestination(this.icon, this.selectedIcon);
 
-  final String label;
   final IconData icon;
   final IconData selectedIcon;
+
+  String localizedLabel(AppLocalizations l10n) {
+    switch (this) {
+      case AppDestination.home:
+        return l10n.navHome;
+      case AppDestination.appointments:
+        return l10n.navAppointments;
+      case AppDestination.consultation:
+        return l10n.navConsultation;
+      case AppDestination.profile:
+        return l10n.navProfile;
+    }
+  }
 }

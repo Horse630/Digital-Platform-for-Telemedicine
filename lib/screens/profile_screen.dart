@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../language/ui_text.dart';
 import '../services/auth_service.dart';
 import '../services/profile_api.dart';
 import '../widgets/account_avatar.dart';
@@ -86,6 +87,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final muted = Theme.of(context).textTheme.bodyMedium?.copyWith(
       color: scheme.onSurfaceVariant,
     );
+    final l10n = context.l10n;
 
     return ContentFrame(
       maxWidth: 520,
@@ -102,7 +104,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             const SizedBox(height: 4),
-            Text(widget.user.roleLabel, textAlign: TextAlign.center, style: muted),
+            Text(
+              localizedRole(l10n, widget.user.role),
+              textAlign: TextAlign.center,
+              style: muted,
+            ),
             if (_description.isNotEmpty) ...[
               const SizedBox(height: 12),
               Text(_description, textAlign: TextAlign.center),
@@ -117,7 +123,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   for (final tag in widget.user.role == 'doctor'
                       ? _specialties
                       : _allergies)
-                    Chip(label: Text(tag)),
+                    Chip(
+                      label: Text(
+                        widget.user.role == 'doctor'
+                            ? localizedDoctorType(l10n, tag)
+                            : tag,
+                      ),
+                    ),
                 ],
               ),
             ],
@@ -127,7 +139,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   ListTile(
                     leading: const Icon(Icons.person_outline),
-                    title: const Text('Username'),
+                    title: Text(l10n.username),
                     subtitle: Text(widget.user.username),
                   ),
                 ],
@@ -138,13 +150,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               key: const Key('settingsButton'),
               onPressed: _openSettings,
               icon: const Icon(Icons.settings_outlined),
-              label: const Text('Settings'),
+              label: Text(l10n.settings),
             ),
             const SizedBox(height: 12),
             OutlinedButton.icon(
               onPressed: widget.onLogout,
               icon: const Icon(Icons.logout),
-              label: const Text('Log out'),
+              label: Text(l10n.logOut),
             ),
           ],
         ),

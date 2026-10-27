@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../language/ui_text.dart';
 import '../widgets/status_placeholder.dart';
 
 /// Video-visit tab.
@@ -11,10 +12,11 @@ class ConsultationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const StatusPlaceholder(
+    final l10n = context.l10n;
+    return StatusPlaceholder(
       icon: Icons.videocam_off_outlined,
-      title: 'Video visits are not available yet',
-      message: 'You can book a time now. The video call will open here when it is ready.',
+      title: l10n.videoNotAvailable,
+      message: l10n.videoNotAvailableMessage,
     );
   }
 }
