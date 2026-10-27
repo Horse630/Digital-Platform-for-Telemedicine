@@ -92,6 +92,14 @@ class _LoginScreenState extends State<LoginScreen> {
     await _submit();
   }
 
+  void _openForgotPassword() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => const _ForgotPasswordPage(),
+      ),
+    );
+  }
+
   void _openSignUp() {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
@@ -309,6 +317,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 const SizedBox(height: 8),
                                 TextButton(
+                                  key: const Key('forgotPasswordButton'),
+                                  onPressed: _submitting ? null : _openForgotPassword,
+                                  child: Text(l10n.forgotPassword),
+                                ),
+                                TextButton(
                                   key: const Key('createAccountButton'),
                                   onPressed: _submitting ? null : _openSignUp,
                                   child: Text(l10n.createAccount),
@@ -351,6 +364,69 @@ class _LoginMark extends StatelessWidget {
             color: scheme.onPrimaryContainer,
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _ForgotPasswordPage extends StatefulWidget {
+  const _ForgotPasswordPage();
+
+  @override
+  State<_ForgotPasswordPage> createState() => _ForgotPasswordPageState();
+}
+
+class _ForgotPasswordPageState extends State<_ForgotPasswordPage> {
+  static final _emailPattern = RegExp(r'^\S+@\S+\.\S+$');
+  final _email = TextEditingController();
+  String? _error;
+
+  @override
+  void dispose() {
+    _email.dispose();
+    super.dispose();
+  }
+
+  void _submit() {
+    final value = _email.text.trim();
+    if (!_emailPattern.hasMatch(value)) {
+      setState(() => _error = context.l10n.enterValidEmail);
+      return;
+    }
+    setState(() => _error = null);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(context.l10n.resetEmailNotSent)),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return Scaffold(
+      appBar: AppBar(title: Text(l10n.resetPasswordTitle)),
+      body: ListView(
+        padding: const EdgeInsets.all(24),
+        children: [
+          Text(l10n.resetPasswordHint),
+          const SizedBox(height: 16),
+          TextField(
+            key: const Key('forgotEmailField'),
+            controller: _email,
+            keyboardType: TextInputType.emailAddress,
+            decoration: InputDecoration(
+              labelText: l10n.email,
+              border: const OutlineInputBorder(),
+              errorText: _error,
+            ),
+            onSubmitted: (_) => _submit(),
+          ),
+          const SizedBox(height: 16),
+          FilledButton(
+            key: const Key('sendResetLinkButton'),
+            onPressed: _submit,
+            child: Text(l10n.sendResetLink),
+          ),
+        ],
       ),
     );
   }

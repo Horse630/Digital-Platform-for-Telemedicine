@@ -204,6 +204,52 @@ router.post('/:id/comments', requireUser, async (req, res) => {
   res.status(201).json(commentJson(saved, req.user._id));
 });
 
+router.patch('/:id/comments/:commentId', requireUser, async (req, res) => {
+  const comment = await findOwnComment(req, res);
+  if (!comment) {
+    return;
+  }
+  const body = replyText(req, res);
+  if (!body) {
+    return;
+  }
+  comment.body = body;
+  await comment.save();
+  await comment.populate('author', personFields);
+  res.json(commentJson(comment, req.user._id));
+});
+
+router.delete('/:id/comments/:commentId', requireUser, async (req, res) => {
+  const comment = await findOwnComment(req, res);
+  if (!comment) {
+    return;
+  }
+  const discussion = await findDiscussion(req, res);
+  if (!discussion) {
+    return;
+  }
+  await comment.deleteOne();
+  const remaining = await DiscussionComment.find({ discussion: discussion._id }).sort({
+    createdAt: 1,
+  });
+  if (remaining.length === 0) {
+    await Discussion.updateOne(
+      { _id: discussion._id },
+      { $unset: { doctor: '' }, $set: { status: 'open' } },
+    );
+  } else {
+    const authorStillThere = remaining.some((row) =>
+      discussion.doctor && row.author.equals(discussion.doctor),
+    );
+    discussion.status = 'answered';
+    if (!authorStillThere) {
+      discussion.doctor = remaining[0].author;
+    }
+    await discussion.save();
+  }
+  res.status(204).end();
+});
+
 router.delete('/:id', requireUser, async (req, res) => {
   const discussion = await findDiscussion(req, res);
   if (!discussion) {
@@ -254,6 +300,44 @@ async function toggleOnComment(req, res, field) {
   await comment.save();
   await comment.populate('author', personFields);
   res.json(commentJson(comment, mine));
+}
+
+function replyText(req, res) {
+  const body = typeof req.body?.body === 'string' ? req.body.body.trim() : '';
+  if (!body) {
+    res.status(400).json({ message: 'Enter a reply.' });
+    return '';
+  }
+  if (body.length > 1000) {
+    res.status(400).json({ message: 'Keep the reply under 1000 characters.' });
+    return '';
+  }
+  return body;
+}
+
+async function findOwnComment(req, res) {
+  if (
+    !mongoose.Types.ObjectId.isValid(req.params.id) ||
+    !mongoose.Types.ObjectId.isValid(req.params.commentId)
+  ) {
+    res.status(404).json({ message: 'That question was not found.' });
+    return null;
+  }
+  const comment = await DiscussionComment.findOne({
+    _id: req.params.commentId,
+    discussion: req.params.id,
+  });
+  if (!comment) {
+    res.status(404).json({ message: 'That question was not found.' });
+    return null;
+  }
+  if (!comment.author.equals(req.user._id)) {
+    res.status(403).json({
+      message: 'Only the doctor who wrote this reply can change it.',
+    });
+    return null;
+  }
+  return comment;
 }
 
 async function findDiscussion(req, res) {

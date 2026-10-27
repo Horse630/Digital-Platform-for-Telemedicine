@@ -31,6 +31,7 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
     token: widget.user.token,
   );
   List<DiscussionTopic> _topics = const [];
+  final _search = TextEditingController();
   bool _mineOnly = false;
   bool _loading = true;
   String? _error;
@@ -39,6 +40,12 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
   void initState() {
     super.initState();
     _load();
+  }
+
+  @override
+  void dispose() {
+    _search.dispose();
+    super.dispose();
   }
 
   Future<void> _load() async {
@@ -77,18 +84,20 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
   bool get _isDoctor => widget.user.role == 'doctor';
 
   List<DiscussionTopic> get _visibleTopics {
-    if (!_mineOnly) {
-      return _topics;
-    }
-    if (_isDoctor) {
-      return [
-        for (final topic in _topics)
-          if (topic.repliedByMe) topic,
-      ];
+    final query = _search.text.trim().toLowerCase();
+    final mine = !_mineOnly
+        ? _topics
+        : _isDoctor
+        ? [for (final topic in _topics) if (topic.repliedByMe) topic]
+        : [for (final topic in _topics) if (topic.patient.id == _myId) topic];
+    if (query.isEmpty) {
+      return mine;
     }
     return [
-      for (final topic in _topics)
-        if (topic.patient.id == _myId) topic,
+      for (final topic in mine)
+        if (topic.title.toLowerCase().contains(query) ||
+            topic.body.toLowerCase().contains(query))
+          topic,
     ];
   }
 
@@ -164,6 +173,18 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
           ),
         ],
         const SizedBox(height: 16),
+        TextField(
+          key: const Key('discussionSearch'),
+          controller: _search,
+          decoration: InputDecoration(
+            hintText: l10n.searchPosts,
+            prefixIcon: const Icon(Icons.search),
+            border: const OutlineInputBorder(),
+            isDense: true,
+          ),
+          onChanged: (_) => setState(() {}),
+        ),
+        const SizedBox(height: 16),
         Wrap(
           spacing: 8,
           children: [
@@ -185,7 +206,9 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
             padding: const EdgeInsets.only(top: 32),
             child: Center(
               child: Text(
-                _mineOnly
+                _search.text.trim().isNotEmpty
+                    ? l10n.noMatchingPosts
+                    : _mineOnly
                     ? (_isDoctor ? l10n.noMyResponses : l10n.noMyDiscussions)
                     : l10n.noDiscussions,
               ),
@@ -446,6 +469,63 @@ class _DiscussionThreadPageState extends State<_DiscussionThreadPage> {
     }
   }
 
+  Future<void> _edit(DiscussionReply reply) async {
+    final next = await showDialog<String>(
+      context: context,
+      builder: (dialogContext) => _EditReplyDialog(initial: reply.body),
+    );
+    if (next == null || !mounted) {
+      return;
+    }
+    try {
+      final updated = await widget.api.updateReply(
+        widget.topicId,
+        reply.id,
+        next,
+      );
+      final thread = _thread;
+      if (!mounted || thread == null) {
+        return;
+      }
+      setState(() {
+        _thread = DiscussionThread(
+          topic: thread.topic,
+          replies: [
+            for (final item in thread.replies)
+              if (item.id == reply.id) updated else item,
+          ],
+        );
+      });
+    } on DiscussionException catch (error) {
+      if (!mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(localizeMessage(context.l10n, error.message))),
+      );
+    }
+  }
+
+  Future<void> _removeReply(DiscussionReply reply) async {
+    final confirmed = await confirmRemoveReply(context);
+    if (!confirmed || !mounted) {
+      return;
+    }
+    try {
+      await widget.api.removeReply(widget.topicId, reply.id);
+      if (mounted) {
+        await _load();
+      }
+    } on DiscussionException catch (error) {
+      if (!mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(localizeMessage(context.l10n, error.message))),
+      );
+    }
+  }
+
   Future<void> _remove() async {
     final confirmed = await confirmRemovePost(context);
     if (!confirmed || !mounted) {
@@ -590,6 +670,12 @@ class _DiscussionThreadPageState extends State<_DiscussionThreadPage> {
                             ),
                             onLike: () => _toggle(reply, like: true),
                             onStore: () => _toggle(reply, like: false),
+                            onEdit: reply.author.id == widget.userId
+                                ? () => _edit(reply)
+                                : null,
+                            onDelete: reply.author.id == widget.userId
+                                ? () => _removeReply(reply)
+                                : null,
                           ),
                           const SizedBox(height: 8),
                         ],
@@ -638,12 +724,16 @@ class _ReplyCard extends StatelessWidget {
     required this.onPerson,
     required this.onLike,
     required this.onStore,
+    this.onEdit,
+    this.onDelete,
   });
 
   final DiscussionReply reply;
   final VoidCallback onPerson;
   final VoidCallback onLike;
   final VoidCallback onStore;
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -685,6 +775,18 @@ class _ReplyCard extends StatelessWidget {
                     reply.stored ? Icons.bookmark : Icons.bookmark_border,
                   ),
                 ),
+                if (onEdit != null)
+                  IconButton(
+                    tooltip: l10n.editReply,
+                    onPressed: onEdit,
+                    icon: const Icon(Icons.edit_outlined),
+                  ),
+                if (onDelete != null)
+                  IconButton(
+                    tooltip: l10n.remove,
+                    onPressed: onDelete,
+                    icon: const Icon(Icons.delete_outline),
+                  ),
               ],
             ),
           ],
@@ -759,6 +861,100 @@ class _UnreadCount extends StatelessWidget {
       ),
     );
   }
+}
+
+class _EditReplyDialog extends StatefulWidget {
+  const _EditReplyDialog({required this.initial});
+
+  final String initial;
+
+  @override
+  State<_EditReplyDialog> createState() => _EditReplyDialogState();
+}
+
+class _EditReplyDialogState extends State<_EditReplyDialog> {
+  late final TextEditingController _body = TextEditingController(
+    text: widget.initial,
+  );
+
+  @override
+  void dispose() {
+    _body.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return AlertDialog(
+      title: Text(l10n.editReply),
+      content: TextField(
+        controller: _body,
+        minLines: 3,
+        maxLines: 8,
+        decoration: InputDecoration(
+          hintText: l10n.replyHint,
+          border: const OutlineInputBorder(),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text(l10n.close),
+        ),
+        FilledButton(
+          onPressed: () {
+            final next = _body.text.trim();
+            if (next.isEmpty) {
+              return;
+            }
+            Navigator.of(context).pop(next);
+          },
+          child: Text(l10n.saveReply),
+        ),
+      ],
+    );
+  }
+}
+
+Future<bool> confirmRemoveReply(BuildContext context) async {
+  final answer = await showDialog<bool>(
+    context: context,
+    builder: (dialogContext) {
+      final scheme = Theme.of(dialogContext).colorScheme;
+      final text = dialogContext.l10n;
+      return AlertDialog(
+        title: Text(text.confirmRemoveReplyTitle),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(text.confirmRemoveReplyMessage),
+            const SizedBox(height: 20),
+            Align(
+              child: FilledButton(
+                style: FilledButton.styleFrom(
+                  backgroundColor: scheme.surfaceContainerHighest,
+                  foregroundColor: scheme.onSurfaceVariant,
+                  visualDensity: VisualDensity.compact,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                ),
+                onPressed: () => Navigator.of(dialogContext).pop(false),
+                child: Text(text.keep),
+              ),
+            ),
+            const SizedBox(height: 8),
+            FilledButton(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              child: Text(text.remove),
+            ),
+          ],
+        ),
+      );
+    },
+  );
+  return answer ?? false;
 }
 
 Future<bool> confirmRemovePost(BuildContext context) async {

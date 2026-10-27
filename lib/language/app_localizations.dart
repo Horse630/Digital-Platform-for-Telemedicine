@@ -196,6 +196,36 @@ abstract class AppLocalizations {
   /// **'Create an account'**
   String get createAccount;
 
+  /// No description provided for @forgotPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot password?'**
+  String get forgotPassword;
+
+  /// No description provided for @resetPasswordTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset password'**
+  String get resetPasswordTitle;
+
+  /// No description provided for @resetPasswordHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the email on your account. Sending the reset email is not connected yet.'**
+  String get resetPasswordHint;
+
+  /// No description provided for @sendResetLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Send reset link'**
+  String get sendResetLink;
+
+  /// No description provided for @resetEmailNotSent.
+  ///
+  /// In en, this message translates to:
+  /// **'The reset email is not sent yet.'**
+  String get resetEmailNotSent;
+
   /// No description provided for @createAccountAction.
   ///
   /// In en, this message translates to:
@@ -555,6 +585,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Write advice or a short explanation'**
   String get replyHint;
+
+  /// No description provided for @searchPosts.
+  ///
+  /// In en, this message translates to:
+  /// **'Search posts'**
+  String get searchPosts;
+
+  /// No description provided for @noMatchingPosts.
+  ///
+  /// In en, this message translates to:
+  /// **'No matching posts.'**
+  String get noMatchingPosts;
+
+  /// No description provided for @editReply.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit reply'**
+  String get editReply;
+
+  /// No description provided for @saveReply.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get saveReply;
+
+  /// No description provided for @confirmRemoveReplyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove this reply?'**
+  String get confirmRemoveReplyTitle;
+
+  /// No description provided for @confirmRemoveReplyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This reply will be deleted.'**
+  String get confirmRemoveReplyMessage;
+
+  /// No description provided for @msgOnlyReplyAuthor.
+  ///
+  /// In en, this message translates to:
+  /// **'Only the doctor who wrote this reply can change it.'**
+  String get msgOnlyReplyAuthor;
 
   /// No description provided for @replyAction.
   ///

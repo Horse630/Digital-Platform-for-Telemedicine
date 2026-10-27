@@ -60,6 +60,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get createAccount => 'Create an account';
 
   @override
+  String get forgotPassword => 'Forgot password?';
+
+  @override
+  String get resetPasswordTitle => 'Reset password';
+
+  @override
+  String get resetPasswordHint =>
+      'Enter the email on your account. Sending the reset email is not connected yet.';
+
+  @override
+  String get sendResetLink => 'Send reset link';
+
+  @override
+  String get resetEmailNotSent => 'The reset email is not sent yet.';
+
+  @override
   String get createAccountAction => 'Create account';
 
   @override
@@ -242,6 +258,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get replyHint => 'Write advice or a short explanation';
+
+  @override
+  String get searchPosts => 'Search posts';
+
+  @override
+  String get noMatchingPosts => 'No matching posts.';
+
+  @override
+  String get editReply => 'Edit reply';
+
+  @override
+  String get saveReply => 'Save';
+
+  @override
+  String get confirmRemoveReplyTitle => 'Remove this reply?';
+
+  @override
+  String get confirmRemoveReplyMessage => 'This reply will be deleted.';
+
+  @override
+  String get msgOnlyReplyAuthor =>
+      'Only the doctor who wrote this reply can change it.';
 
   @override
   String get replyAction => 'Reply';

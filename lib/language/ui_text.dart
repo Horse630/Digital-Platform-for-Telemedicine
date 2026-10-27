@@ -130,6 +130,8 @@ String localizeMessage(AppLocalizations l10n, String message) {
       return l10n.msgDiscussionsUnread;
     case 'Only the person who posted can remove it.':
       return l10n.msgOnlyPosterCanRemove;
+    case 'Only the doctor who wrote this reply can change it.':
+      return l10n.msgOnlyReplyAuthor;
     default:
       return message;
   }

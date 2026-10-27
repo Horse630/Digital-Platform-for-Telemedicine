@@ -251,6 +251,28 @@ class DiscussionApi {
     return _send('DELETE', '/api/discussions/$id');
   }
 
+  Future<DiscussionReply> updateReply(
+    String topicId,
+    String commentId,
+    String body,
+  ) async {
+    final decoded = jsonDecode(
+      await _send(
+        'PATCH',
+        '/api/discussions/$topicId/comments/$commentId',
+        jsonBody: {'body': body},
+      ),
+    );
+    if (decoded is! Map<String, dynamic>) {
+      throw const DiscussionException('The discussion request failed.');
+    }
+    return DiscussionReply.fromJson(decoded);
+  }
+
+  Future<void> removeReply(String topicId, String commentId) {
+    return _send('DELETE', '/api/discussions/$topicId/comments/$commentId');
+  }
+
   Future<DiscussionReply> _comment(
     String topicId,
     String commentId,
@@ -289,6 +311,10 @@ class DiscussionApi {
       } else if (method == 'DELETE') {
         response = await client
             .delete(uri, headers: headers)
+            .timeout(const Duration(seconds: 8));
+      } else if (method == 'PATCH') {
+        response = await client
+            .patch(uri, headers: headers, body: jsonEncode(jsonBody ?? {}))
             .timeout(const Duration(seconds: 8));
       } else {
         response = await client

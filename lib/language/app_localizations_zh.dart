@@ -58,6 +58,21 @@ class AppLocalizationsZh extends AppLocalizations {
   String get createAccount => '建立帳號';
 
   @override
+  String get forgotPassword => '忘記密碼？';
+
+  @override
+  String get resetPasswordTitle => '重設密碼';
+
+  @override
+  String get resetPasswordHint => '輸入帳號的電郵。寄出重設電郵的功能尚未接上。';
+
+  @override
+  String get sendResetLink => '傳送重設連結';
+
+  @override
+  String get resetEmailNotSent => '重設電郵尚未寄出。';
+
+  @override
   String get createAccountAction => '建立帳號';
 
   @override
@@ -238,6 +253,27 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get replyHint => '寫下建議或簡單說明';
+
+  @override
+  String get searchPosts => '搜尋帖子';
+
+  @override
+  String get noMatchingPosts => '沒有相符的帖子。';
+
+  @override
+  String get editReply => '編輯回覆';
+
+  @override
+  String get saveReply => '儲存';
+
+  @override
+  String get confirmRemoveReplyTitle => '移除這則回覆？';
+
+  @override
+  String get confirmRemoveReplyMessage => '這則回覆會被刪除。';
+
+  @override
+  String get msgOnlyReplyAuthor => '只有寫下這則回覆的醫生可以更改。';
 
   @override
   String get replyAction => '回覆';
@@ -789,6 +825,21 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get createAccount => '创建账号';
 
   @override
+  String get forgotPassword => '忘记密码？';
+
+  @override
+  String get resetPasswordTitle => '重设密码';
+
+  @override
+  String get resetPasswordHint => '输入账号的邮箱。寄出重设邮件的功能尚未接上。';
+
+  @override
+  String get sendResetLink => '发送重设链接';
+
+  @override
+  String get resetEmailNotSent => '重设邮件尚未寄出。';
+
+  @override
   String get createAccountAction => '创建账号';
 
   @override
@@ -969,6 +1020,27 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get replyHint => '写下建议或简单说明';
+
+  @override
+  String get searchPosts => '搜索帖子';
+
+  @override
+  String get noMatchingPosts => '没有相符的帖子。';
+
+  @override
+  String get editReply => '编辑回复';
+
+  @override
+  String get saveReply => '保存';
+
+  @override
+  String get confirmRemoveReplyTitle => '移除这条回复？';
+
+  @override
+  String get confirmRemoveReplyMessage => '这条回复会被删除。';
+
+  @override
+  String get msgOnlyReplyAuthor => '只有写下这条回复的医生可以更改。';
 
   @override
   String get replyAction => '回复';
@@ -1520,6 +1592,21 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get createAccount => '建立帳號';
 
   @override
+  String get forgotPassword => '忘記密碼？';
+
+  @override
+  String get resetPasswordTitle => '重設密碼';
+
+  @override
+  String get resetPasswordHint => '輸入帳號的電郵。寄出重設電郵的功能尚未接上。';
+
+  @override
+  String get sendResetLink => '傳送重設連結';
+
+  @override
+  String get resetEmailNotSent => '重設電郵尚未寄出。';
+
+  @override
   String get createAccountAction => '建立帳號';
 
   @override
@@ -1700,6 +1787,27 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get replyHint => '寫下建議或簡單說明';
+
+  @override
+  String get searchPosts => '搜尋帖子';
+
+  @override
+  String get noMatchingPosts => '沒有相符的帖子。';
+
+  @override
+  String get editReply => '編輯回覆';
+
+  @override
+  String get saveReply => '儲存';
+
+  @override
+  String get confirmRemoveReplyTitle => '移除這則回覆？';
+
+  @override
+  String get confirmRemoveReplyMessage => '這則回覆會被刪除。';
+
+  @override
+  String get msgOnlyReplyAuthor => '只有寫下這則回覆的醫生可以更改。';
 
   @override
   String get replyAction => '回覆';
