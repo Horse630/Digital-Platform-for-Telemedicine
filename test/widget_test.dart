@@ -5,10 +5,38 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 
+import 'package:digital_platform_for_telemedicine/language/language_settings.dart';
 import 'package:digital_platform_for_telemedicine/main.dart';
+import 'package:digital_platform_for_telemedicine/screens/startup_screen.dart';
 import 'package:digital_platform_for_telemedicine/services/auth_service.dart';
+import 'package:digital_platform_for_telemedicine/theme/theme_settings.dart';
 
 void main() {
+  testWidgets('the startup animation ends on the sign-in screen', (tester) async {
+    final settings = ThemeSettings();
+    final language = LanguageSettings();
+    await tester.pumpWidget(
+      StartupHost(
+        themeSettings: settings,
+        languageSettings: language,
+        next: TelemedicineApp(
+          authService: _testAuth(),
+          themeSettings: settings,
+          languageSettings: language,
+        ),
+      ),
+    );
+
+    expect(find.byKey(const Key('startupAnimation')), findsOneWidget);
+    expect(find.byKey(const Key('loginButton')), findsNothing);
+
+    await tester.pump(StartupHost.duration + const Duration(milliseconds: 50));
+    await tester.pump();
+
+    expect(find.byKey(const Key('startupAnimation')), findsNothing);
+    expect(find.byKey(const Key('loginButton')), findsOneWidget);
+  });
+
   testWidgets('empty sign-in asks for both fields', (tester) async {
     await _pumpPhone(tester);
 

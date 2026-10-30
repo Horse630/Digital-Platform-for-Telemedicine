@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'language/app_localizations.dart';
 import 'language/language_settings.dart';
 import 'screens/login_screen.dart';
+import 'screens/startup_screen.dart';
 import 'services/auth_service.dart';
 import 'theme/app_theme.dart';
 import 'theme/theme_settings.dart';
@@ -12,9 +13,13 @@ Future<void> main() async {
   final themeSettings = await _loadTheme();
   final languageSettings = await _loadLanguage();
   runApp(
-    TelemedicineApp(
+    StartupHost(
       themeSettings: themeSettings,
       languageSettings: languageSettings,
+      next: TelemedicineApp(
+        themeSettings: themeSettings,
+        languageSettings: languageSettings,
+      ),
     ),
   );
 }
