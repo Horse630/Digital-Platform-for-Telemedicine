@@ -274,6 +274,12 @@ abstract class AppLocalizations {
   /// **'Welcome back, {name}'**
   String welcomeBack(String name);
 
+  /// No description provided for @welcomeUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome, {name}'**
+  String welcomeUser(String name);
+
   /// No description provided for @doctorDashboard.
   ///
   /// In en, this message translates to:

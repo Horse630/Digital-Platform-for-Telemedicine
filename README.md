@@ -43,9 +43,11 @@ The Android emulator calls the API at `http://10.0.2.2:3000`. Chrome, desktop, a
 
 The app icon is `assets/app_icon.png`, a teal medical cross with a video camera. Platform icon files are generated from that image.
 
+Opening the app plays that mark for about two seconds, then the sign-in screen appears. After that, every opened page fades and slides a short distance. Switching a tab uses the same motion.
+
 ## Screens
 
-- **Login** calls `POST /api/login` and opens the shell when MongoDB accepts the account. Three buttons sign in as the seeded admin, doctor, or patient without typing. **Create an account** opens sign-up.
+- **Login** calls `POST /api/login`. A match shows `Welcome,` plus the username, then opens the shell. Three buttons sign in as the seeded admin, doctor, or patient without typing. **Create an account** opens sign-up, and a new account sees the same welcome.
 - **Sign up** asks for an email, username, and password, and a choice of patient or doctor. Both roles use those same fields. The API rejects a username that is already stored.
 - **Home** greets the signed-in person and lists the core functions and sub-functions from the progress report. The next-appointment card shows that person's soonest booked visit, or "Not scheduled" when there is none. Appointments and Consultation open their tabs. Discussion opens the public question board. The other modules explain that this build does not save new data.
 - **Appointments** lists a doctor's own time slots and a patient's own bookings. The default view is a calendar. A **List** button switches to the scrolling cards, and **Calendar** switches back. An empty list shows "No appointment" and a button: **Make an appointment** for a doctor, **Book an appointment** for a patient. The booking page searches by doctor name, filters by doctor type, and sorts by time or name. Booking needs a short reason. Cancelling asks for confirmation. A patient cancel opens that slot again. A doctor cancel marks the row cancelled, and a cross on that card can delete it after another confirmation. An admin can read every row in either format and cannot change one.
@@ -196,4 +198,4 @@ flutter test
 
 ## Later phases
 
-Appointment booking, settings, the public discussion board, and sick leave certificates are in this build. A doctor fills a certificate for an appointed patient. A patient can only read it and download a copy. PayPal Sandbox, video, the delivery map, the chatbot, and wearable sync are not connected yet. The home screen entries for those modules are still navigation targets.
+Appointment booking, settings, the public discussion board, sick leave certificates, and a map of Hong Kong are in this build. A doctor fills a certificate for an appointed patient. A patient can only read it and download a copy. The map does not track a delivery. PayPal Sandbox, video, the chatbot, and wearable sync are not connected yet. The home screen entries for those modules are still navigation targets.

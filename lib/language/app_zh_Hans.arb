@@ -29,6 +29,7 @@
   "doctor": "医生",
   "admin": "管理员",
   "welcomeBack": "欢迎回来，{name}",
+  "welcomeUser": "欢迎，{name}",
   "doctorDashboard": "医生主页",
   "patientDashboard": "患者主页",
   "adminDashboard": "管理员主页",

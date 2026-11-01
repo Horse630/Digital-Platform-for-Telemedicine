@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../language/ui_text.dart';
 import '../services/auth_service.dart';
-import 'main_shell.dart';
+import 'welcome_screen.dart';
 
 /// Creates a patient or doctor account with the same fields.
 ///
@@ -67,7 +67,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
       }
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute<void>(
-          builder: (_) => MainShell(user: user, authService: widget.authService),
+          builder: (_) => WelcomeScreen(
+            user: user,
+            authService: widget.authService,
+          ),
         ),
         (route) => false,
       );

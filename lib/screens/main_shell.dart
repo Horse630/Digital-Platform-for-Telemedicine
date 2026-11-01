@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../language/ui_text.dart';
 import '../navigation/app_destination.dart';
 import '../services/auth_service.dart';
+import '../theme/app_motion.dart';
 import 'appointments_screen.dart';
 import 'consultation_screen.dart';
 import 'home_screen.dart';
@@ -100,12 +101,15 @@ class _MainShellState extends State<MainShell> {
     final current = AppDestination.values[_index];
     final l10n = context.l10n;
     // Off-screen tabs stay built, so a later list can keep its scroll position.
-    final pages = IndexedStack(
+    final pages = _TabMotion(
       index: _index,
-      alignment: Alignment.topCenter,
-      children: [
-        for (final destination in AppDestination.values) _pageFor(destination),
-      ],
+      child: IndexedStack(
+        index: _index,
+        alignment: Alignment.topCenter,
+        children: [
+          for (final destination in AppDestination.values) _pageFor(destination),
+        ],
+      ),
     );
 
     return Scaffold(
@@ -130,6 +134,60 @@ class _MainShellState extends State<MainShell> {
               unreadMessages: _unreadMessages,
               onSelect: _select,
             ),
+    );
+  }
+}
+
+/// Fades the visible tab when the person changes tabs.
+///
+/// The first tab is already visible. Off-screen tabs stay in the stack.
+class _TabMotion extends StatefulWidget {
+  const _TabMotion({required this.index, required this.child});
+
+  final int index;
+  final Widget child;
+
+  @override
+  State<_TabMotion> createState() => _TabMotionState();
+}
+
+class _TabMotionState extends State<_TabMotion>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+    vsync: this,
+    duration: AppMotion.duration,
+    value: 1,
+  );
+
+  @override
+  void didUpdateWidget(covariant _TabMotion oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.index != widget.index) {
+      _controller.forward(from: 0);
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final curved = CurvedAnimation(
+      parent: _controller,
+      curve: AppMotion.curve,
+    );
+    return FadeTransition(
+      opacity: curved,
+      child: SlideTransition(
+        position: Tween<Offset>(
+          begin: AppMotion.enterOffset,
+          end: Offset.zero,
+        ).animate(curved),
+        child: widget.child,
+      ),
     );
   }
 }

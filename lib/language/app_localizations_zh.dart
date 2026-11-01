@@ -99,6 +99,11 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String welcomeUser(String name) {
+    return '歡迎，$name';
+  }
+
+  @override
   String get doctorDashboard => '醫生主頁';
 
   @override
@@ -998,6 +1003,11 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   }
 
   @override
+  String welcomeUser(String name) {
+    return '欢迎，$name';
+  }
+
+  @override
   String get doctorDashboard => '医生主页';
 
   @override
@@ -1894,6 +1904,11 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   @override
   String welcomeBack(String name) {
     return '歡迎回來，$name';
+  }
+
+  @override
+  String welcomeUser(String name) {
+    return '歡迎，$name';
   }
 
   @override

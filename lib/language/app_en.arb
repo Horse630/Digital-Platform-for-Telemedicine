@@ -30,6 +30,8 @@
   "admin": "Admin",
   "welcomeBack": "Welcome back, {name}",
   "@welcomeBack": {"placeholders": {"name": {"type": "String"}}},
+  "welcomeUser": "Welcome, {name}",
+  "@welcomeUser": {"placeholders": {"name": {"type": "String"}}},
   "doctorDashboard": "Doctor dashboard",
   "patientDashboard": "Patient dashboard",
   "adminDashboard": "Admin dashboard",

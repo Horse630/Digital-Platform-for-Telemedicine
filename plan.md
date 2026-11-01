@@ -38,14 +38,15 @@ The report's phases are the plan, not the current build.
 | Phase 2, November | Appointment scheduling, PayPal Sandbox, read-only sick-leave PDFs | Appointment scheduling and sick leave certificates are done. PayPal is not. |
 | Phase 3, December to January | Video SDK and Hong Kong Vector Map delivery tracking | Medication delivery shows a map of Hong Kong. Live tracking and the Vector Map API are not started. No video package is installed. |
 | Phase 4, February to March | HKBU chatbot, discussion board, wearable health sync | Discussion is done. The chatbot and wearable sync are not started. Their seed documents exist. The app does not load them. |
-| Phase 5, April | Full testing, UI polish, final report | Not started. `flutter test` covers the current screens with a fake HTTP client. Those tests do not prove Atlas is running. |
+| Phase 5, April | Full testing, UI polish, final report | Page and tab motion is in the app. Full testing and the final report are not started. `flutter test` covers the current screens with a fake HTTP client. Those tests do not prove Atlas is running. |
 
 ## Done
 
 Login, shell, and theme:
 
 - `lib/main.dart` opens `lib/screens/startup_screen.dart` once, for about two seconds. A teal cross and a video camera scale in, then the app title fades in, and the sign-in screen replaces that view. Widget tests build `TelemedicineApp` directly and do not play this animation.
-- `lib/screens/login_screen.dart` posts to `POST /api/login`. A failed login stays on that screen. Success replaces the route with `lib/screens/main_shell.dart`. **Create an account** opens `lib/screens/sign_up_screen.dart`.
+- Every pushed page fades and slides a short distance. That transition is `AppMotion.pageTransitions` in `lib/theme/app_motion.dart`, applied by `AppTheme`. Changing a tab uses the same fade and slide. The first tab is already visible, and off-screen tabs stay built.
+- `lib/screens/login_screen.dart` posts to `POST /api/login`. A failed login stays on that screen. Success opens `lib/screens/welcome_screen.dart`, which shows `Welcome,` and the account username for about 1.6 seconds, then replaces that view with `lib/screens/main_shell.dart`. Sign-up uses the same welcome. **Create an account** opens `lib/screens/sign_up_screen.dart`.
 - The login screen has **Forgot password?**. That page asks for the account email and does not send a message. Sending the reset email is still to do. The login screen also has three temporary buttons: Admin, Doctor, and Patient. Each one signs in as the matching seeded account (`admin` / `Admin123!`, `doctor` / `Doctor123!`, `patient` / `Patient123!`) without typing. The username and password fields stay. Remove these buttons later. See To do.
 - `POST /api/signup` in `backend/src/server.js` accepts `email`, `username`, `password`, and `role`. `role` must be `patient` or `doctor`. It rejects `admin`. The username is checked without case sensitivity against `users`. A duplicate username returns 409, `That username is already used.` A duplicate email returns 409, `That email is already used.` The password must be at least 8 characters. The new document stores `fullName` as the username because sign-up does not ask for a separate name. Success returns the same JSON as login, including a token, and the app opens the shell.
 - Patient and doctor sign-up send the same fields. `User.js` no longer rejects a doctor who has no specialty or license number. The seeded doctor still has those values.

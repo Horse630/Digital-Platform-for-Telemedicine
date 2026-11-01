@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 import '../language/ui_text.dart';
 import '../services/auth_service.dart';
-import 'main_shell.dart';
 import 'sign_up_screen.dart';
+import 'welcome_screen.dart';
 
 /// Sign-in screen.
 ///
 /// [AuthService] sends the username and password to the Node API, which
-/// checks them in MongoDB. A match opens the signed-in shell.
+/// checks them in MongoDB. A match opens a short welcome, then the shell.
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key, this.authService = const AuthService()});
 
@@ -70,8 +70,10 @@ class _LoginScreenState extends State<LoginScreen> {
       // Replace the login route so the system back button leaves the app.
       Navigator.of(context).pushReplacement(
         MaterialPageRoute<void>(
-          builder: (_) =>
-              MainShell(user: user, authService: widget.authService),
+          builder: (_) => WelcomeScreen(
+            user: user,
+            authService: widget.authService,
+          ),
         ),
       );
     } on AuthException catch (error) {

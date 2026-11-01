@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'app_motion.dart';
+
 /// One accent the settings page can apply to the whole app.
 class ThemeChoice {
   const ThemeChoice(this.name, this.color);
@@ -39,6 +41,7 @@ class AppTheme {
 
     return ThemeData(
       useMaterial3: true,
+      pageTransitionsTheme: AppMotion.pageTransitions,
       colorScheme: scheme,
       scaffoldBackgroundColor: scaffold,
       appBarTheme: AppBarTheme(

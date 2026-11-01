@@ -102,6 +102,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String welcomeUser(String name) {
+    return 'Welcome, $name';
+  }
+
+  @override
   String get doctorDashboard => 'Doctor dashboard';
 
   @override

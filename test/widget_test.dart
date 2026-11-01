@@ -37,6 +37,25 @@ void main() {
     expect(find.byKey(const Key('loginButton')), findsOneWidget);
   });
 
+  testWidgets('sign-in welcomes the username before the home screen', (
+    tester,
+  ) async {
+    await _pumpPhone(tester);
+    await tester.enterText(find.byKey(const Key('usernameField')), 'doctor');
+    await tester.enterText(find.byKey(const Key('passwordField')), 'Doctor123!');
+    await tester.tap(find.byKey(const Key('loginButton')));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+
+    expect(find.text('Welcome, doctor'), findsOneWidget);
+    expect(find.text('Welcome back, Demo Doctor'), findsNothing);
+
+    await tester.pumpAndSettle();
+
+    expect(find.text('Welcome, doctor'), findsNothing);
+    expect(find.text('Welcome back, Demo Doctor'), findsOneWidget);
+  });
+
   testWidgets('empty sign-in asks for both fields', (tester) async {
     await _pumpPhone(tester);
 
