@@ -84,7 +84,11 @@ class _MainShellState extends State<MainShell> {
           onUnreadChanged: _setUnreadMessages,
         );
       case AppDestination.consultation:
-        return const ConsultationScreen();
+        return ConsultationScreen(
+          user: _user,
+          authService: widget.authService,
+          active: _index == AppDestination.consultation.index,
+        );
       case AppDestination.profile:
         return ProfileScreen(
           user: _user,

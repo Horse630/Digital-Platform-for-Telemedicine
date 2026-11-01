@@ -75,14 +75,21 @@ async function upsertUser(account) {
   };
 
   const existing = await User.findOne({ username: account.username });
-  if (existing) {
-    existing.set(fields);
-    await existing.save();
+    if (existing) {
+      existing.set(fields);
+      if (account.role === 'doctor' && !existing.meetingRoomCode) {
+        existing.meetingRoomCode = '482910';
+      }
+      await existing.save();
     console.log(`Updated users: ${account.username}`);
     return existing;
   }
 
   const created = await User.create(fields);
+  if (account.role === 'doctor') {
+    created.meetingRoomCode = '482910';
+    await created.save();
+  }
   console.log(`Created users: ${account.username}`);
   return created;
 }

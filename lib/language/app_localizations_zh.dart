@@ -164,7 +164,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get msgMessageFailed => '訊息要求失敗。';
 
   @override
-  String get navConsultation => '諮詢';
+  String get navConsultation => '會議';
 
   @override
   String get navProfile => '個人資料';
@@ -191,10 +191,95 @@ class AppLocalizationsZh extends AppLocalizations {
   String get appointmentsSubtitle => '預約一次遠距診症';
 
   @override
-  String get consultationTitle => '諮詢';
+  String get consultationTitle => '會議';
 
   @override
-  String get consultationSubtitle => '與醫生對話';
+  String get consultationSubtitle => '主持或加入看診';
+
+  @override
+  String get todayMeetings => '今天的看診';
+
+  @override
+  String get joinMeetingTitle => '加入會議';
+
+  @override
+  String get roomNumber => '房號';
+
+  @override
+  String get saveRoomNumber => '儲存房號';
+
+  @override
+  String get hostMeeting => '主持會議';
+
+  @override
+  String get noMeetingsToday => '今天沒有已預約的看診。';
+
+  @override
+  String get noOpenMeetings => '目前沒有可以加入的會議。';
+
+  @override
+  String get joinWindowHint => '預約時間前 10 分鐘起可以加入。';
+
+  @override
+  String get joinMeeting => '加入';
+
+  @override
+  String get waitingRoom => '候診室';
+
+  @override
+  String get waitingForDoctor => '等候醫生允許進入。';
+
+  @override
+  String get letThemIn => '允許進入';
+
+  @override
+  String patientWaiting(String name) {
+    return '$name 正在等候';
+  }
+
+  @override
+  String get inTheMeeting => '會議中';
+
+  @override
+  String meetingWith(String name) {
+    return '正在與 $name 會議';
+  }
+
+  @override
+  String get endMeeting => '結束會議';
+
+  @override
+  String get meetingEnded => '這場會議已結束。';
+
+  @override
+  String get meetingsRoleHint => '會議供醫生和病人使用。';
+
+  @override
+  String get videoNotSent => '雙方的即時畫面尚未傳送。';
+
+  @override
+  String get selectMeeting => '可加入的會議';
+
+  @override
+  String get msgOnlyDoctorHosts => '只有醫生可以主持會議。';
+
+  @override
+  String get msgOnlyDoctorRoom => '只有醫生可以更改房號。';
+
+  @override
+  String get msgJoinWindow => '預約時間前 10 分鐘起才可以加入。';
+
+  @override
+  String get msgDoctorNotOpened => '醫生尚未開啟這場會議。';
+
+  @override
+  String get msgRoomNumberRule => '房號請使用 4 至 12 個英文字母或數字。';
+
+  @override
+  String get msgCannotOpenMeeting => '你不能開啟這場會議。';
+
+  @override
+  String get msgMeetingFailed => '會議請求失敗。';
 
   @override
   String get sickLeave => '病假紙';
@@ -1068,7 +1153,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get msgMessageFailed => '消息请求失败。';
 
   @override
-  String get navConsultation => '咨询';
+  String get navConsultation => '会议';
 
   @override
   String get navProfile => '个人资料';
@@ -1095,10 +1180,95 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get appointmentsSubtitle => '预约一次远程问诊';
 
   @override
-  String get consultationTitle => '咨询';
+  String get consultationTitle => '会议';
 
   @override
-  String get consultationSubtitle => '与医生对话';
+  String get consultationSubtitle => '主持或加入看诊';
+
+  @override
+  String get todayMeetings => '今天的看诊';
+
+  @override
+  String get joinMeetingTitle => '加入会议';
+
+  @override
+  String get roomNumber => '房号';
+
+  @override
+  String get saveRoomNumber => '保存房号';
+
+  @override
+  String get hostMeeting => '主持会议';
+
+  @override
+  String get noMeetingsToday => '今天没有已预约的看诊。';
+
+  @override
+  String get noOpenMeetings => '目前没有可以加入的会议。';
+
+  @override
+  String get joinWindowHint => '预约时间前 10 分钟起可以加入。';
+
+  @override
+  String get joinMeeting => '加入';
+
+  @override
+  String get waitingRoom => '候诊室';
+
+  @override
+  String get waitingForDoctor => '等候医生允许进入。';
+
+  @override
+  String get letThemIn => '允许进入';
+
+  @override
+  String patientWaiting(String name) {
+    return '$name 正在等候';
+  }
+
+  @override
+  String get inTheMeeting => '会议中';
+
+  @override
+  String meetingWith(String name) {
+    return '正在与 $name 会议';
+  }
+
+  @override
+  String get endMeeting => '结束会议';
+
+  @override
+  String get meetingEnded => '这场会议已结束。';
+
+  @override
+  String get meetingsRoleHint => '会议供医生和患者使用。';
+
+  @override
+  String get videoNotSent => '双方的实时画面尚未传送。';
+
+  @override
+  String get selectMeeting => '可加入的会议';
+
+  @override
+  String get msgOnlyDoctorHosts => '只有医生可以主持会议。';
+
+  @override
+  String get msgOnlyDoctorRoom => '只有医生可以更改房号。';
+
+  @override
+  String get msgJoinWindow => '预约时间前 10 分钟起才可以加入。';
+
+  @override
+  String get msgDoctorNotOpened => '医生尚未开启这场会议。';
+
+  @override
+  String get msgRoomNumberRule => '房号请使用 4 至 12 个英文字母或数字。';
+
+  @override
+  String get msgCannotOpenMeeting => '你不能开启这场会议。';
+
+  @override
+  String get msgMeetingFailed => '会议请求失败。';
 
   @override
   String get sickLeave => '病假单';
@@ -1972,7 +2142,7 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get msgMessageFailed => '訊息要求失敗。';
 
   @override
-  String get navConsultation => '諮詢';
+  String get navConsultation => '會議';
 
   @override
   String get navProfile => '個人資料';
@@ -1999,10 +2169,95 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get appointmentsSubtitle => '預約一次遠距診症';
 
   @override
-  String get consultationTitle => '諮詢';
+  String get consultationTitle => '會議';
 
   @override
-  String get consultationSubtitle => '與醫生對話';
+  String get consultationSubtitle => '主持或加入看診';
+
+  @override
+  String get todayMeetings => '今天的看診';
+
+  @override
+  String get joinMeetingTitle => '加入會議';
+
+  @override
+  String get roomNumber => '房號';
+
+  @override
+  String get saveRoomNumber => '儲存房號';
+
+  @override
+  String get hostMeeting => '主持會議';
+
+  @override
+  String get noMeetingsToday => '今天沒有已預約的看診。';
+
+  @override
+  String get noOpenMeetings => '目前沒有可以加入的會議。';
+
+  @override
+  String get joinWindowHint => '預約時間前 10 分鐘起可以加入。';
+
+  @override
+  String get joinMeeting => '加入';
+
+  @override
+  String get waitingRoom => '候診室';
+
+  @override
+  String get waitingForDoctor => '等候醫生允許進入。';
+
+  @override
+  String get letThemIn => '允許進入';
+
+  @override
+  String patientWaiting(String name) {
+    return '$name 正在等候';
+  }
+
+  @override
+  String get inTheMeeting => '會議中';
+
+  @override
+  String meetingWith(String name) {
+    return '正在與 $name 會議';
+  }
+
+  @override
+  String get endMeeting => '結束會議';
+
+  @override
+  String get meetingEnded => '這場會議已結束。';
+
+  @override
+  String get meetingsRoleHint => '會議供醫生和病人使用。';
+
+  @override
+  String get videoNotSent => '雙方的即時畫面尚未傳送。';
+
+  @override
+  String get selectMeeting => '可加入的會議';
+
+  @override
+  String get msgOnlyDoctorHosts => '只有醫生可以主持會議。';
+
+  @override
+  String get msgOnlyDoctorRoom => '只有醫生可以更改房號。';
+
+  @override
+  String get msgJoinWindow => '預約時間前 10 分鐘起才可以加入。';
+
+  @override
+  String get msgDoctorNotOpened => '醫生尚未開啟這場會議。';
+
+  @override
+  String get msgRoomNumberRule => '房號請使用 4 至 12 個英文字母或數字。';
+
+  @override
+  String get msgCannotOpenMeeting => '你不能開啟這場會議。';
+
+  @override
+  String get msgMeetingFailed => '會議請求失敗。';
 
   @override
   String get sickLeave => '病假紙';

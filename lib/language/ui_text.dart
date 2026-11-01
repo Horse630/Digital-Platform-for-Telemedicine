@@ -164,6 +164,20 @@ String localizeMessage(AppLocalizations l10n, String message) {
       return l10n.msgCertificateExists;
     case 'That appointment was not found.':
       return l10n.msgAppointmentMissingSick;
+    case 'Only a doctor can host a meeting.':
+      return l10n.msgOnlyDoctorHosts;
+    case 'Only a doctor can change the room number.':
+      return l10n.msgOnlyDoctorRoom;
+    case 'You can join from 10 minutes before the meeting.':
+      return l10n.msgJoinWindow;
+    case 'The doctor has not opened this meeting yet.':
+      return l10n.msgDoctorNotOpened;
+    case 'Use 4 to 12 letters or numbers for the room number.':
+      return l10n.msgRoomNumberRule;
+    case 'You cannot open this meeting.':
+      return l10n.msgCannotOpenMeeting;
+    case 'The meeting request failed.':
+      return l10n.msgMeetingFailed;
     case 'You cannot open this certificate.':
       return l10n.msgCannotOpenCertificate;
     case 'That certificate was not found.':

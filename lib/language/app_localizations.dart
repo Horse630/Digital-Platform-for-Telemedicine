@@ -403,7 +403,7 @@ abstract class AppLocalizations {
   /// No description provided for @navConsultation.
   ///
   /// In en, this message translates to:
-  /// **'Consultation'**
+  /// **'Meetings'**
   String get navConsultation;
 
   /// No description provided for @navProfile.
@@ -457,14 +457,176 @@ abstract class AppLocalizations {
   /// No description provided for @consultationTitle.
   ///
   /// In en, this message translates to:
-  /// **'Consultation'**
+  /// **'Meetings'**
   String get consultationTitle;
 
   /// No description provided for @consultationSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Talk with a doctor'**
+  /// **'Host or join a visit'**
   String get consultationSubtitle;
+
+  /// No description provided for @todayMeetings.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s visits'**
+  String get todayMeetings;
+
+  /// No description provided for @joinMeetingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Join a meeting'**
+  String get joinMeetingTitle;
+
+  /// No description provided for @roomNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Room number'**
+  String get roomNumber;
+
+  /// No description provided for @saveRoomNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Save room number'**
+  String get saveRoomNumber;
+
+  /// No description provided for @hostMeeting.
+  ///
+  /// In en, this message translates to:
+  /// **'Host meeting'**
+  String get hostMeeting;
+
+  /// No description provided for @noMeetingsToday.
+  ///
+  /// In en, this message translates to:
+  /// **'No booked visit today.'**
+  String get noMeetingsToday;
+
+  /// No description provided for @noOpenMeetings.
+  ///
+  /// In en, this message translates to:
+  /// **'No meeting is open for you yet.'**
+  String get noOpenMeetings;
+
+  /// No description provided for @joinWindowHint.
+  ///
+  /// In en, this message translates to:
+  /// **'You can join from 10 minutes before the visit.'**
+  String get joinWindowHint;
+
+  /// No description provided for @joinMeeting.
+  ///
+  /// In en, this message translates to:
+  /// **'Join'**
+  String get joinMeeting;
+
+  /// No description provided for @waitingRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting room'**
+  String get waitingRoom;
+
+  /// No description provided for @waitingForDoctor.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for the doctor to let you in.'**
+  String get waitingForDoctor;
+
+  /// No description provided for @letThemIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Let them in'**
+  String get letThemIn;
+
+  /// No description provided for @patientWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is waiting'**
+  String patientWaiting(String name);
+
+  /// No description provided for @inTheMeeting.
+  ///
+  /// In en, this message translates to:
+  /// **'In the meeting'**
+  String get inTheMeeting;
+
+  /// No description provided for @meetingWith.
+  ///
+  /// In en, this message translates to:
+  /// **'In the meeting with {name}'**
+  String meetingWith(String name);
+
+  /// No description provided for @endMeeting.
+  ///
+  /// In en, this message translates to:
+  /// **'End meeting'**
+  String get endMeeting;
+
+  /// No description provided for @meetingEnded.
+  ///
+  /// In en, this message translates to:
+  /// **'This meeting has ended.'**
+  String get meetingEnded;
+
+  /// No description provided for @meetingsRoleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Meetings are for a doctor and a patient.'**
+  String get meetingsRoleHint;
+
+  /// No description provided for @videoNotSent.
+  ///
+  /// In en, this message translates to:
+  /// **'The live picture between the two devices is not sent yet.'**
+  String get videoNotSent;
+
+  /// No description provided for @selectMeeting.
+  ///
+  /// In en, this message translates to:
+  /// **'Open meeting'**
+  String get selectMeeting;
+
+  /// No description provided for @msgOnlyDoctorHosts.
+  ///
+  /// In en, this message translates to:
+  /// **'Only a doctor can host a meeting.'**
+  String get msgOnlyDoctorHosts;
+
+  /// No description provided for @msgOnlyDoctorRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Only a doctor can change the room number.'**
+  String get msgOnlyDoctorRoom;
+
+  /// No description provided for @msgJoinWindow.
+  ///
+  /// In en, this message translates to:
+  /// **'You can join from 10 minutes before the meeting.'**
+  String get msgJoinWindow;
+
+  /// No description provided for @msgDoctorNotOpened.
+  ///
+  /// In en, this message translates to:
+  /// **'The doctor has not opened this meeting yet.'**
+  String get msgDoctorNotOpened;
+
+  /// No description provided for @msgRoomNumberRule.
+  ///
+  /// In en, this message translates to:
+  /// **'Use 4 to 12 letters or numbers for the room number.'**
+  String get msgRoomNumberRule;
+
+  /// No description provided for @msgCannotOpenMeeting.
+  ///
+  /// In en, this message translates to:
+  /// **'You cannot open this meeting.'**
+  String get msgCannotOpenMeeting;
+
+  /// No description provided for @msgMeetingFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The meeting request failed.'**
+  String get msgMeetingFailed;
 
   /// No description provided for @sickLeave.
   ///

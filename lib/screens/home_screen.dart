@@ -15,7 +15,7 @@ import 'sick_leave_screen.dart';
 ///
 /// The tiles follow the core functions and sub-functions in the progress
 /// report. The next-appointment card reads the signed-in person's bookings.
-/// Appointments and Consultation open their tabs. Discussion opens the
+/// Appointments and Meetings open their tabs. Discussion opens the
 /// public question board. Sick leave opens certificates. Medication delivery
 /// opens a map of Hong Kong. Every other tile only explains that the module
 /// does not save data yet.

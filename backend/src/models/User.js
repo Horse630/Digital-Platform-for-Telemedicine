@@ -69,6 +69,13 @@ const userSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    // Fixed meeting room number for a doctor. Empty until the first meeting.
+    meetingRoomCode: {
+      type: String,
+      trim: true,
+      maxlength: 12,
+      default: '',
+    },
     // Filled for patients. Admin and doctor documents leave this empty.
     dateOfBirth: {
       type: Date,

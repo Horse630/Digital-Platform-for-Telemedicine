@@ -23,6 +23,9 @@ const consultationSchema = new mongoose.Schema(
     },
     status: { type: String, required: true, enum: STATUSES },
     channelName: { type: String, required: true, trim: true },
+    // The patient is in the waiting room until the doctor lets them in.
+    waiting: { type: Boolean, default: false },
+    admitted: { type: Boolean, default: false },
   },
   { collection: 'consultations', timestamps: true },
 );

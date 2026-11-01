@@ -168,7 +168,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get msgMessageFailed => 'The message request failed.';
 
   @override
-  String get navConsultation => 'Consultation';
+  String get navConsultation => 'Meetings';
 
   @override
   String get navProfile => 'Profile';
@@ -195,10 +195,99 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appointmentsSubtitle => 'Book a remote visit';
 
   @override
-  String get consultationTitle => 'Consultation';
+  String get consultationTitle => 'Meetings';
 
   @override
-  String get consultationSubtitle => 'Talk with a doctor';
+  String get consultationSubtitle => 'Host or join a visit';
+
+  @override
+  String get todayMeetings => 'Today\'s visits';
+
+  @override
+  String get joinMeetingTitle => 'Join a meeting';
+
+  @override
+  String get roomNumber => 'Room number';
+
+  @override
+  String get saveRoomNumber => 'Save room number';
+
+  @override
+  String get hostMeeting => 'Host meeting';
+
+  @override
+  String get noMeetingsToday => 'No booked visit today.';
+
+  @override
+  String get noOpenMeetings => 'No meeting is open for you yet.';
+
+  @override
+  String get joinWindowHint => 'You can join from 10 minutes before the visit.';
+
+  @override
+  String get joinMeeting => 'Join';
+
+  @override
+  String get waitingRoom => 'Waiting room';
+
+  @override
+  String get waitingForDoctor => 'Waiting for the doctor to let you in.';
+
+  @override
+  String get letThemIn => 'Let them in';
+
+  @override
+  String patientWaiting(String name) {
+    return '$name is waiting';
+  }
+
+  @override
+  String get inTheMeeting => 'In the meeting';
+
+  @override
+  String meetingWith(String name) {
+    return 'In the meeting with $name';
+  }
+
+  @override
+  String get endMeeting => 'End meeting';
+
+  @override
+  String get meetingEnded => 'This meeting has ended.';
+
+  @override
+  String get meetingsRoleHint => 'Meetings are for a doctor and a patient.';
+
+  @override
+  String get videoNotSent =>
+      'The live picture between the two devices is not sent yet.';
+
+  @override
+  String get selectMeeting => 'Open meeting';
+
+  @override
+  String get msgOnlyDoctorHosts => 'Only a doctor can host a meeting.';
+
+  @override
+  String get msgOnlyDoctorRoom => 'Only a doctor can change the room number.';
+
+  @override
+  String get msgJoinWindow =>
+      'You can join from 10 minutes before the meeting.';
+
+  @override
+  String get msgDoctorNotOpened =>
+      'The doctor has not opened this meeting yet.';
+
+  @override
+  String get msgRoomNumberRule =>
+      'Use 4 to 12 letters or numbers for the room number.';
+
+  @override
+  String get msgCannotOpenMeeting => 'You cannot open this meeting.';
+
+  @override
+  String get msgMeetingFailed => 'The meeting request failed.';
 
   @override
   String get sickLeave => 'Sick leave';
