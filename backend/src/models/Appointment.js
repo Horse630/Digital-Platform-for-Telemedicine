@@ -29,6 +29,19 @@ const appointmentSchema = new mongoose.Schema(
         return this.status === 'scheduled' || this.status === 'completed';
       },
     },
+    // Short note the doctor writes when the visit is marked completed.
+    visitNote: {
+      type: String,
+      trim: true,
+      maxlength: 500,
+      default: '',
+    },
+    // 1 to 5, set once by the patient after the visit is completed.
+    patientRating: {
+      type: Number,
+      min: 1,
+      max: 5,
+    },
     status: { type: String, required: true, enum: STATUSES },
   },
   { collection: 'appointments', timestamps: true },

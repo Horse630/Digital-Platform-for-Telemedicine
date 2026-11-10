@@ -266,6 +266,8 @@ String localizedStatus(AppLocalizations l10n, String status) {
       return l10n.statusScheduled;
     case 'cancelled':
       return l10n.statusCancelled;
+    case 'completed':
+      return l10n.statusCompleted;
     default:
       return status;
   }

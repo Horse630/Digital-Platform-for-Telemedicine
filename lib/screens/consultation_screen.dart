@@ -40,6 +40,15 @@ class _ConsultationScreenState extends State<ConsultationScreen> {
     token: widget.user.token,
   );
 
+  MeetingRecord? get _selectedMeeting {
+    for (final meeting in _meetings) {
+      if (meeting.appointmentId == _selectedId) {
+        return meeting;
+      }
+    }
+    return null;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -266,7 +275,7 @@ class _ConsultationScreenState extends State<ConsultationScreen> {
               const SizedBox(height: 12),
               FilledButton(
                 key: const Key('joinMeetingButton'),
-                onPressed: _selectedId == null ? null : _join,
+                onPressed: _selectedMeeting?.canEnter == true ? _join : null,
                 child: Text(l10n.joinMeeting),
               ),
             ],

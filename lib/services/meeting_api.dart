@@ -16,6 +16,7 @@ class MeetingRecord {
     required this.status,
     required this.waiting,
     required this.admitted,
+    required this.canEnter,
   });
 
   final String appointmentId;
@@ -26,6 +27,7 @@ class MeetingRecord {
   final String status;
   final bool waiting;
   final bool admitted;
+  final bool canEnter;
 
   bool get isOpen => status == 'live';
 
@@ -48,6 +50,9 @@ class MeetingRecord {
       status: json['status'] is String ? json['status'] as String : 'closed',
       waiting: json['waiting'] == true,
       admitted: json['admitted'] == true,
+      canEnter: json['canEnter'] is bool
+          ? json['canEnter'] as bool
+          : !parsed.isAfter(DateTime.now().add(const Duration(minutes: 10))),
     );
   }
 }

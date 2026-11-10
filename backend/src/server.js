@@ -24,6 +24,8 @@ app.use('/api/discussions', require('./routes/discussions'));
 app.use('/api/sick-leave', require('./routes/sickLeave'));
 app.use('/api/meetings', require('./routes/meetings'));
 app.use('/api/profile', require('./routes/profile'));
+app.use('/api/deliveries', require('./routes/deliveries'));
+app.use('/api/health-readings', require('./routes/healthReadings'));
 
 app.get('/api/health', (_req, res) => {
   res.json({ ok: true });

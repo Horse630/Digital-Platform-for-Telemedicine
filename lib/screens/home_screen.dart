@@ -10,6 +10,8 @@ import '../theme/theme_settings.dart';
 import '../widgets/content_frame.dart';
 import 'delivery_map_screen.dart';
 import 'discussions_screen.dart';
+import 'guide_screen.dart';
+import 'health_screen.dart';
 import 'sick_leave_screen.dart';
 
 /// Home dashboard.
@@ -18,7 +20,7 @@ import 'sick_leave_screen.dart';
 /// report. The next-appointment card reads the signed-in person's bookings.
 /// Appointments and Meetings open their tabs. Discussion opens the
 /// public question board. Sick leave opens certificates. Medication delivery
-/// opens a map of Hong Kong. Every other tile only explains that the module
+/// opens a map of Hong Kong pinned at Hong Kong Baptist University. Every other tile only explains that the module
 /// does not save data yet.
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
@@ -111,7 +113,10 @@ class _HomeScreenState extends State<HomeScreen> {
     if (module.opensDelivery) {
       await Navigator.of(context).push(
         MaterialPageRoute<void>(
-          builder: (_) => const DeliveryMapScreen(),
+          builder: (_) => DeliveryMapScreen(
+            authService: widget.authService,
+            user: widget.user,
+          ),
         ),
       );
       return;
@@ -120,6 +125,23 @@ class _HomeScreenState extends State<HomeScreen> {
       await Navigator.of(context).push(
         MaterialPageRoute<void>(
           builder: (_) => SickLeaveScreen(
+            authService: widget.authService,
+            user: widget.user,
+          ),
+        ),
+      );
+      return;
+    }
+    if (module.opensGuide) {
+      await Navigator.of(context).push(
+        MaterialPageRoute<void>(builder: (_) => const GuideScreen()),
+      );
+      return;
+    }
+    if (module.opensHealth) {
+      await Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => HealthScreen(
             authService: widget.authService,
             user: widget.user,
           ),
@@ -189,6 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
         icon: Icons.smart_toy_outlined,
         title: l10n.aiChatbot,
         subtitle: l10n.aiChatbotSubtitle,
+        opensGuide: true,
       ),
       _Module(
         icon: Icons.forum_outlined,
@@ -200,6 +223,7 @@ class _HomeScreenState extends State<HomeScreen> {
         icon: Icons.monitor_heart_outlined,
         title: l10n.iotHealth,
         subtitle: l10n.iotHealthSubtitle,
+        opensHealth: true,
       ),
     ];
   }
@@ -277,7 +301,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   value: l10n.noActiveOrder,
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute<void>(
-                      builder: (_) => const DeliveryMapScreen(),
+                      builder: (_) => DeliveryMapScreen(
+            authService: widget.authService,
+            user: widget.user,
+          ),
                     ),
                   ),
                 );
@@ -370,6 +397,8 @@ class _Module {
     this.opensDiscussion = false,
     this.opensSickLeave = false,
     this.opensDelivery = false,
+    this.opensGuide = false,
+    this.opensHealth = false,
   });
 
   final IconData icon;
@@ -379,6 +408,8 @@ class _Module {
   final bool opensDiscussion;
   final bool opensSickLeave;
   final bool opensDelivery;
+  final bool opensGuide;
+  final bool opensHealth;
 }
 
 class _SectionHeader extends StatelessWidget {

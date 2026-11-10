@@ -1516,6 +1516,216 @@ abstract class AppLocalizations {
   /// **'cancelled'**
   String get statusCancelled;
 
+  /// No description provided for @statusCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'completed'**
+  String get statusCompleted;
+
+  /// No description provided for @markCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark completed'**
+  String get markCompleted;
+
+  /// No description provided for @visitNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Visit note'**
+  String get visitNote;
+
+  /// No description provided for @visitNoteHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Short note for the patient'**
+  String get visitNoteHint;
+
+  /// No description provided for @saveAndComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Save and complete'**
+  String get saveAndComplete;
+
+  /// No description provided for @medicineWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'This medicine can upset the stomach. Pair it with a stomach medicine.'**
+  String get medicineWarning;
+
+  /// No description provided for @confirmVisitTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm this visit'**
+  String get confirmVisitTitle;
+
+  /// No description provided for @confirmVisitBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The visit is saved only after you confirm. The demo fee is HKD 0. PayPal is not called.'**
+  String get confirmVisitBody;
+
+  /// No description provided for @confirmAndBook.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm booking'**
+  String get confirmAndBook;
+
+  /// No description provided for @freeCancelNote.
+  ///
+  /// In en, this message translates to:
+  /// **'This visit is at least one day away, so cancelling it is free. No payment was taken.'**
+  String get freeCancelNote;
+
+  /// No description provided for @deliveryOrders.
+  ///
+  /// In en, this message translates to:
+  /// **'Medicine orders'**
+  String get deliveryOrders;
+
+  /// No description provided for @medicineName.
+  ///
+  /// In en, this message translates to:
+  /// **'Medicine name'**
+  String get medicineName;
+
+  /// No description provided for @quantity.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity'**
+  String get quantity;
+
+  /// No description provided for @saveDelivery.
+  ///
+  /// In en, this message translates to:
+  /// **'Send medicine'**
+  String get saveDelivery;
+
+  /// No description provided for @advanceDelivery.
+  ///
+  /// In en, this message translates to:
+  /// **'Update delivery'**
+  String get advanceDelivery;
+
+  /// No description provided for @noDeliveryOrders.
+  ///
+  /// In en, this message translates to:
+  /// **'No medicine order yet.'**
+  String get noDeliveryOrders;
+
+  /// No description provided for @healthTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Health readings'**
+  String get healthTitle;
+
+  /// No description provided for @healthHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Type a reading. A wearable is not connected.'**
+  String get healthHint;
+
+  /// No description provided for @heartRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Heart rate'**
+  String get heartRate;
+
+  /// No description provided for @stepsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Steps'**
+  String get stepsCount;
+
+  /// No description provided for @bloodOxygen.
+  ///
+  /// In en, this message translates to:
+  /// **'Blood oxygen'**
+  String get bloodOxygen;
+
+  /// No description provided for @saveReading.
+  ///
+  /// In en, this message translates to:
+  /// **'Save reading'**
+  String get saveReading;
+
+  /// No description provided for @guideTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'App guide'**
+  String get guideTitle;
+
+  /// No description provided for @guideHint.
+  ///
+  /// In en, this message translates to:
+  /// **'This guide explains the app. It does not call the HKBU assistant.'**
+  String get guideHint;
+
+  /// No description provided for @guideAppointments.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Appointments, pick an open time, write a reason, then confirm. The visit is saved only after you confirm.'**
+  String get guideAppointments;
+
+  /// No description provided for @guideMeetings.
+  ///
+  /// In en, this message translates to:
+  /// **'A hosted meeting appears for the patient at once. The patient can enter from 10 minutes before the booked time.'**
+  String get guideMeetings;
+
+  /// No description provided for @guideDelivery.
+  ///
+  /// In en, this message translates to:
+  /// **'Medicine is sent from Hong Kong Baptist University. The doctor updates the order as preparing, in transit, or delivered.'**
+  String get guideDelivery;
+
+  /// No description provided for @courseNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Course project notice'**
+  String get courseNotice;
+
+  /// No description provided for @courseNoticeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This is a course demo, not a clinic and not a legal agreement. Do not use it for a real medical emergency.'**
+  String get courseNoticeBody;
+
+  /// No description provided for @acceptNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'I understand this is a course demo.'**
+  String get acceptNotice;
+
+  /// No description provided for @courseNoticeRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Tick the course notice before creating an account.'**
+  String get courseNoticeRequired;
+
+  /// No description provided for @actionNotices.
+  ///
+  /// In en, this message translates to:
+  /// **'Action notices'**
+  String get actionNotices;
+
+  /// No description provided for @actionNoticesSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep a short note on this device after you book a visit.'**
+  String get actionNoticesSubtitle;
+
+  /// No description provided for @rateVisit.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate this visit'**
+  String get rateVisit;
+
+  /// No description provided for @doctorRating.
+  ///
+  /// In en, this message translates to:
+  /// **'{rating} stars'**
+  String doctorRating(String rating);
+
   /// No description provided for @settings.
   ///
   /// In en, this message translates to:
@@ -1681,8 +1891,50 @@ abstract class AppLocalizations {
   /// No description provided for @deliveryMapHint.
   ///
   /// In en, this message translates to:
-  /// **'This map shows Hong Kong. Delivery tracking is not available yet.'**
+  /// **'Medicine is sent from Hong Kong Baptist University, Kowloon Tong. Blue pins are public clinics and red pins are public hospitals. Tap a pin for the name and opening hours.'**
   String get deliveryMapHint;
+
+  /// No description provided for @deliveryHeadquarters.
+  ///
+  /// In en, this message translates to:
+  /// **'Hong Kong Baptist University'**
+  String get deliveryHeadquarters;
+
+  /// No description provided for @publicClinic.
+  ///
+  /// In en, this message translates to:
+  /// **'Public family medicine clinic'**
+  String get publicClinic;
+
+  /// No description provided for @publicHospital.
+  ///
+  /// In en, this message translates to:
+  /// **'Public hospital or institution'**
+  String get publicHospital;
+
+  /// No description provided for @openingHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Opening hours'**
+  String get openingHours;
+
+  /// No description provided for @hoursNotListed.
+  ///
+  /// In en, this message translates to:
+  /// **'The Hospital Authority list does not include opening hours for this place.'**
+  String get hoursNotListed;
+
+  /// No description provided for @accidentEmergencyYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Accident and emergency department: yes'**
+  String get accidentEmergencyYes;
+
+  /// No description provided for @accidentEmergencyNo.
+  ///
+  /// In en, this message translates to:
+  /// **'Accident and emergency department: no'**
+  String get accidentEmergencyNo;
 
   /// No description provided for @msgDeliveryAddressTooLong.
   ///

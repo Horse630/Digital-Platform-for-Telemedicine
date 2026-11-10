@@ -92,6 +92,17 @@ const userSchema = new mongoose.Schema(
       maxlength: 200,
       default: '',
     },
+    // Running total of stars patients gave this doctor. Zero for other roles.
+    ratingSum: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    ratingCount: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
     // Optional note the person writes on the settings page.
     description: {
       type: String,

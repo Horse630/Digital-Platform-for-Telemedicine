@@ -2,10 +2,11 @@ const express = require('express');
 
 const { readToken } = require('../authToken');
 const Appointment = require('../models/Appointment');
+const Payment = require('../models/Payment');
 const User = require('../models/User');
 
 const router = express.Router();
-const doctorFields = 'fullName specialty specialties description avatarBase64';
+const doctorFields = 'fullName specialty specialties description avatarBase64 ratingSum ratingCount';
 const patientFields = 'fullName description avatarBase64 allergies';
 
 // The Flutter app sends the token from POST /api/login.
@@ -36,6 +37,9 @@ function toAppointmentJson(appointment) {
     scheduledAt: appointment.scheduledAt.toISOString(),
     status: appointment.status,
     reason: appointment.reason || '',
+    visitNote: appointment.visitNote || '',
+    medicineWarning: needsStomachMedicine(appointment.visitNote),
+    patientRating: appointment.patientRating || null,
     doctor: {
       id: appointment.doctor._id.toString(),
       fullName: appointment.doctor.fullName,
@@ -43,6 +47,7 @@ function toAppointmentJson(appointment) {
       specialties: doctorTypes(appointment.doctor),
       description: appointment.doctor.description || '',
       avatarBase64: appointment.doctor.avatarBase64 || '',
+      ratingAverage: ratingAverage(appointment.doctor),
     },
     patient: appointment.patient
       ? {
@@ -56,6 +61,21 @@ function toAppointmentJson(appointment) {
         }
       : null,
   };
+}
+
+const STOMACH_MEDICINE = /aspirin|ibuprofen|naproxen|diclofenac|阿司匹林|布洛芬/i;
+
+function needsStomachMedicine(note) {
+  return STOMACH_MEDICINE.test(typeof note === 'string' ? note : '');
+}
+
+function ratingAverage(doctor) {
+  const count = Number(doctor && doctor.ratingCount) || 0;
+  const sum = Number(doctor && doctor.ratingSum) || 0;
+  if (count < 1) {
+    return null;
+  }
+  return Math.round((sum / count) * 10) / 10;
 }
 
 function doctorTypes(doctor) {
@@ -148,7 +168,74 @@ router.post('/:id/book', requireUser, async (req, res) => {
   }
   await booked.populate('doctor', doctorFields);
   await booked.populate('patient', patientFields);
+  await Payment.create({
+    patient: req.user._id,
+    appointment: booked._id,
+    amount: 0,
+    currency: 'HKD',
+    purpose: 'consultation',
+    status: 'pending',
+    provider: 'demo',
+  });
   res.json(toAppointmentJson(booked));
+});
+
+router.post('/:id/complete', requireUser, async (req, res) => {
+  if (req.user.role !== 'doctor') {
+    res.status(403).json({ message: 'Only a doctor can complete a visit.' });
+    return;
+  }
+  const visitNote = typeof req.body?.visitNote === 'string' ? req.body.visitNote.trim() : '';
+  if (visitNote.length > 500) {
+    res.status(400).json({ message: 'Keep the visit note under 500 characters.' });
+    return;
+  }
+  const completed = await Appointment.findOneAndUpdate(
+    { _id: req.params.id, doctor: req.user._id, status: 'scheduled' },
+    { status: 'completed', visitNote },
+    { new: true },
+  );
+  if (!completed) {
+    res.status(404).json({ message: 'Appointment not found.' });
+    return;
+  }
+  await completed.populate('doctor', doctorFields);
+  await completed.populate('patient', patientFields);
+  res.json(toAppointmentJson(completed));
+});
+
+router.post('/:id/rate', requireUser, async (req, res) => {
+  if (req.user.role !== 'patient') {
+    res.status(403).json({ message: 'Only a patient can rate a visit.' });
+    return;
+  }
+  const stars = Number(req.body?.stars);
+  if (!Number.isInteger(stars) || stars < 1 || stars > 5) {
+    res.status(400).json({ message: 'Choose a rating from 1 to 5.' });
+    return;
+  }
+  const appointment = await Appointment.findOne({
+    _id: req.params.id,
+    patient: req.user._id,
+    status: 'completed',
+  });
+  if (!appointment) {
+    res.status(404).json({ message: 'Appointment not found.' });
+    return;
+  }
+  if (appointment.patientRating) {
+    res.status(409).json({ message: 'This visit already has a rating.' });
+    return;
+  }
+  appointment.patientRating = stars;
+  await appointment.save();
+  await User.updateOne(
+    { _id: appointment.doctor },
+    { $inc: { ratingSum: stars, ratingCount: 1 } },
+  );
+  await appointment.populate('doctor', doctorFields);
+  await appointment.populate('patient', patientFields);
+  res.json(toAppointmentJson(appointment));
 });
 
 router.post('/:id/cancel', requireUser, async (req, res) => {
@@ -163,6 +250,11 @@ router.post('/:id/cancel', requireUser, async (req, res) => {
     req.user.role === 'patient' &&
     appointment.patient &&
     appointment.patient.equals(req.user._id);
+  const oneDay = 24 * 60 * 60 * 1000;
+  const freeCancellation =
+    isPatient &&
+    appointment.status === 'scheduled' &&
+    appointment.scheduledAt.getTime() - Date.now() >= oneDay;
 
   if (isPatient && appointment.status === 'scheduled') {
     await Appointment.findByIdAndUpdate(appointment._id, {
@@ -182,7 +274,7 @@ router.post('/:id/cancel', requireUser, async (req, res) => {
 
   await appointment.populate('doctor', doctorFields);
   await appointment.populate('patient', patientFields);
-  res.json(toAppointmentJson(appointment));
+  res.json({ ...toAppointmentJson(appointment), freeCancellation });
 });
 
 router.delete('/:id', requireUser, async (req, res) => {

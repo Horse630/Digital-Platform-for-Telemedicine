@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../language/ui_text.dart';
 import '../theme/theme_settings.dart';
+import '../services/action_notices.dart';
 import '../services/appointment_api.dart';
 import '../widgets/account_avatar.dart';
 import 'chat_thread_screen.dart';
@@ -113,6 +114,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
         appointments: _appointments,
         onAdd: _addSlot,
         onCancel: _cancel,
+        onComplete: _complete,
         onRemove: _remove,
         onMessage: (appointment) => _openChat(
           userId: appointment.patientId,
@@ -130,6 +132,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
         appointments: mine,
         onOpenBooking: _openBooking,
         onCancel: _cancel,
+        onRate: _rate,
         onRemove: _remove,
         onMessage: (appointment) => _openChat(
           userId: appointment.doctorId,
@@ -207,8 +210,24 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
     if (reason == null || !mounted) {
       return false;
     }
+    final confirmed = await Navigator.of(context).push<bool>(
+      MaterialPageRoute<bool>(
+        builder: (_) => _ConfirmVisitPage(
+          appointment: appointment,
+          reason: reason,
+        ),
+      ),
+    );
+    if (confirmed != true || !mounted) {
+      return false;
+    }
     try {
       await _api.book(appointment.id, reason);
+      if (ThemeScope.of(context).actionNotices) {
+        await ActionNotices.add(
+          '${appointment.doctorName} · ${appointment.scheduledAt.toLocal()}',
+        );
+      }
       await _load(showSpinner: false);
       return true;
     } on AppointmentException catch (error) {
@@ -255,8 +274,29 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
     await _run(_api.cancel(appointment.id));
   }
 
+  Future<void> _complete(AppointmentRecord appointment) async {
+    final note = await showDialog<String>(
+      context: context,
+      builder: (context) => const _NoteDialog(),
+    );
+    if (note == null || !mounted) {
+      return;
+    }
+    await _run(_api.complete(appointment.id, note));
+  }
+
+  Future<void> _rate(AppointmentRecord appointment, int stars) async {
+    await _run(_api.rate(appointment.id, stars));
+  }
+
   String _cancelWarning(AppLocalizations l10n, AppointmentRecord appointment) {
     if (widget.user.role == 'patient') {
+      final free =
+          appointment.scheduledAt.difference(DateTime.now()) >=
+          const Duration(days: 1);
+      if (free) {
+        return '${l10n.confirmCancelBookingMessage}\n\n${l10n.freeCancelNote}';
+      }
       return l10n.confirmCancelBookingMessage;
     }
     if (appointment.status == 'available') {
@@ -327,6 +367,7 @@ class _DoctorSchedule extends StatelessWidget {
     required this.appointments,
     required this.onAdd,
     required this.onCancel,
+    required this.onComplete,
     required this.onRemove,
     required this.onMessage,
   });
@@ -334,6 +375,7 @@ class _DoctorSchedule extends StatelessWidget {
   final List<AppointmentRecord> appointments;
   final VoidCallback onAdd;
   final Future<void> Function(AppointmentRecord appointment) onCancel;
+  final Future<void> Function(AppointmentRecord appointment) onComplete;
   final Future<void> Function(AppointmentRecord appointment) onRemove;
   final void Function(AppointmentRecord appointment) onMessage;
 
@@ -374,6 +416,7 @@ class _DoctorSchedule extends StatelessWidget {
           onMessage: hasPatient ? () => onMessage(appointment) : null,
           actionLabel: open || booked ? l10n.cancelSlot : null,
           onAction: open || booked ? () => onCancel(appointment) : null,
+          onComplete: booked ? () => onComplete(appointment) : null,
           onRemove: appointment.status == 'cancelled'
               ? () => onRemove(appointment)
               : null,
@@ -388,6 +431,7 @@ class _MyAppointments extends StatelessWidget {
     required this.appointments,
     required this.onOpenBooking,
     required this.onCancel,
+    required this.onRate,
     required this.onRemove,
     required this.onMessage,
   });
@@ -395,6 +439,7 @@ class _MyAppointments extends StatelessWidget {
   final List<AppointmentRecord> appointments;
   final VoidCallback onOpenBooking;
   final Future<void> Function(AppointmentRecord appointment) onCancel;
+  final Future<void> Function(AppointmentRecord appointment, int stars) onRate;
   final Future<void> Function(AppointmentRecord appointment) onRemove;
   final void Function(AppointmentRecord appointment) onMessage;
 
@@ -432,6 +477,9 @@ class _MyAppointments extends StatelessWidget {
           actionLabel: appointment.status == 'scheduled' ? l10n.cancelBooking : null,
           onAction: appointment.status == 'scheduled'
               ? () => onCancel(appointment)
+              : null,
+          onRate: appointment.status == 'completed' && appointment.patientRating == null
+              ? (stars) => onRate(appointment, stars)
               : null,
           onRemove: appointment.status == 'cancelled'
               ? () => onRemove(appointment)
@@ -1139,6 +1187,8 @@ class _AppointmentCard extends StatelessWidget {
     this.onAction,
     this.onRemove,
     this.onMessage,
+    this.onComplete,
+    this.onRate,
     this.showDoctor = false,
     this.showPatient = false,
   });
@@ -1147,6 +1197,8 @@ class _AppointmentCard extends StatelessWidget {
   final String detail;
   final String? actionLabel;
   final VoidCallback? onAction;
+  final VoidCallback? onComplete;
+  final ValueChanged<int>? onRate;
   final VoidCallback? onRemove;
   final VoidCallback? onMessage;
   final bool showDoctor;
@@ -1167,7 +1219,9 @@ class _AppointmentCard extends StatelessWidget {
             if (showDoctor)
               _ContactRow(
                 mark: _DoctorMark(appointment: appointment),
-                name: appointment.doctorName,
+                name: appointment.doctorRatingAverage == null
+                    ? appointment.doctorName
+                    : '${appointment.doctorName} · ${context.l10n.doctorRating(appointment.doctorRatingAverage!.toStringAsFixed(1))}',
                 onProfile: () => _showDoctorProfile(
                   context,
                   appointment,
@@ -1218,6 +1272,41 @@ class _AppointmentCard extends StatelessWidget {
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ),
+            if (appointment.visitNote.isNotEmpty) ...[
+              const SizedBox(height: 4),
+              Text('${context.l10n.visitNote}: ${appointment.visitNote}'),
+            ],
+            if (appointment.medicineWarning) ...[
+              const SizedBox(height: 4),
+              Text(
+                context.l10n.medicineWarning,
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              ),
+            ],
+            if (onComplete != null) ...[
+              const SizedBox(height: 8),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: onComplete,
+                  child: Text(context.l10n.markCompleted),
+                ),
+              ),
+            ],
+            if (onRate != null) ...[
+              const SizedBox(height: 8),
+              Text(context.l10n.rateVisit),
+              Row(
+                children: [
+                  for (var stars = 1; stars <= 5; stars++)
+                    IconButton(
+                      tooltip: '$stars',
+                      onPressed: () => onRate!(stars),
+                      icon: const Icon(Icons.star_outline),
+                    ),
+                ],
+              ),
+            ],
             if (actionLabel != null && onAction != null) ...[
               const SizedBox(height: 12),
               Align(
@@ -1283,6 +1372,83 @@ class _ReasonDialogState extends State<_ReasonDialog> {
           child: Text(l10n.book),
         ),
       ],
+    );
+  }
+}
+
+class _NoteDialog extends StatefulWidget {
+  const _NoteDialog();
+
+  @override
+  State<_NoteDialog> createState() => _NoteDialogState();
+}
+
+class _NoteDialogState extends State<_NoteDialog> {
+  final _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return AlertDialog(
+      title: Text(l10n.visitNote),
+      content: TextField(
+        controller: _controller,
+        autofocus: true,
+        maxLength: 500,
+        decoration: InputDecoration(labelText: l10n.visitNoteHint),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(l10n.close),
+        ),
+        FilledButton(
+          onPressed: () => Navigator.pop(context, _controller.text.trim()),
+          child: Text(l10n.saveAndComplete),
+        ),
+      ],
+    );
+  }
+}
+
+class _ConfirmVisitPage extends StatelessWidget {
+  const _ConfirmVisitPage({required this.appointment, required this.reason});
+
+  final AppointmentRecord appointment;
+  final String reason;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final local = appointment.scheduledAt.toLocal();
+    final date = MaterialLocalizations.of(context).formatMediumDate(local);
+    final time = TimeOfDay.fromDateTime(local).format(context);
+    return Scaffold(
+      appBar: AppBar(title: Text(l10n.confirmVisitTitle)),
+      body: ListView(
+        padding: const EdgeInsets.all(24),
+        children: [
+          Text(appointment.doctorName, style: Theme.of(context).textTheme.titleLarge),
+          const SizedBox(height: 8),
+          Text('$date, $time'),
+          const SizedBox(height: 8),
+          Text(reason),
+          const SizedBox(height: 16),
+          Text(l10n.confirmVisitBody),
+          const SizedBox(height: 24),
+          FilledButton(
+            key: const Key('confirmBookingButton'),
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(l10n.confirmAndBook),
+          ),
+        ],
+      ),
     );
   }
 }

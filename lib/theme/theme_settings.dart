@@ -13,13 +13,16 @@ class ThemeSettings extends ChangeNotifier {
     this._seed = AppTheme.seed,
     String fontSize = normalFont,
     bool easyMode = false,
+    bool actionNotices = true,
   }) : _fontSize = fontSizes.containsKey(fontSize) ? fontSize : normalFont,
-       _easyMode = easyMode;
+       _easyMode = easyMode,
+       _actionNotices = actionNotices;
 
   static const modeKey = 'ui_theme_mode';
   static const seedKey = 'ui_theme_seed';
   static const fontKey = 'ui_font_size';
   static const easyKey = 'ui_easy_mode';
+  static const noticesKey = 'ui_action_notices';
   static const normalFont = 'normal';
 
   /// Named sizes used by Settings. The value is the text scale for every page.
@@ -34,6 +37,7 @@ class ThemeSettings extends ChangeNotifier {
   Color _seed;
   String _fontSize;
   bool _easyMode;
+  bool _actionNotices;
 
   ThemeMode get mode => _mode;
   Color get seed => _seed;
@@ -41,6 +45,7 @@ class ThemeSettings extends ChangeNotifier {
   String get fontSize => _fontSize;
   double get textScale => fontSizes[_fontSize] ?? 1;
   bool get easyMode => _easyMode;
+  bool get actionNotices => _actionNotices;
 
   static Future<ThemeSettings> load() async {
     final prefs = await SharedPreferences.getInstance();
@@ -55,6 +60,7 @@ class ThemeSettings extends ChangeNotifier {
       seed: seed,
       fontSize: fontSize,
       easyMode: prefs.getBool(easyKey) ?? false,
+      actionNotices: prefs.getBool(noticesKey) ?? true,
     );
   }
 
@@ -64,6 +70,7 @@ class ThemeSettings extends ChangeNotifier {
       seed: _seed,
       fontSize: _fontSize,
       easyMode: _easyMode,
+      actionNotices: _actionNotices,
     );
   }
 
@@ -78,6 +85,7 @@ class ThemeSettings extends ChangeNotifier {
       seed: seed,
       fontSize: _fontSize,
       easyMode: _easyMode,
+      actionNotices: _actionNotices,
     );
   }
 
@@ -90,6 +98,7 @@ class ThemeSettings extends ChangeNotifier {
       seed: _seed,
       fontSize: fontSize,
       easyMode: _easyMode,
+      actionNotices: _actionNotices,
     );
   }
 
@@ -99,6 +108,17 @@ class ThemeSettings extends ChangeNotifier {
       seed: _seed,
       fontSize: _fontSize,
       easyMode: easyMode,
+      actionNotices: _actionNotices,
+    );
+  }
+
+  Future<void> setActionNotices(bool actionNotices) {
+    return _update(
+      mode: _mode,
+      seed: _seed,
+      fontSize: _fontSize,
+      easyMode: _easyMode,
+      actionNotices: actionNotices,
     );
   }
 
@@ -107,17 +127,20 @@ class ThemeSettings extends ChangeNotifier {
     required Color seed,
     required String fontSize,
     required bool easyMode,
+    required bool actionNotices,
   }) async {
     if (_mode == mode &&
         _seed.toARGB32() == seed.toARGB32() &&
         _fontSize == fontSize &&
-        _easyMode == easyMode) {
+        _easyMode == easyMode &&
+        _actionNotices == actionNotices) {
       return;
     }
     _mode = mode;
     _seed = seed;
     _fontSize = fontSize;
     _easyMode = easyMode;
+    _actionNotices = actionNotices;
     notifyListeners();
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -128,6 +151,7 @@ class ThemeSettings extends ChangeNotifier {
       );
       await prefs.setString(fontKey, fontSize);
       await prefs.setBool(easyKey, easyMode);
+      await prefs.setBool(noticesKey, actionNotices);
     } catch (_) {
       // The choice still applies until the app is closed.
     }

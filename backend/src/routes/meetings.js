@@ -57,6 +57,7 @@ function meetingJson(appointment, consultation) {
     status: consultation ? consultation.status : 'closed',
     waiting: Boolean(consultation && consultation.waiting),
     admitted: Boolean(consultation && consultation.admitted),
+    canEnter: canJoin(appointment.scheduledAt, new Date()),
   };
 }
 
@@ -112,9 +113,9 @@ router.get('/', requireUser, async (req, res) => {
         { path: 'doctor', select: 'fullName' },
       ],
     });
-    const meetings = consultations
-      .filter((row) => row.appointment && canJoin(row.appointment.scheduledAt, now))
-      .map((row) => meetingJson(row.appointment, row));
+  const meetings = consultations
+    .filter((row) => row.appointment)
+    .map((row) => meetingJson(row.appointment, row));
     res.json({ meetings });
     return;
   }

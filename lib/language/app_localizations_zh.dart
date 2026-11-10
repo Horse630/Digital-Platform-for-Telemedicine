@@ -730,6 +730,113 @@ class AppLocalizationsZh extends AppLocalizations {
   String get statusCancelled => '已取消';
 
   @override
+  String get statusCompleted => '已完成';
+
+  @override
+  String get markCompleted => '標示完成';
+
+  @override
+  String get visitNote => '診症備註';
+
+  @override
+  String get visitNoteHint => '給病人的簡短備註';
+
+  @override
+  String get saveAndComplete => '儲存並完成';
+
+  @override
+  String get medicineWarning => '這種藥可能刺激腸胃，請同時配止胃藥。';
+
+  @override
+  String get confirmVisitTitle => '確認這次診症';
+
+  @override
+  String get confirmVisitBody => '按下確認後才會儲存預約。示範費用是港幣 0 元，不會呼叫 PayPal。';
+
+  @override
+  String get confirmAndBook => '確認預約';
+
+  @override
+  String get freeCancelNote => '這次診症在一天以後，取消是免費的。沒有收取費用。';
+
+  @override
+  String get deliveryOrders => '藥物訂單';
+
+  @override
+  String get medicineName => '藥物名稱';
+
+  @override
+  String get quantity => '數量';
+
+  @override
+  String get saveDelivery => '送出藥物';
+
+  @override
+  String get advanceDelivery => '更新運送';
+
+  @override
+  String get noDeliveryOrders => '還沒有藥物訂單。';
+
+  @override
+  String get healthTitle => '健康讀數';
+
+  @override
+  String get healthHint => '請自行輸入讀數。沒有連接穿戴裝置。';
+
+  @override
+  String get heartRate => '心率';
+
+  @override
+  String get stepsCount => '步數';
+
+  @override
+  String get bloodOxygen => '血氧';
+
+  @override
+  String get saveReading => '儲存讀數';
+
+  @override
+  String get guideTitle => '應用程式指南';
+
+  @override
+  String get guideHint => '這份指南說明如何使用應用程式，不會呼叫浸大助手。';
+
+  @override
+  String get guideAppointments => '打開預約，選擇空檔，寫下原因，然後確認。按下確認後才會儲存。';
+
+  @override
+  String get guideMeetings => '醫生開始會議後，病人會立即看到該會議。病人要到預約時間前 10 分鐘才可以進入。';
+
+  @override
+  String get guideDelivery => '藥物由香港浸會大學送出。醫生會把訂單更新為準備中、運送中或已送達。';
+
+  @override
+  String get courseNotice => '課程專案說明';
+
+  @override
+  String get courseNoticeBody => '這是課程示範，不是診所，也不是法律協議。請勿用於真正的緊急醫療。';
+
+  @override
+  String get acceptNotice => '我明白這是課程示範。';
+
+  @override
+  String get courseNoticeRequired => '建立帳戶前，請先勾選課程說明。';
+
+  @override
+  String get actionNotices => '操作提示';
+
+  @override
+  String get actionNoticesSubtitle => '預約之後，在這部裝置上記下一行提示。';
+
+  @override
+  String get rateVisit => '為這次診症評分';
+
+  @override
+  String doctorRating(String rating) {
+    return '$rating 星';
+  }
+
+  @override
   String get settings => '設定';
 
   @override
@@ -811,7 +918,29 @@ class AppLocalizationsZh extends AppLocalizations {
   String get deliveryAddressHint => '藥物送到這個地址';
 
   @override
-  String get deliveryMapHint => '這張地圖顯示香港。藥物配送追蹤尚未提供。';
+  String get deliveryMapHint =>
+      '藥物由香港浸會大學（九龍塘）送出。藍針是公立診所，紅針是公立醫院。點一下可看名稱和開放時間。';
+
+  @override
+  String get deliveryHeadquarters => '香港浸會大學';
+
+  @override
+  String get publicClinic => '公立家庭醫學診所';
+
+  @override
+  String get publicHospital => '公立醫院或機構';
+
+  @override
+  String get openingHours => '開放時間';
+
+  @override
+  String get hoursNotListed => '醫院管理局的資料沒有列出這裡的開放時間。';
+
+  @override
+  String get accidentEmergencyYes => '急症室：有';
+
+  @override
+  String get accidentEmergencyNo => '急症室：沒有';
 
   @override
   String get msgDeliveryAddressTooLong => '配送地址請少於 200 個字。';
@@ -1725,6 +1854,113 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get statusCancelled => '已取消';
 
   @override
+  String get statusCompleted => '已完成';
+
+  @override
+  String get markCompleted => '标示完成';
+
+  @override
+  String get visitNote => '诊症备注';
+
+  @override
+  String get visitNoteHint => '给病人的简短备注';
+
+  @override
+  String get saveAndComplete => '储存并完成';
+
+  @override
+  String get medicineWarning => '这种药可能刺激肠胃，请同时配止胃药。';
+
+  @override
+  String get confirmVisitTitle => '确认这次诊症';
+
+  @override
+  String get confirmVisitBody => '按下确认后才会储存预约。示范费用是港币 0 元，不会调用 PayPal。';
+
+  @override
+  String get confirmAndBook => '确认预约';
+
+  @override
+  String get freeCancelNote => '这次诊症在一天以后，取消是免费的。没有收取费用。';
+
+  @override
+  String get deliveryOrders => '药物订单';
+
+  @override
+  String get medicineName => '药物名称';
+
+  @override
+  String get quantity => '数量';
+
+  @override
+  String get saveDelivery => '送出药物';
+
+  @override
+  String get advanceDelivery => '更新运送';
+
+  @override
+  String get noDeliveryOrders => '还没有药物订单。';
+
+  @override
+  String get healthTitle => '健康读数';
+
+  @override
+  String get healthHint => '请自行输入读数。没有连接穿戴装置。';
+
+  @override
+  String get heartRate => '心率';
+
+  @override
+  String get stepsCount => '步数';
+
+  @override
+  String get bloodOxygen => '血氧';
+
+  @override
+  String get saveReading => '储存读数';
+
+  @override
+  String get guideTitle => '应用程序指南';
+
+  @override
+  String get guideHint => '这份指南说明如何使用应用程序，不会调用浸大助手。';
+
+  @override
+  String get guideAppointments => '打开预约，选择空档，写下原因，然后确认。按下确认后才会储存。';
+
+  @override
+  String get guideMeetings => '医生开始会议后，病人会立即看到该会议。病人要到预约时间前 10 分钟才可以进入。';
+
+  @override
+  String get guideDelivery => '药物由香港浸会大学送出。医生会把订单更新为准备中、运送中或已送达。';
+
+  @override
+  String get courseNotice => '课程项目说明';
+
+  @override
+  String get courseNoticeBody => '这是课程示范，不是诊所，也不是法律协议。请勿用于真正的紧急医疗。';
+
+  @override
+  String get acceptNotice => '我明白这是课程示范。';
+
+  @override
+  String get courseNoticeRequired => '建立账户前，请先勾选课程说明。';
+
+  @override
+  String get actionNotices => '操作提示';
+
+  @override
+  String get actionNoticesSubtitle => '预约之后，在这部装置上记下一行提示。';
+
+  @override
+  String get rateVisit => '为这次诊症评分';
+
+  @override
+  String doctorRating(String rating) {
+    return '$rating 星';
+  }
+
+  @override
   String get settings => '设置';
 
   @override
@@ -1806,7 +2042,29 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get deliveryAddressHint => '药物送到这个地址';
 
   @override
-  String get deliveryMapHint => '这张地图显示香港。药物配送追踪尚未提供。';
+  String get deliveryMapHint =>
+      '药物由香港浸会大学（九龙塘）送出。蓝针是公立诊所，红针是公立医院。点一下可看名称和开放时间。';
+
+  @override
+  String get deliveryHeadquarters => '香港浸会大学';
+
+  @override
+  String get publicClinic => '公立家庭医学诊所';
+
+  @override
+  String get publicHospital => '公立医院或机构';
+
+  @override
+  String get openingHours => '开放时间';
+
+  @override
+  String get hoursNotListed => '医院管理局的资料没有列出这里的开放时间。';
+
+  @override
+  String get accidentEmergencyYes => '急诊室：有';
+
+  @override
+  String get accidentEmergencyNo => '急诊室：没有';
 
   @override
   String get msgDeliveryAddressTooLong => '配送地址请少于 200 个字。';
@@ -2720,6 +2978,113 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get statusCancelled => '已取消';
 
   @override
+  String get statusCompleted => '已完成';
+
+  @override
+  String get markCompleted => '標示完成';
+
+  @override
+  String get visitNote => '診症備註';
+
+  @override
+  String get visitNoteHint => '給病人的簡短備註';
+
+  @override
+  String get saveAndComplete => '儲存並完成';
+
+  @override
+  String get medicineWarning => '這種藥可能刺激腸胃，請同時配止胃藥。';
+
+  @override
+  String get confirmVisitTitle => '確認這次診症';
+
+  @override
+  String get confirmVisitBody => '按下確認後才會儲存預約。示範費用是港幣 0 元，不會呼叫 PayPal。';
+
+  @override
+  String get confirmAndBook => '確認預約';
+
+  @override
+  String get freeCancelNote => '這次診症在一天以後，取消是免費的。沒有收取費用。';
+
+  @override
+  String get deliveryOrders => '藥物訂單';
+
+  @override
+  String get medicineName => '藥物名稱';
+
+  @override
+  String get quantity => '數量';
+
+  @override
+  String get saveDelivery => '送出藥物';
+
+  @override
+  String get advanceDelivery => '更新運送';
+
+  @override
+  String get noDeliveryOrders => '還沒有藥物訂單。';
+
+  @override
+  String get healthTitle => '健康讀數';
+
+  @override
+  String get healthHint => '請自行輸入讀數。沒有連接穿戴裝置。';
+
+  @override
+  String get heartRate => '心率';
+
+  @override
+  String get stepsCount => '步數';
+
+  @override
+  String get bloodOxygen => '血氧';
+
+  @override
+  String get saveReading => '儲存讀數';
+
+  @override
+  String get guideTitle => '應用程式指南';
+
+  @override
+  String get guideHint => '這份指南說明如何使用應用程式，不會呼叫浸大助手。';
+
+  @override
+  String get guideAppointments => '打開預約，選擇空檔，寫下原因，然後確認。按下確認後才會儲存。';
+
+  @override
+  String get guideMeetings => '醫生開始會議後，病人會立即看到該會議。病人要到預約時間前 10 分鐘才可以進入。';
+
+  @override
+  String get guideDelivery => '藥物由香港浸會大學送出。醫生會把訂單更新為準備中、運送中或已送達。';
+
+  @override
+  String get courseNotice => '課程專案說明';
+
+  @override
+  String get courseNoticeBody => '這是課程示範，不是診所，也不是法律協議。請勿用於真正的緊急醫療。';
+
+  @override
+  String get acceptNotice => '我明白這是課程示範。';
+
+  @override
+  String get courseNoticeRequired => '建立帳戶前，請先勾選課程說明。';
+
+  @override
+  String get actionNotices => '操作提示';
+
+  @override
+  String get actionNoticesSubtitle => '預約之後，在這部裝置上記下一行提示。';
+
+  @override
+  String get rateVisit => '為這次診症評分';
+
+  @override
+  String doctorRating(String rating) {
+    return '$rating 星';
+  }
+
+  @override
   String get settings => '設定';
 
   @override
@@ -2801,7 +3166,29 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get deliveryAddressHint => '藥物送到這個地址';
 
   @override
-  String get deliveryMapHint => '這張地圖顯示香港。藥物配送追蹤尚未提供。';
+  String get deliveryMapHint =>
+      '藥物由香港浸會大學（九龍塘）送出。藍針是公立診所，紅針是公立醫院。點一下可看名稱和開放時間。';
+
+  @override
+  String get deliveryHeadquarters => '香港浸會大學';
+
+  @override
+  String get publicClinic => '公立家庭醫學診所';
+
+  @override
+  String get publicHospital => '公立醫院或機構';
+
+  @override
+  String get openingHours => '開放時間';
+
+  @override
+  String get hoursNotListed => '醫院管理局的資料沒有列出這裡的開放時間。';
+
+  @override
+  String get accidentEmergencyYes => '急症室：有';
+
+  @override
+  String get accidentEmergencyNo => '急症室：沒有';
 
   @override
   String get msgDeliveryAddressTooLong => '配送地址請少於 200 個字。';

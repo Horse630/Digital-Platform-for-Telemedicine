@@ -24,6 +24,10 @@ class AppointmentRecord {
     this.patientDescription = '',
     this.patientAvatarBase64 = '',
     this.patientAllergies = const [],
+    this.visitNote = '',
+    this.medicineWarning = false,
+    this.patientRating,
+    this.doctorRatingAverage,
   });
 
   final String id;
@@ -41,6 +45,10 @@ class AppointmentRecord {
   final String patientDescription;
   final String patientAvatarBase64;
   final List<String> patientAllergies;
+  final String visitNote;
+  final bool medicineWarning;
+  final int? patientRating;
+  final double? doctorRatingAverage;
 
   factory AppointmentRecord.fromJson(Map<String, dynamic> json) {
     final doctor = json['doctor'];
@@ -95,6 +103,12 @@ class AppointmentRecord {
           ? patient['avatarBase64'] as String
           : '',
       patientAllergies: _stringList(patient),
+      visitNote: json['visitNote'] is String ? json['visitNote'] as String : '',
+      medicineWarning: json['medicineWarning'] == true,
+      patientRating: json['patientRating'] is int ? json['patientRating'] as int : null,
+      doctorRatingAverage: doctor['ratingAverage'] is num
+          ? (doctor['ratingAverage'] as num).toDouble()
+          : null,
     );
   }
 }
@@ -169,6 +183,22 @@ class AppointmentApi {
 
   Future<void> cancel(String id) {
     return _send('POST', '/api/appointments/$id/cancel');
+  }
+
+  Future<void> complete(String id, String visitNote) {
+    return _send(
+      'POST',
+      '/api/appointments/$id/complete',
+      body: {'visitNote': visitNote},
+    );
+  }
+
+  Future<void> rate(String id, int stars) {
+    return _send(
+      'POST',
+      '/api/appointments/$id/rate',
+      body: {'stars': '$stars'},
+    );
   }
 
   Future<void> remove(String id) {

@@ -6,8 +6,10 @@ import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:digital_platform_for_telemedicine/language/app_localizations.dart';
 import 'package:digital_platform_for_telemedicine/language/language_settings.dart';
 import 'package:digital_platform_for_telemedicine/main.dart';
+import 'package:digital_platform_for_telemedicine/screens/delivery_map_screen.dart';
 import 'package:digital_platform_for_telemedicine/screens/startup_screen.dart';
 import 'package:digital_platform_for_telemedicine/services/auth_service.dart';
 import 'package:digital_platform_for_telemedicine/theme/theme_settings.dart';
@@ -69,6 +71,27 @@ void main() {
 
     expect(find.text('登入'), findsOneWidget);
     expect(find.text('遠距醫療數位平台'), findsOneWidget);
+  });
+
+  testWidgets('the delivery map pins Hong Kong Baptist University', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: LanguageScope(
+          settings: LanguageSettings(),
+          child: const DeliveryMapScreen(),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    expect(find.byKey(const Key('deliveryHeadquarters')), findsOneWidget);
+    expect(find.text('Hong Kong Baptist University'), findsOneWidget);
+    expect(DeliveryMapScreen.headquarters.latitude, closeTo(22.3379, 0.0001));
+    expect(DeliveryMapScreen.headquarters.longitude, closeTo(114.1820, 0.0001));
   });
 
   testWidgets('empty sign-in asks for both fields', (tester) async {

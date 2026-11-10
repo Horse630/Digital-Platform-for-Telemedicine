@@ -750,6 +750,123 @@ class AppLocalizationsEn extends AppLocalizations {
   String get statusCancelled => 'cancelled';
 
   @override
+  String get statusCompleted => 'completed';
+
+  @override
+  String get markCompleted => 'Mark completed';
+
+  @override
+  String get visitNote => 'Visit note';
+
+  @override
+  String get visitNoteHint => 'Short note for the patient';
+
+  @override
+  String get saveAndComplete => 'Save and complete';
+
+  @override
+  String get medicineWarning =>
+      'This medicine can upset the stomach. Pair it with a stomach medicine.';
+
+  @override
+  String get confirmVisitTitle => 'Confirm this visit';
+
+  @override
+  String get confirmVisitBody =>
+      'The visit is saved only after you confirm. The demo fee is HKD 0. PayPal is not called.';
+
+  @override
+  String get confirmAndBook => 'Confirm booking';
+
+  @override
+  String get freeCancelNote =>
+      'This visit is at least one day away, so cancelling it is free. No payment was taken.';
+
+  @override
+  String get deliveryOrders => 'Medicine orders';
+
+  @override
+  String get medicineName => 'Medicine name';
+
+  @override
+  String get quantity => 'Quantity';
+
+  @override
+  String get saveDelivery => 'Send medicine';
+
+  @override
+  String get advanceDelivery => 'Update delivery';
+
+  @override
+  String get noDeliveryOrders => 'No medicine order yet.';
+
+  @override
+  String get healthTitle => 'Health readings';
+
+  @override
+  String get healthHint => 'Type a reading. A wearable is not connected.';
+
+  @override
+  String get heartRate => 'Heart rate';
+
+  @override
+  String get stepsCount => 'Steps';
+
+  @override
+  String get bloodOxygen => 'Blood oxygen';
+
+  @override
+  String get saveReading => 'Save reading';
+
+  @override
+  String get guideTitle => 'App guide';
+
+  @override
+  String get guideHint =>
+      'This guide explains the app. It does not call the HKBU assistant.';
+
+  @override
+  String get guideAppointments =>
+      'Open Appointments, pick an open time, write a reason, then confirm. The visit is saved only after you confirm.';
+
+  @override
+  String get guideMeetings =>
+      'A hosted meeting appears for the patient at once. The patient can enter from 10 minutes before the booked time.';
+
+  @override
+  String get guideDelivery =>
+      'Medicine is sent from Hong Kong Baptist University. The doctor updates the order as preparing, in transit, or delivered.';
+
+  @override
+  String get courseNotice => 'Course project notice';
+
+  @override
+  String get courseNoticeBody =>
+      'This is a course demo, not a clinic and not a legal agreement. Do not use it for a real medical emergency.';
+
+  @override
+  String get acceptNotice => 'I understand this is a course demo.';
+
+  @override
+  String get courseNoticeRequired =>
+      'Tick the course notice before creating an account.';
+
+  @override
+  String get actionNotices => 'Action notices';
+
+  @override
+  String get actionNoticesSubtitle =>
+      'Keep a short note on this device after you book a visit.';
+
+  @override
+  String get rateVisit => 'Rate this visit';
+
+  @override
+  String doctorRating(String rating) {
+    return '$rating stars';
+  }
+
+  @override
   String get settings => 'Settings';
 
   @override
@@ -834,7 +951,29 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deliveryMapHint =>
-      'This map shows Hong Kong. Delivery tracking is not available yet.';
+      'Medicine is sent from Hong Kong Baptist University, Kowloon Tong. Blue pins are public clinics and red pins are public hospitals. Tap a pin for the name and opening hours.';
+
+  @override
+  String get deliveryHeadquarters => 'Hong Kong Baptist University';
+
+  @override
+  String get publicClinic => 'Public family medicine clinic';
+
+  @override
+  String get publicHospital => 'Public hospital or institution';
+
+  @override
+  String get openingHours => 'Opening hours';
+
+  @override
+  String get hoursNotListed =>
+      'The Hospital Authority list does not include opening hours for this place.';
+
+  @override
+  String get accidentEmergencyYes => 'Accident and emergency department: yes';
+
+  @override
+  String get accidentEmergencyNo => 'Accident and emergency department: no';
 
   @override
   String get msgDeliveryAddressTooLong =>

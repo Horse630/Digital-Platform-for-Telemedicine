@@ -297,6 +297,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   const Divider(height: 1),
                   SwitchListTile(
+                    key: const Key('actionNoticesSwitch'),
+                    secondary: const Icon(Icons.notifications_none_outlined),
+                    title: Text(l10n.actionNotices),
+                    subtitle: Text(l10n.actionNoticesSubtitle),
+                    value: settings.actionNotices,
+                    onChanged: (enabled) {
+                      settings.setActionNotices(enabled);
+                    },
+                  ),
+                  const Divider(height: 1),
+                  SwitchListTile(
                     key: const Key('easyModeSwitch'),
                     secondary: const Icon(Icons.accessibility_new_outlined),
                     title: Text(l10n.easyMode),

@@ -31,6 +31,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String? _errorMessage;
   bool _submitting = false;
   bool _obscurePassword = true;
+  bool _acceptedNotice = false;
 
   @override
   void dispose() {
@@ -47,6 +48,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
     if (!_formKey.currentState!.validate()) {
       setState(() => _errorMessage = null);
+      return;
+    }
+    if (!_acceptedNotice) {
+      setState(() => _errorMessage = context.l10n.courseNoticeRequired);
       return;
     }
 
@@ -201,6 +206,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           style: TextStyle(color: scheme.error),
                         ),
                       ],
+                      const SizedBox(height: 12),
+                      CheckboxListTile(
+                        key: const Key('courseNoticeBox'),
+                        contentPadding: EdgeInsets.zero,
+                        value: _acceptedNotice,
+                        onChanged: (value) {
+                          setState(() => _acceptedNotice = value ?? false);
+                        },
+                        title: Text(l10n.acceptNotice),
+                        subtitle: Text(l10n.courseNoticeBody),
+                      ),
                       const SizedBox(height: 20),
                       FilledButton(
                         key: const Key('signUpButton'),

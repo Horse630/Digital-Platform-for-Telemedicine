@@ -79,6 +79,10 @@ void main() {
     await tester.enterText(find.byKey(const Key('signUpUsernameField')), 'doctor');
     await tester.enterText(find.byKey(const Key('signUpPasswordField')), 'NewPass123');
     await tester.enterText(find.byKey(const Key('signUpConfirmField')), 'NewPass123');
+    await tester.ensureVisible(find.byKey(const Key('courseNoticeBox')));
+    await tester.tap(find.byKey(const Key('courseNoticeBox')));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.byKey(const Key('signUpButton')));
     await tester.tap(find.byKey(const Key('signUpButton')));
     await tester.pumpAndSettle();
     expect(find.text('That username is already used.'), findsOneWidget);
