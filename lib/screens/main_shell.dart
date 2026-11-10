@@ -4,6 +4,7 @@ import '../language/ui_text.dart';
 import '../navigation/app_destination.dart';
 import '../services/auth_service.dart';
 import '../theme/app_motion.dart';
+import '../theme/theme_settings.dart';
 import 'appointments_screen.dart';
 import 'consultation_screen.dart';
 import 'home_screen.dart';
@@ -39,7 +40,34 @@ class _MainShellState extends State<MainShell> {
     _user = widget.user;
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final easy = ThemeScope.of(context).easyMode;
+    if (easy && _index == AppDestination.consultation.index) {
+      _index = AppDestination.home.index;
+    }
+  }
+
   void _select(AppDestination destination) {
+    final easy = ThemeScope.of(context).easyMode;
+    if (easy && destination == AppDestination.consultation) {
+      Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (routeContext) => Scaffold(
+            appBar: AppBar(
+              title: Text(routeContext.l10n.navConsultation),
+            ),
+            body: ConsultationScreen(
+              user: _user,
+              authService: widget.authService,
+              active: true,
+            ),
+          ),
+        ),
+      );
+      return;
+    }
     setState(() => _index = destination.index);
   }
 
@@ -102,7 +130,10 @@ class _MainShellState extends State<MainShell> {
   @override
   Widget build(BuildContext context) {
     final wide = MediaQuery.sizeOf(context).width >= MainShell.railBreakpoint;
+    final easy = ThemeScope.of(context).easyMode;
+    final tabs = _visibleTabs(easy);
     final current = AppDestination.values[_index];
+    final selectedTab = tabs.indexOf(current);
     final l10n = context.l10n;
     // Off-screen tabs stay built, so a later list can keep its scroll position.
     final pages = _TabMotion(
@@ -122,7 +153,8 @@ class _MainShellState extends State<MainShell> {
           ? Row(
               children: [
                 _SideRail(
-                  selectedIndex: _index,
+                  tabs: tabs,
+                  selectedIndex: selectedTab < 0 ? 0 : selectedTab,
                   unreadMessages: _unreadMessages,
                   onSelect: _select,
                 ),
@@ -134,7 +166,8 @@ class _MainShellState extends State<MainShell> {
       bottomNavigationBar: wide
           ? null
           : _BottomBar(
-              selectedIndex: _index,
+              tabs: tabs,
+              selectedIndex: selectedTab < 0 ? 0 : selectedTab,
               unreadMessages: _unreadMessages,
               onSelect: _select,
             ),
@@ -196,13 +229,27 @@ class _TabMotionState extends State<_TabMotion>
   }
 }
 
+List<AppDestination> _visibleTabs(bool easy) {
+  if (!easy) {
+    return AppDestination.values;
+  }
+  return const [
+    AppDestination.home,
+    AppDestination.appointments,
+    AppDestination.messages,
+    AppDestination.profile,
+  ];
+}
+
 class _BottomBar extends StatelessWidget {
   const _BottomBar({
+    required this.tabs,
     required this.selectedIndex,
     required this.unreadMessages,
     required this.onSelect,
   });
 
+  final List<AppDestination> tabs;
   final int selectedIndex;
   final int unreadMessages;
   final ValueChanged<AppDestination> onSelect;
@@ -213,10 +260,10 @@ class _BottomBar extends StatelessWidget {
       selectedIndex: selectedIndex,
       labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
       onDestinationSelected: (index) {
-        onSelect(AppDestination.values[index]);
+        onSelect(tabs[index]);
       },
       destinations: [
-        for (final destination in AppDestination.values)
+        for (final destination in tabs)
           NavigationDestination(
             icon: _navIcon(destination, destination.icon, unreadMessages),
             selectedIcon: _navIcon(
@@ -233,11 +280,13 @@ class _BottomBar extends StatelessWidget {
 
 class _SideRail extends StatelessWidget {
   const _SideRail({
+    required this.tabs,
     required this.selectedIndex,
     required this.unreadMessages,
     required this.onSelect,
   });
 
+  final List<AppDestination> tabs;
   final int selectedIndex;
   final int unreadMessages;
   final ValueChanged<AppDestination> onSelect;
@@ -249,10 +298,10 @@ class _SideRail extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.surface,
       labelType: NavigationRailLabelType.all,
       onDestinationSelected: (index) {
-        onSelect(AppDestination.values[index]);
+        onSelect(tabs[index]);
       },
       destinations: [
-        for (final destination in AppDestination.values)
+        for (final destination in tabs)
           NavigationRailDestination(
             icon: _navIcon(destination, destination.icon, unreadMessages),
             selectedIcon: _navIcon(

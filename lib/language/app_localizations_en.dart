@@ -793,6 +793,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'The font size stays on this device and applies to every page.';
 
   @override
+  String get easyMode => 'Easy mode';
+
+  @override
+  String get easyModeSubtitle =>
+      'Home, Appointments, and the tabs show fewer choices. Font size stays the same.';
+
+  @override
   String get account => 'Account';
 
   @override

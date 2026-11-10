@@ -3,19 +3,23 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_theme.dart';
 
-/// Light or dark mode and the accent color chosen on the settings page.
+/// Light or dark mode, the accent color, font size, and easy mode.
 ///
 /// These values stay on this device. MongoDB does not store them.
+/// Easy mode hides extra choices. It does not change the font size.
 class ThemeSettings extends ChangeNotifier {
   ThemeSettings({
     this._mode = ThemeMode.light,
     this._seed = AppTheme.seed,
     String fontSize = normalFont,
-  }) : _fontSize = fontSizes.containsKey(fontSize) ? fontSize : normalFont;
+    bool easyMode = false,
+  }) : _fontSize = fontSizes.containsKey(fontSize) ? fontSize : normalFont,
+       _easyMode = easyMode;
 
   static const modeKey = 'ui_theme_mode';
   static const seedKey = 'ui_theme_seed';
   static const fontKey = 'ui_font_size';
+  static const easyKey = 'ui_easy_mode';
   static const normalFont = 'normal';
 
   /// Named sizes used by Settings. The value is the text scale for every page.
@@ -29,12 +33,14 @@ class ThemeSettings extends ChangeNotifier {
   ThemeMode _mode;
   Color _seed;
   String _fontSize;
+  bool _easyMode;
 
   ThemeMode get mode => _mode;
   Color get seed => _seed;
   bool get isDark => _mode == ThemeMode.dark;
   String get fontSize => _fontSize;
   double get textScale => fontSizes[_fontSize] ?? 1;
+  bool get easyMode => _easyMode;
 
   static Future<ThemeSettings> load() async {
     final prefs = await SharedPreferences.getInstance();
@@ -44,7 +50,12 @@ class ThemeSettings extends ChangeNotifier {
     final seed = _colorFromHex(prefs.getString(seedKey)) ?? AppTheme.seed;
     final savedFont = prefs.getString(fontKey);
     final fontSize = fontSizes.containsKey(savedFont) ? savedFont! : normalFont;
-    return ThemeSettings(mode: mode, seed: seed, fontSize: fontSize);
+    return ThemeSettings(
+      mode: mode,
+      seed: seed,
+      fontSize: fontSize,
+      easyMode: prefs.getBool(easyKey) ?? false,
+    );
   }
 
   Future<void> setDark(bool dark) {
@@ -52,6 +63,7 @@ class ThemeSettings extends ChangeNotifier {
       mode: dark ? ThemeMode.dark : ThemeMode.light,
       seed: _seed,
       fontSize: _fontSize,
+      easyMode: _easyMode,
     );
   }
 
@@ -61,29 +73,51 @@ class ThemeSettings extends ChangeNotifier {
     )) {
       return Future<void>.value();
     }
-    return _update(mode: _mode, seed: seed, fontSize: _fontSize);
+    return _update(
+      mode: _mode,
+      seed: seed,
+      fontSize: _fontSize,
+      easyMode: _easyMode,
+    );
   }
 
   Future<void> setFontSize(String fontSize) {
     if (!fontSizes.containsKey(fontSize)) {
       return Future<void>.value();
     }
-    return _update(mode: _mode, seed: _seed, fontSize: fontSize);
+    return _update(
+      mode: _mode,
+      seed: _seed,
+      fontSize: fontSize,
+      easyMode: _easyMode,
+    );
+  }
+
+  Future<void> setEasyMode(bool easyMode) {
+    return _update(
+      mode: _mode,
+      seed: _seed,
+      fontSize: _fontSize,
+      easyMode: easyMode,
+    );
   }
 
   Future<void> _update({
     required ThemeMode mode,
     required Color seed,
     required String fontSize,
+    required bool easyMode,
   }) async {
     if (_mode == mode &&
         _seed.toARGB32() == seed.toARGB32() &&
-        _fontSize == fontSize) {
+        _fontSize == fontSize &&
+        _easyMode == easyMode) {
       return;
     }
     _mode = mode;
     _seed = seed;
     _fontSize = fontSize;
+    _easyMode = easyMode;
     notifyListeners();
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -93,6 +127,7 @@ class ThemeSettings extends ChangeNotifier {
         seed.toARGB32().toRadixString(16).padLeft(8, '0'),
       );
       await prefs.setString(fontKey, fontSize);
+      await prefs.setBool(easyKey, easyMode);
     } catch (_) {
       // The choice still applies until the app is closed.
     }

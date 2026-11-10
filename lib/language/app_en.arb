@@ -260,6 +260,8 @@
   "fontSizeLarge": "Large",
   "fontSizeExtra": "Extra large",
   "fontSizeStaysOnDevice": "The font size stays on this device and applies to every page.",
+  "easyMode": "Easy mode",
+  "easyModeSubtitle": "Home, Appointments, and the tabs show fewer choices. Font size stays the same.",
   "account": "Account",
   "passwordSection": "Password",
   "uploadPhoto": "Upload photo",

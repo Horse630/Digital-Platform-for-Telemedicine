@@ -255,6 +255,8 @@
   "fontSizeLarge": "大",
   "fontSizeExtra": "特大",
   "fontSizeStaysOnDevice": "字体大小只保存在这台设备，并应用到每一页。",
+  "easyMode": "简易模式",
+  "easyModeSubtitle": "主页、预约和分页会少一些选项。字体大小维持不变。",
   "account": "账号",
   "passwordSection": "密码",
   "uploadPhoto": "上传照片",

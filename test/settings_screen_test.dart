@@ -102,6 +102,14 @@ void main() {
     expect(savedTypes, contains('Dermatology'));
     expect(find.text('Profile saved.'), findsOneWidget);
 
+    await tester.ensureVisible(find.byKey(const Key('easyModeSwitch')));
+    await tester.tap(find.byKey(const Key('easyModeSwitch')));
+    await tester.pumpAndSettle();
+    expect(
+      tester.widget<SwitchListTile>(find.byKey(const Key('easyModeSwitch'))).value,
+      isTrue,
+    );
+
     await tester.ensureVisible(find.byKey(const Key('darkModeSwitch')));
     await tester.tap(find.byKey(const Key('darkModeSwitch')));
     await tester.pumpAndSettle();

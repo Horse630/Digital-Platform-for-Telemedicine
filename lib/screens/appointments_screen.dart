@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../language/ui_text.dart';
+import '../theme/theme_settings.dart';
 import '../services/appointment_api.dart';
 import '../widgets/account_avatar.dart';
 import 'chat_thread_screen.dart';
@@ -470,10 +471,11 @@ class _OpenTimesPageState extends State<_OpenTimesPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final easy = ThemeScope.of(context).easyMode;
     final query = AppointmentQuery(
-      doctorName: _doctorName.text,
-      doctorType: _doctorType.isEmpty ? null : _doctorType,
-      sort: _sort,
+      doctorName: easy ? '' : _doctorName.text,
+      doctorType: easy || _doctorType.isEmpty ? null : _doctorType,
+      sort: easy ? AppointmentSort.soonest : _sort,
     );
     final open = filterAppointments(widget.appointments, query);
 
@@ -482,6 +484,7 @@ class _OpenTimesPageState extends State<_OpenTimesPage> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
+          if (!easy) ...[
           TextField(
             key: const Key('doctorNameSearch'),
             controller: _doctorName,
@@ -541,6 +544,7 @@ class _OpenTimesPageState extends State<_OpenTimesPage> {
               }
             },
           ),
+          ],
           const SizedBox(height: 16),
           Text(l10n.openTimes, style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 8),
@@ -783,6 +787,8 @@ class _AppointmentBrowserState extends State<_AppointmentBrowser> {
 
   @override
   Widget build(BuildContext context) {
+    final easy = ThemeScope.of(context).easyMode;
+    final view = easy ? _ScheduleView.list : _view;
     return Column(
       children: [
         Padding(
@@ -794,6 +800,7 @@ class _AppointmentBrowserState extends State<_AppointmentBrowser> {
                 widget.action!,
                 const SizedBox(height: 12),
               ],
+              if (!easy)
               SegmentedButton<_ScheduleView>(
                 showSelectedIcon: false,
                 segments: [
@@ -817,7 +824,7 @@ class _AppointmentBrowserState extends State<_AppointmentBrowser> {
           ),
         ),
         Expanded(
-          child: _view == _ScheduleView.calendar
+          child: view == _ScheduleView.calendar
               ? _CalendarSchedule(
                   appointments: widget.appointments,
                   cardBuilder: widget.cardBuilder,

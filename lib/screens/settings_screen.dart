@@ -296,6 +296,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     },
                   ),
                   const Divider(height: 1),
+                  SwitchListTile(
+                    key: const Key('easyModeSwitch'),
+                    secondary: const Icon(Icons.accessibility_new_outlined),
+                    title: Text(l10n.easyMode),
+                    subtitle: Text(l10n.easyModeSubtitle),
+                    value: settings.easyMode,
+                    onChanged: (easy) {
+                      settings.setEasyMode(easy);
+                    },
+                  ),
+                  const Divider(height: 1),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
                     child: Column(

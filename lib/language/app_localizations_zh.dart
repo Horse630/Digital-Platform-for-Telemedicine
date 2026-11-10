@@ -772,6 +772,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get fontSizeStaysOnDevice => '字體大小只保存在這台裝置，並套用到每一頁。';
 
   @override
+  String get easyMode => '簡易模式';
+
+  @override
+  String get easyModeSubtitle => '主頁、預約和分頁會少一些選項。字體大小維持不變。';
+
+  @override
   String get account => '帳號';
 
   @override
@@ -1761,6 +1767,12 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get fontSizeStaysOnDevice => '字体大小只保存在这台设备，并应用到每一页。';
 
   @override
+  String get easyMode => '简易模式';
+
+  @override
+  String get easyModeSubtitle => '主页、预约和分页会少一些选项。字体大小维持不变。';
+
+  @override
   String get account => '账号';
 
   @override
@@ -2748,6 +2760,12 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get fontSizeStaysOnDevice => '字體大小只保存在這台裝置，並套用到每一頁。';
+
+  @override
+  String get easyMode => '簡易模式';
+
+  @override
+  String get easyModeSubtitle => '主頁、預約和分頁會少一些選項。字體大小維持不變。';
 
   @override
   String get account => '帳號';

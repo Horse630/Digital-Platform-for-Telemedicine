@@ -138,6 +138,38 @@ void main() {
     expect(find.text('Close'), findsNothing);
   });
 
+  testWidgets('easy mode keeps four home actions and drops the meetings tab', (
+    tester,
+  ) async {
+    final settings = ThemeSettings(easyMode: true);
+    tester.view.physicalSize = const Size(800, 600);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    await tester.pumpWidget(
+      TelemedicineApp(authService: _testAuth(), themeSettings: settings),
+    );
+    await _signIn(tester);
+
+    expect(find.text('Payment'), findsNothing);
+    expect(find.text('Discussion'), findsNothing);
+    expect(find.text('Sick leave'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byType(NavigationBar),
+        matching: find.text('Meetings'),
+      ),
+      findsNothing,
+    );
+
+    expect(find.byType(BackButton), findsNothing);
+    await tester.tap(find.text('Meetings'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(BackButton), findsOneWidget);
+    expect(find.text('Today\'s visits'), findsWidgets);
+  });
+
   testWidgets('wide windows use the side rail', (tester) async {
     await _pumpSurface(tester, const Size(1200, 800));
     await _signIn(tester);
@@ -170,6 +202,12 @@ AuthService _testAuth() {
           (request.url.path == '/api/messages' ||
               request.url.path == '/api/discussions')) {
         return http.Response('[]', 200);
+      }
+      if (request.method == 'GET' && request.url.path == '/api/meetings') {
+        return http.Response(
+          jsonEncode({'roomCode': '', 'meetings': []}),
+          200,
+        );
       }
       if (request.method == 'GET' && request.url.path == '/api/profile') {
         return http.Response(

@@ -6,6 +6,7 @@ import '../services/appointment_api.dart';
 import '../services/appointment_filter.dart';
 import '../services/auth_service.dart';
 import '../services/discussion_api.dart';
+import '../theme/theme_settings.dart';
 import '../widgets/content_frame.dart';
 import 'delivery_map_screen.dart';
 import 'discussions_screen.dart';
@@ -207,6 +208,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final l10n = context.l10n;
+    final easy = ThemeScope.of(context).easyMode;
 
     return ContentFrame(
       child: SingleChildScrollView(
@@ -225,6 +227,42 @@ class _HomeScreenState extends State<HomeScreen> {
                   ?.copyWith(color: scheme.onSurfaceVariant),
             ),
             const SizedBox(height: 24),
+            if (easy) ...[
+              _NextAppointmentCard(
+                appointment: _loaded ? _next : null,
+                role: widget.user.role,
+                onTap: () => widget.onOpen(AppDestination.appointments),
+              ),
+              const SizedBox(height: 24),
+              _EasyAction(
+                icon: Icons.event_available_outlined,
+                title: l10n.navAppointments,
+                onPressed: () => widget.onOpen(AppDestination.appointments),
+              ),
+              _EasyAction(
+                icon: Icons.video_camera_front_outlined,
+                title: l10n.consultationTitle,
+                onPressed: () => widget.onOpen(AppDestination.consultation),
+              ),
+              _EasyAction(
+                icon: Icons.chat_bubble_outline,
+                title: l10n.navMessages,
+                onPressed: () => widget.onOpen(AppDestination.messages),
+              ),
+              _EasyAction(
+                icon: Icons.description_outlined,
+                title: l10n.sickLeave,
+                onPressed: () => _openModule(
+                  context,
+                  _Module(
+                    icon: Icons.description_outlined,
+                    title: l10n.sickLeave,
+                    subtitle: l10n.sickLeaveSubtitle,
+                    opensSickLeave: true,
+                  ),
+                ),
+              ),
+            ] else ...[
             _SectionHeader(l10n.overview),
             LayoutBuilder(
               builder: (context, constraints) {
@@ -275,6 +313,46 @@ class _HomeScreenState extends State<HomeScreen> {
               modules: _otherModules(l10n),
               discussionUnread: _discussionUnread,
               onOpen: (module) => _openModule(context, module),
+            ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _EasyAction extends StatelessWidget {
+  const _EasyAction({
+    required this.icon,
+    required this.title,
+    required this.onPressed,
+  });
+
+  final IconData icon;
+  final String title;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: FilledButton.tonal(
+        style: FilledButton.styleFrom(
+          minimumSize: const Size.fromHeight(72),
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+        ),
+        onPressed: onPressed,
+        child: Row(
+          children: [
+            Icon(icon, size: 28),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                title,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
             ),
           ],
         ),

@@ -1600,6 +1600,18 @@ abstract class AppLocalizations {
   /// **'The font size stays on this device and applies to every page.'**
   String get fontSizeStaysOnDevice;
 
+  /// No description provided for @easyMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Easy mode'**
+  String get easyMode;
+
+  /// No description provided for @easyModeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Home, Appointments, and the tabs show fewer choices. Font size stays the same.'**
+  String get easyModeSubtitle;
+
   /// No description provided for @account.
   ///
   /// In en, this message translates to:
