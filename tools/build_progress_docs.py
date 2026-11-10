@@ -23,7 +23,7 @@ from reportlab.platypus import (
 )
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT
+OUT = ROOT / "documents"
 FLOW = OUT / "progress_flowchart.png"
 ER = OUT / "progress_er.png"
 
@@ -332,6 +332,7 @@ def build_pdf():
 
 
 if __name__ == "__main__":
+    OUT.mkdir(exist_ok=True)
     draw_flowchart()
     draw_er()
     build_report()

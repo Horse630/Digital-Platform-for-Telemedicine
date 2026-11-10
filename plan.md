@@ -8,7 +8,7 @@ The student wants explanations in Traditional Chinese. Code comments, `README.md
 
 ## Project
 
-Hong Kong Baptist University, COMP4878-9 Innovative Computing Project I. Project name: Digital Platform for Telemedicine. Student: Ma Chun Kit. Supervisor: Prof. LEUNG, Yiu Wing. The report is `MA_Chun_Kit_Frist_Progress_Report_23230215.docx` at the repository root. The filename spells "First" as "Frist". That report says Google Gemini was used only to edit the report's grammar and wording. That sentence is about the document, not about which code exists.
+Hong Kong Baptist University, COMP4878-9 Innovative Computing Project I. Project name: Digital Platform for Telemedicine. Student: Ma Chun Kit. Supervisor: Prof. LEUNG, Yiu Wing. The report is `documents/MA_Chun_Kit_Frist_Progress_Report_23230215.docx`. The filename spells "First" as "Frist". That report says Google Gemini was used only to edit the report's grammar and wording. That sentence is about the document, not about which code exists.
 
 The report's stack is Flutter and Dart for the app, MongoDB for storage, and a separate backend. The backend in this repository is Node.js, Express 5, and Mongoose. It is not a Dart server. An earlier attempt to rewrite the backend in Dart was stopped. Do not start that rewrite again unless the student asks.
 
@@ -38,7 +38,7 @@ The report's phases are the plan, not the current build.
 | Phase 2, November | Appointment scheduling, PayPal Sandbox, read-only sick-leave PDFs | Appointment scheduling and sick leave certificates are done. PayPal is not. |
 | Phase 3, December to January | Video SDK and Hong Kong Vector Map delivery tracking | Meetings, a waiting room, and a doctor room number are in the app. The live picture between the two devices is not sent. No video package is installed. The Hong Kong map is shown. Live delivery tracking and the Vector Map API are not started. |
 | Phase 4, February to March | HKBU chatbot, discussion board, wearable health sync | Discussion is done. The chatbot and wearable sync are not started. Their seed documents exist. The app does not load them. |
-| Phase 5, April | Full testing, UI polish, final report | Page and tab motion is in the app. On 10 November 2026, `flutter test` reported 27 passed. A second progress report and a test-case PDF are in the project root. The final report is still later. Those tests use a fake HTTP client and do not prove Atlas is running. |
+| Phase 5, April | Full testing, UI polish, final report | Page and tab motion is in the app. On 10 November 2026, `flutter test` reported 27 passed. A second progress report and a test-case PDF are in `documents/`. The final report is still later. Those tests use a fake HTTP client and do not prove Atlas is running. |
 
 ## Done
 
