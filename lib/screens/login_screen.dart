@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../language/language_settings.dart';
 import '../language/ui_text.dart';
 import '../services/auth_service.dart';
 import 'sign_up_screen.dart';
@@ -176,6 +177,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                       ),
                                 ),
                                 const SizedBox(height: 24),
+                                const _LoginLanguagePicker(),
+                                const SizedBox(height: 24),
                                 TextFormField(
                                   key: const Key('usernameField'),
                                   controller: _username,
@@ -341,6 +344,45 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _LoginLanguagePicker extends StatelessWidget {
+  const _LoginLanguagePicker();
+
+  @override
+  Widget build(BuildContext context) {
+    final language = LanguageScope.of(context);
+    final code = LanguageSettings.codeFor(language.locale);
+    return Wrap(
+      key: const Key('loginLanguagePicker'),
+      alignment: WrapAlignment.center,
+      spacing: 8,
+      runSpacing: 8,
+      children: [
+        ChoiceChip(
+          label: const Text('English'),
+          selected: code == 'en',
+          onSelected: (_) => language.setLocale(
+            LanguageSettings.localeFromCode('en'),
+          ),
+        ),
+        ChoiceChip(
+          label: const Text('繁體中文'),
+          selected: code == 'zh_Hant',
+          onSelected: (_) => language.setLocale(
+            LanguageSettings.localeFromCode('zh_Hant'),
+          ),
+        ),
+        ChoiceChip(
+          label: const Text('简体中文'),
+          selected: code == 'zh_Hans',
+          onSelected: (_) => language.setLocale(
+            LanguageSettings.localeFromCode('zh_Hans'),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:digital_platform_for_telemedicine/language/language_settings.dart';
 import 'package:digital_platform_for_telemedicine/main.dart';
@@ -54,6 +55,20 @@ void main() {
 
     expect(find.text('Welcome, doctor'), findsNothing);
     expect(find.text('Welcome back, Demo Doctor'), findsOneWidget);
+  });
+
+  testWidgets('the login screen can switch to Traditional Chinese', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({});
+    await _pumpPhone(tester);
+
+    expect(find.byKey(const Key('loginLanguagePicker')), findsOneWidget);
+    await tester.tap(find.text('繁體中文'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('登入'), findsOneWidget);
+    expect(find.text('遠距醫療數位平台'), findsOneWidget);
   });
 
   testWidgets('empty sign-in asks for both fields', (tester) async {
